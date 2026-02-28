@@ -1,195 +1,159 @@
 ---
-name: Save Workflow
-description: "Công cụ tự động hóa quy trình lưu trữ, ghi chú, cập nhật LESSONS.md và đẩy mã nguồn lên GitHub với atomic commit. Kích hoạt bằng lệnh /save."
+name: Save — Đóng gói & Xuất bản Production Code
+description: "Kết thúc phiên làm việc toàn diện: review 7 tiêu chí, ghi LESSONS, cập nhật docs, atomic commit, push. Thay thế review + save + checkpoint cũ. Kích hoạt bằng lệnh /save."
 ---
 
-# HƯỚNG DẪN KỸ NĂNG: SAVE WORKFLOW
+# /save
 
-## Mục tiêu
-Kết thúc phiên làm việc một cách toàn vẹn: docs cập nhật, bài học được ghi, code được push với commit message chuẩn. Không bao giờ kết thúc phiên mà không có commit.
-
----
-
-## CÁC BƯỚC BẮT BUỘC
-
-### Bước -1 — MEMORY AUDIT (MỚI — TRƯỚC TẤT CẢ)
-```
-1. Đọc ACTIVE_CONTEXT.md (nếu có):
-   - Liệt kê: task nào đã xong, task nào còn dở
-   - NẾU còn task dở → cảnh báo:
-     "⚠️ Còn [task] chưa hoàn thành. Lưu tạm hay tiếp tục?"
-   - Nếu lưu tạm → chạy /checkpoint ngay (memory-optimizer skill)
-
-2. Merge thông tin quan trọng từ ACTIVE_CONTEXT vào STATE.md
-```
+> **1 lệnh thay 3** — Gộp review + save + checkpoint cũ
+> Mục tiêu: Code đã review → docs cập nhật → committed → pushed → memory archived
 
 ---
 
-### Bước 0 — Nhắc Review (KHÔNG SKIP)
-```
-⚠️ Bạn đã chạy lệnh /review chưa?
-- Đã review → gõ "tiếp tục"
-- Muốn review ngay → tôi sẽ chạy /review trước
-- Muốn bỏ qua → gõ "bỏ qua" (chỉ nên dùng khi chỉ sửa docs)
-```
-**DỪNG** và chờ phản hồi. CHỈ tiếp tục khi được xác nhận.
+## QUY TRÌNH 7 BƯỚC
 
----
-
-### Bước 1 — Kiểm tra Task Đang Dở (GSD Awareness)
-```
-1. Đọc STATE.md (nếu tồn tại):
-   - Có task nào đang dở trong Wave hiện tại không?
-   - Nếu CÓ → cảnh báo: "⚠️ Còn [N] task chưa xong trong Wave X"
-   - Hỏi: "Bạn muốn tiếp tục sau hay lưu trạng thái tạm?"
-
-2. Đọc git status:
-   - Liệt kê các file đã thay đổi
-   - Nhóm theo feature/module để commit hợp lý
-```
-
----
-
-### Bước 2 — Cập nhật CHANGE_LOG.md
-```
-Format chuẩn:
-## [vX.Y.Z] - YYYY-MM-DD
-
-### Added (Tính năng mới)
-- Mô tả tính năng đã thêm
-
-### Fixed (Bug đã sửa)
-- #BUG-XXX: Mô tả bug và cách fix
-
-### Changed (Thay đổi)
-- Mô tả thay đổi existing behavior
-
-### Security
-- Mô tả fix security (nếu có)
-```
-
----
-
-### Bước 3 — Cập nhật NEXT-TODO.md
-```
-Quy tắc:
-- XÓA task đã hoàn thành trong phiên này
-- THÊM task mới phát sinh
-- Sắp xếp theo độ ưu tiên: 🔴 Cao → 🟡 Trung bình → 🟢 Thấp
-- Ghi rõ: Task chưa xong do hết thời gian (carried over)
-```
-
----
-
-### Bước 4 — Cập nhật GEMINI.md / README.md
-```
-GEMINI.md: Cập nhật section Implementation Status + Development History Log
-README.md: Cập nhật version, tính năng mới (nếu đáng kể)
-```
-
----
-
-### Bước 5 — Cập nhật LESSONS.md (Critical Step)
-
-```
-1. Nhìn lại phiên làm việc: Có bug nào fix? Pattern nào học được?
-
-2. Nếu CÓ bài học mới:
-   Hỏi: "📝 Phiên này có [N] bài học cần ghi. Ghi vào LESSONS.md không?"
-
-3. Nếu đồng ý, ghi theo format:
-```
-
-```markdown
-### #BUG-XXX Tiêu đề ngắn gọn (YYYY-MM-DD)
-
-- **Mức độ:** 🔴 Critical | 🟡 Warning | 🟢 Info
-- **Thẻ:** #laravel, #auth, #n8n (tối đa 3 tags)
-- **Triệu chứng:** Mô tả lỗi quan sát được
-- **Nguyên nhân gốc:** Tại sao lỗi xảy ra
-- **Cách fix:** Giải pháp cụ thể (kèm code snippet nếu cần)
-- **Quy tắc rút ra:** Quy tắc LUÔN áp dụng từ nay
-- **File liên quan:** `path/to/file.php`
-```
-
-```
-4. Cập nhật phần Thống kê nhanh đầu LESSONS.md:
-   - Tổng số bug: +1
-   - Lần cuối cập nhật: YYYY-MM-DD
-```
-
-> ❌ KHÔNG BAO GIỜ xóa nội dung LESSONS.md — chỉ thêm mới
-
----
-
-### Bước 6 — Cập nhật STATE.md (GSD Integration)
-```
-Nếu dự án có PLAN.md/STATE.md:
-- Cập nhật: phase hiện tại, wave hiện tại, task hoàn thành, task tiếp theo
-- Mark task đã xong: [x] trong PLAN.md
-```
-
----
-
-### Bước 7 — Atomic Commit & Push
+### Bước 1 — SCOPE REVIEW
 
 ```bash
-# Format commit message (conventional commits):
-# feat(scope): mô tả ngắn gọn — 72 ký tự tối đa
-# fix(scope): mô tả bug đã sửa
-# chore(scope): task kỹ thuật, refactor, config
-# docs(scope): chỉ cập nhật tài liệu
-# sec(scope): security fix
-# perf(scope): cải thiện performance
+git status          # Files đã thay đổi
+git diff --stat     # Tổng quan changes
+```
 
-# Nếu nhiều thay đổi khác nhau → nhiều commit:
-git add app/Services/PayrollService.php
-git commit -m "feat(payroll): add bcmath precision for salary"
+Liệt kê files thay đổi, nhóm theo module.
 
-git add app/Http/Controllers/AuthController.php
-git commit -m "fix(auth): prevent timing attack on login"
+---
 
-git add GEMINI.md README.md CHANGE_LOG.md
-git commit -m "docs: update changelog and version to vX.Y.Z"
+### Bước 2 — 7 TIÊU CHÍ REVIEW (Từ review skill — giữ nguyên)
 
-# Push lên GitHub
+Cho MỖI file thay đổi, kiểm tra:
+
+| # | Tiêu chí | Kiểm tra |
+|---|---|---|
+| ① | **Bugs & Logic** | Null pointer, edge cases, infinite loop, logic đúng? |
+| ② | **UI/UX** | Responsive, contrast, ARIA, loading/empty/error states? |
+| ③ | **Security** | SQL injection, XSS, CSRF, hardcoded secrets? |
+| ④ | **Performance** | N+1 query, missing index, heavy computation? |
+| ⑤ | **Code Quality** | Magic numbers, DRY, naming, function length, strict types? |
+| ⑥ | **Verification** | Evidence đã có? (test pass / curl output / screenshot) |
+| ⑦ | **LESSONS Compliance** | Code mới có vi phạm bài học cũ trong LESSONS.md? |
+
+**Output format:**
+```
+① BUGS:          [✅ | ⚠️ N warning | 🛑 N lỗi]
+② UI/UX:         [✅ | ⚠️ | 🛑 | N/A]
+③ SECURITY:      [✅ | ⚠️ | 🛑]
+④ PERFORMANCE:   [✅ | ⚠️ | 🛑]
+⑤ CODE QUALITY:  [✅ | ⚠️ | 🛑]
+⑥ VERIFICATION:  [✅ Evidence đủ | ❌ Thiếu]
+⑦ LESSONS:       [✅ Tuân thủ | 🛑 Vi phạm #WARN-XXX]
+```
+
+> 🛑 Nếu có CRITICAL → **DỪNG**, yêu cầu sửa trước khi tiếp tục.
+
+---
+
+### Bước 3 — LESSONS CAPTURE
+
+```
+Hỏi: "Phiên này có gặp bug hoặc rút ra bài học gì không?"
+
+NẾU CÓ → Ghi vào LESSONS.md ngay:
+
+### [🔴|🟡|🟢] #WARN-NNN — Tiêu đề (YYYY-MM-DD)
+
+- **Mức độ:** 🔴 Critical | 🟡 Warning | 🟢 Info
+- **Thẻ:** #tag1, #tag2 (tối đa 3)
+- **Triệu chứng:** Mô tả lỗi quan sát được
+- **Nguyên nhân gốc:** WHY
+- **Cách fix:** Code snippet cụ thể
+- **Quy tắc rút ra:** Rule LUÔN áp dụng từ nay
+  // ✅ Đúng: [code example]
+  // ❌ Sai: [code example]
+- **File liên quan:** `path/to/file`
+
+Cập nhật thống kê đầu LESSONS.md.
+
+NẾU KHÔNG → Bỏ qua, tiếp tục.
+```
+
+> ❌ KHÔNG BAO GIỜ xóa LESSONS.md — chỉ thêm mới.
+> ✅ MỚI: Luôn thêm ✅❌ code examples (học từ bkns-minicrm)
+
+---
+
+### Bước 4 — DOCS UPDATE
+
+Cập nhật theo quy tắc One Source of Truth:
+
+| File | Hành động |
+|---|---|
+| `CHANGE_LOG.md` | Thêm entry `## [vX.Y.Z] - YYYY-MM-DD` với Added/Fixed/Changed |
+| `NEXT-TODO.md` | XÓA task đã hoàn thành, THÊM task mới phát sinh |
+| `GEMINI.md` | Cập nhật version, Implementation Status, Development History |
+| `STATE.md` | Cập nhật phase/wave/task hiện tại (nếu dùng GSD) |
+
+---
+
+### Bước 5 — ATOMIC COMMIT & PUSH
+
+```bash
+# Nhóm commit theo module/feature:
+git add [files cùng feature]
+git commit -m "feat(scope): mô tả 72 ký tự max"
+
+git add [docs files]
+git commit -m "docs: update changelog vX.Y.Z"
+
+# Push
 git push origin main
 ```
 
----
+Convention commits: `feat | fix | chore | docs | perf | sec | test`
 
-### Bước 7.5 — MEMORY CONSOLIDATION (MỚI — SAU PUSH)
-```
-1. Đã push thành công → archive ACTIVE_CONTEXT.md:
-   - Rename: ACTIVE_CONTEXT.md → .archived/ACTIVE_CONTEXT_[date].md
-   - Hoặc xóa nếu không cần lưu lịch sử
-
-2. Xác nhận: "✅ Working memory đã được consolidate và archive"
-3. Phiên mới sẽ tạo ACTIVE_CONTEXT.md mới khi cần
-```
+> 🔑 Mỗi feature/fix = 1 commit riêng. Không gom.
 
 ---
 
-### Bước 8 — Kết thúc phiên
+### Bước 6 — MEMORY CONSOLIDATION
 
 ```
-✅ Phiên /save hoàn thành!
+1. NẾU có ACTIVE_CONTEXT.md:
+   → Archive hoặc xóa (context đã persist vào docs)
+   → "✅ Working memory archived"
 
-📝 Docs đã cập nhật: CHANGE_LOG.md | NEXT-TODO.md | GEMINI.md
-🧠 LESSONS.md: [N bài học mới / Không có thay đổi]
-📦 Committed: [N commits]
-🔗 Pushed: [branch] → [remote] (hash: xxxxxxx)
+2. NẾU STATE.md tồn tại:
+   → Cập nhật: version, phase, task xong, task tiếp theo
 
-Task tiếp theo (phiên sau):
+3. NẾU Qdrant available:
+   → Store lessons mới vào collection (curl scripts)
+```
+
+---
+
+### Bước 7 — END REPORT
+
+```
+✅ /save hoàn tất!
+
+📊 REVIEW: [✅ 7/7 pass | ⚠️ N warnings accepted]
+📝 LESSONS: [N bài học mới ghi | Không thay đổi]
+📋 DOCS: CHANGE_LOG ✅ | NEXT-TODO ✅ | GEMINI ✅
+📦 COMMITS: [N commits]
+🔗 PUSHED: main → origin (hash: xxxxxxx)
+
+🔜 TASK TIẾP THEO:
   → [Task ưu tiên cao nhất từ NEXT-TODO.md]
 
-Gõ /start để bắt đầu phiên mới!
+Gõ /start [task] để bắt đầu phiên mới!
 ```
 
 ---
 
 ## QUY TẮC QUAN TRỌNG
-- Luôn dùng tool edit file (không chỉ in ra màn hình)
-- Commit message phải rõ WHY, không chỉ WHAT
-- Nếu phiên chỉ sửa docs → commit type là `docs:`
-- Số BUG trong LESSONS.md: đọc entry cuối cùng rồi tăng +1
+
+- 🛑 CRITICAL trong review → KHÔNG cho phép commit
+- ❌ Thiếu evidence verify → KHÔNG cho phép commit
+- ❌ Vi phạm LESSONS → phải sửa trước
+- ✅ Luôn dùng tool edit file — không chỉ in ra màn hình
+- ✅ Commit message rõ WHY, không chỉ WHAT
+- ✅ LESSONS entry mới PHẢI có ✅❌ code examples

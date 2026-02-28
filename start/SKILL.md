@@ -1,148 +1,128 @@
 ---
-name: Start Workflow
-description: "Công cụ khởi động phiên làm việc. Tự động kiểm tra trạng thái các file nhật ký (CHANGE_LOG.md, README.md, NEXT-TODO.md, LESSONS.md, STATE.md) để nắm bắt bối cảnh và gợi ý công việc tiếp theo. Kích hoạt bằng lệnh /start."
+name: Start — Khởi động phiên Production Code
+description: "Khởi động phiên làm việc toàn diện: load context, check LESSONS, scan blueprints, chọn skill, sẵn sàng code. Thay thế start + recall + supper cũ. Kích hoạt bằng lệnh /start [mô tả task]."
 ---
 
-# HƯỚNG DẪN KỸ NĂNG: START WORKFLOW
+# /start [task description]
 
-## Mục tiêu
-Khởi động phiên làm việc với đầy đủ context. Không bao giờ bắt đầu code khi chưa biết: dự án đang ở đâu, còn làm gì, đã học được gì từ bài học cũ. **Tổng thời gian chạy /start: < 60 giây.**
+> **1 lệnh thay 3** — Gộp start + recall + supper cũ
+> Mục tiêu: Từ 0 → sẵn sàng code trong **< 60 giây**
 
 ---
 
-## CÁC BƯỚC BẮT BUỘC
+## QUY TRÌNH 5 BƯỚC
 
-### Bước 0 — MEMORY BOOTSTRAP (TRƯỚC TẤT CẢ — KHÔNG SKIP)
-
-Kiểm tra `ACTIVE_CONTEXT.md` trong thư mục dự án:
+### Bước 1 — MEMORY BOOTSTRAP
 
 ```
-NẾU TỒN TẠI ACTIVE_CONTEXT.md:
-  🚨 ALERT: "Phiên làm việc cũ chưa kết thúc đúng cách!"
-  Hiển thị ngay:
-    📌 Task đang dở: [task từ ACTIVE_CONTEXT]
-    📁 Files đang chỉnh: [files từ ACTIVE_CONTEXT]
-    🎯 Tiếp theo: [NEXT IMMEDIATE ACTION]
-  Hỏi user: "Bạn muốn /recall để tiếp tục, hay bắt đầu task mới?"
-  → Nếu tiếp tục: kích hoạt /recall (memory-optimizer skill)
-  → Nếu mới: ghi nhận và tiếp tục Bước 1
+1. Kiểm tra ACTIVE_CONTEXT.md trong thư mục dự án:
 
-NẾU KHÔNG CÓ ACTIVE_CONTEXT.md:
-  → Tiếp tục Bước 1 như bình thường
+   NẾU TỒN TẠI:
+     🚨 "Phiên cũ chưa kết thúc!"
+     📌 Task đang dở: [task]
+     📁 Files: [files]
+     🎯 Tiếp theo: [action]
+     → Hỏi: "Tiếp tục task cũ hay bắt đầu task mới?"
+
+   NẾU KHÔNG:
+     → Tiếp tục Bước 2
 ```
-
-> 💡 `ACTIVE_CONTEXT.md` là working memory của AI — xem memory-optimizer/SKILL.md
 
 ---
 
-### Bước 1 — Load Context Files (Song song)
-Đọc tất cả các file sau cùng lúc:
+### Bước 2 — CONTEXT LOAD (Song song, < 10 giây)
 
-| File | Mục tiêu đọc |
+Đọc **đồng thời** tất cả file context:
+
+| File | Trích xuất |
 |---|---|
-| `GEMINI.md` hoặc `memory.md` | Kiến trúc dự án, tech stack, coding rules |
-| `CHANGE_LOG.md` | Những gì đã thay đổi trong phiên gần nhất |
-| `NEXT-TODO.md` | Danh sách task chưa hoàn thành |
-| `LESSONS.md` | Các lỗi và bài học đã ghi lại |
-| `STATE.md` (GSD) | Phase/wave đang làm dở (nếu tồn tại) |
-| `PLAN.md` (GSD) | Wave breakdown của phase hiện tại (nếu tồn tại) |
+| `GEMINI.md` | Version, tech stack, Architecture Rules |
+| `LESSONS.md` | ⚠️ Warnings liên quan task |
+| `CHANGE_LOG.md` | Phiên trước: tóm tắt 1 dòng |
+| `NEXT-TODO.md` | Top 3 task ưu tiên |
+| `STATE.md` / `.gsd/STATE.md` | Phase/wave đang dở (nếu có) |
 
-> Nếu file không tồn tại → ghi nhận, không báo lỗi, tiếp tục.
-
----
-
-### Bước 2 — Phân tích và Tổng hợp
-
-```
-Từ GEMINI.md/memory.md:
-  → Dự án là gì? Tech stack? Phase hiện tại? Version?
-
-Từ CHANGE_LOG.md:
-  → Phiên trước làm gì? Bug nào đã fix? Feature nào đã ship?
-
-Từ NEXT-TODO.md:
-  → Task nào đang chờ? Ưu tiên nào cao nhất?
-
-Từ STATE.md (nếu có):
-  → Đang ở Phase mấy? Wave mấy? Task nào đang làm dở?
-```
+> Nếu file không tồn tại → bỏ qua, không báo lỗi.
 
 ---
 
-### Bước 3 — Cảnh báo LESSONS.md (Critical only)
+### Bước 3 — LESSONS PRE-FLIGHT
 
 ```
 1. Đọc LESSONS.md
-2. Lọc các entry có mức 🔴 Critical và 🟡 Warning
-3. Đối chiếu với task trong NEXT-TODO.md: bài học nào LIÊN QUAN đến task hôm nay?
-4. Hiển thị tối đa 5 bài học relevant nhất:
-   📌 #BUG-XXX [🔴 Critical] — Mô tả ngắn → Quy tắc cần nhớ
+2. Grep: entry nào LIÊN QUAN tới task mô tả trong [task description]?
+3. Match theo #tags hoặc file liên quan
+4. Hiển thị tối đa 3 cảnh báo relevant:
+   ⚠️ #WARN-003 — Thiếu @endsection gây vỡ layout Blade
+   ⚠️ #WARN-005 — FK constraint phải xóa theo thứ tự
 ```
 
-> Nếu LESSONS.md chưa tồn tại:
-> *"📒 Dự án chưa có LESSONS.md. Gõ `/save` sau phiên đầu tiên để bắt đầu ghi bài học."*
+> 🛑 **RULE**: Nếu có LESSONS liên quan → AI PHẢI nhắc lại trước khi code. Không exception.
 
 ---
 
-### Bước 4 — Báo cáo Trạng thái (Bắt buộc format này)
+### Bước 4 — BLUEPRINT CHECK (MỚI — từ bkns-minicrm)
 
 ```
-🚀 **Phiên làm việc mới — [Tên dự án] [Version]**
-📅 [Ngày giờ hiện tại]
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📋 TRẠNG THÁI DỰ ÁN
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-- Version: vX.Y.Z
-- Phase hiện tại: Phase XX — [Tên phase]
-- Wave: [Wave N] (nếu có STATE.md/PLAN.md)
-- Phiên trước: [Tóm tắt 1-2 dòng từ CHANGE_LOG]
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔜 TASK CẦN LÀM (từ NEXT-TODO.md)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔴 Ưu tiên cao:
-  1. [Task ưu tiên cao nhất]
-  2. [Task ưu tiên cao thứ 2]
-
-🟡 Trung bình:
-  3. [Task trung bình]
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-⚠️ BÀI HỌC CẦN LƯU Ý HÔM NAY
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📌 #BUG-XXX [🔴] — [Mô tả] → [Quy tắc]
-...
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🧭 GỢI Ý TIẾP THEO
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. Scan thư mục .agent/commands/ (nếu tồn tại)
+2. Tìm file task-*.md match với [task description]
+3. NẾU TÌM THẤY:
+   📋 "Blueprint found: task-001-payroll-comparison.md"
+   → Suggest: "/build sẽ dùng blueprint này"
+4. NẾU KHÔNG:
+   📋 "Không có blueprint. Bạn muốn /plan trước hay /build trực tiếp?"
 ```
 
 ---
 
-### Bước 5 — Gợi ý hành động
+### Bước 5 — SKILL AUTO-SELECT & STATUS REPORT
 
-Ở cuối báo cáo, **bắt buộc** đề xuất:
+Dựa vào [task description], tự chọn skill phù hợp:
+
+| Từ khóa trong task | Skill được chọn |
+|---|---|
+| code, feature, thêm, tạo, viết | `/build` |
+| fix, bug, lỗi, sửa, error | `/fix` |
+| design, UI, giao diện, logo | `/design` |
+| test, security, audit, kiểm tra | `/guard` |
+| API, webhook, n8n, payment, integrate | `/integrate` |
+| plan, thiết kế, spec, blueprint | `/plan` |
+
+Xuất báo cáo:
 
 ```
-Dựa trên task đang chờ, tôi gợi ý:
+🚀 START — [Tên dự án] v[X.Y.Z]
+📅 [Timestamp]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Option A (cho task kỹ thuật):
-  "/supper [mô tả task cụ thể]" → để chọn skill phù hợp
+📋 TRẠNG THÁI
+  Version: vX.Y.Z | Phase: [X] | Phiên trước: [tóm tắt]
 
-Option B (cho task có trong PLAN.md/STATE.md):
-  Tiếp tục Wave N — Task: [tên task] → kích hoạt vibe-code
+🔜 TASK HÔM NAY
+  → [task description]
 
-Option C (dự án mới):
-  "/gsd" → lên kế hoạch với GSD methodology
+⚠️ LESSONS CẦN LƯU Ý
+  #WARN-XXX — [quy tắc liên quan]
+
+📋 BLUEPRINT
+  [✅ Có: task-NNN.md | ❌ Chưa có — gợi ý /plan]
+
+🎯 SKILL ĐƯỢC CHỌN
+  → /build [task]  (hoặc /fix, /design, /guard, /integrate)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💡 Gõ lệnh skill ở trên để bắt đầu, hoặc:
+   /plan [feature]  → tạo blueprint trước
+   /build [task]    → bắt đầu code ngay
+   /fix [bug]       → debug ngay
 ```
 
 ---
 
-## QUY TẮC QUAN TRỌNG
+## QUY TẮC
 
-- CHỈ đọc và báo cáo — KHÔNG tự ý sửa file trong /start
-- Nếu STATE.md tồn tại và có task đang dở → **ưu tiên hiển thị** ngay đầu báo cáo
-- Luôn kết thúc bằng gợi ý `/supper [context]` hoặc action cụ thể
-- Tone: đồng nghiệp thân thiện, đã biết dự án từ hôm qua, sẵn sàng làm việc tiếp
+- CHỈ đọc và báo cáo — KHÔNG tự sửa file
+- Nếu ACTIVE_CONTEXT tồn tại → ưu tiên hiển thị task đang dở
+- Nếu có blueprint → gợi ý dùng `/build` với blueprint
+- Nếu task phức tạp và chưa có blueprint → gợi ý `/plan` trước
+- Tone: đồng nghiệp senior, ngắn gọn, sẵn sàng action
