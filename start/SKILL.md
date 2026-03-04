@@ -81,16 +81,22 @@ Dựa vào [task description], tự chọn skill phù hợp:
 
 | Từ khóa trong task | Skill được chọn |
 |---|---|
-| code, feature, thêm, tạo, viết | `/build` |
-| fix, bug, lỗi, sửa, error | `/fix` |
-| design, UI, giao diện, logo | `/design` |
-| test, kiểm tra code | `/guard` |
-| API, webhook, payment, integrate | `/integrate` |
-| plan, thiết kế, spec, blueprint | `/plan` |
-| n8n, workflow, automation, trigger | `/n8n` 🆕 |
-| ý tưởng, brainstorm, idea, compare | `/brainstorm` 🆕 |
-| bảo mật, security, OWASP, CVE, hack | `/security` 🆕 |
-| review web, đánh giá website, audit site | `/review-web` 🆕 |
+| code, feature, thêm, tạo, viết, build, module | `/build` |
+| fix, bug, lỗi, sửa, error, debug, crash | `/fix` |
+| design, UI, giao diện, logo, CSS, theme, layout | `/design` |
+| test, kiểm tra code, coverage, lint | `/guard` |
+| API, webhook, payment, integrate, 3rd-party | `/integrate` |
+| plan, thiết kế, spec, blueprint, roadmap | `/plan` |
+| n8n, workflow, automation, trigger, queue | `/n8n` |
+| ý tưởng, brainstorm, idea, compare, đánh giá | `/brainstorm` |
+| bảo mật, security, OWASP, CVE, hack, pentest | `/security` |
+| review web, đánh giá website, audit site, lighthouse | `/review-web` |
+| docs, tài liệu, document, ADR, handoff, onboard | `/docs` 🆕 |
+| SEO, viết bài, content, keyword, GEO, article, blog | `/seo` 🆕 |
+| save, kết thúc, đóng phiên, commit, push | `/save` |
+| start, bắt đầu, khởi động, mở phiên | `/start` |
+
+> **Fallback**: Nếu không match pattern nào → hỏi user chọn skill.
 
 Xuất báo cáo:
 

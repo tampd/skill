@@ -55,6 +55,81 @@ Liệt kê ở đây (ví dụ):
 
 ---
 
+### Step 0.5 — ARCHITECTURE SPEC (BẮT BUỘC cho project/module mới ≥ 3 files)
+
+> ⭐ **MỚI v4.0** — Vibe code CÓ CẤU TRÚC. Không code mà chưa có spec.
+> Skip nếu task nhỏ (fix/patch 1-2 files) hoặc project đã có spec.
+
+**TRƯỚC KHI CODE BẤT KỲ FILE NÀO**, tạo file `.spec.md` (version-controlled cùng code):
+
+```markdown
+# [Project/Module Name] — Architecture Spec
+
+## 1. Site Map (Cấu trúc Routes/Pages)
+/ → Homepage
+/about → About page
+/dashboard → Dashboard (auth required)
+/api/v1/* → REST API endpoints
+
+## 2. Component Tree
+App
+├── Layout
+│   ├── Header (logo, nav, user menu)
+│   ├── Sidebar (menu items, collapse)
+│   └── Footer (links, copyright)
+├── Pages
+│   ├── Home (hero, features, CTA)
+│   ├── Dashboard (stats, charts, tables)
+│   └── Settings (profile, preferences)
+└── Shared
+    ├── Button (primary, secondary, ghost, danger)
+    ├── Card (header, body, footer slots)
+    ├── Modal (confirm, form, alert)
+    ├── Form (input, select, textarea, validation)
+    └── Table (sortable, searchable, paginated)
+
+## 3. Data Flow
+User → Browser → [Frontend/Blade] → [Controller] → [Service Layer] → [Database]
+                                                   ↓
+                                            [Queue Jobs] → [Email/Webhook]
+
+## 4. File Structure Convention
+src/ (hoặc app/ cho Laravel)
+├── Controllers/    ← Route handlers, validation, response
+├── Services/       ← Business logic (KHÔNG ở Controller)
+├── Models/         ← Database models, relationships
+├── Views/          ← Templates (Blade/React/Vue)
+├── Jobs/           ← Queue jobs (async processing)
+├── Mail/           ← Email templates
+└── Middleware/     ← Auth, RBAC, rate limiting
+
+## 5. Design Tokens
+colors:
+  --color-primary: #2563eb (light) / #60a5fa (dark)
+  --color-secondary: #7c3aed
+  --bg-surface: #ffffff / #0f172a
+  --bg-card: #f8fafc / #1e293b
+  --text-primary: #0f172a / #f8fafc
+spacing:
+  --space-xs: 4px  | --space-sm: 8px  | --space-md: 16px
+  --space-lg: 24px | --space-xl: 32px | --space-2xl: 48px
+typography:
+  --font-heading: 'Inter', sans-serif
+  --font-body: 'Inter', sans-serif
+  --font-mono: 'JetBrains Mono', monospace
+
+## 6. Tech Decisions (mini-ADR)
+| Quyết định | Lý do | Thay thế đã xem xét |
+|---|---|---|
+| [tech choice] | [why] | [alternatives] |
+```
+
+**Output**: File `.spec.md` tại root hoặc `.agent/specs/[module].spec.md`
+
+> 🛑 **RULE**: Nếu đang build project mới hoặc module mới (≥ 3 files) mà CHƯA CÓ `.spec.md` → DỪNG và tạo trước.
+
+---
+
 ### Step 1 — SPEC TASK (< 2 phút)
 
 Trả lời 6 câu hỏi TRƯỚC KHI viết bất kỳ dòng code nào:

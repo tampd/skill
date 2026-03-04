@@ -1,6 +1,6 @@
-# Skill System v3 — Extended Arsenal
+# Skill System v4 — Structured Vibe
 
-> Production Code Framework + 4 New Expert Skills
+> 14 Skills Production Code Framework + Documentation + SEO
 > Cập nhật: 2026-03-04
 
 ## Cài đặt
@@ -20,37 +20,62 @@ ln -sf ~/skill ~/.gemini/antigravity/skills/skill-system
 cp -r ~/skill/.agent/skills/ .agent/skills/
 ```
 
-## Có gì mới trong v3?
+## Có gì mới trong v4?
 
-### 4 Skills mới:
+### 2 Skills mới:
 | Skill | Lệnh | Mục đích |
 |---|---|---|
-| **n8n-pro** | `/n8n [task]` | N8N expert: 7 chuyên môn + MCP + CVE patches |
-| **brainstorm** | `/brainstorm [idea]` | Ideation → Spec → Prototype pipeline |
-| **web-security** | `/security [target]` | OWASP Top 10 deep audit + hardening |
-| **review-website** | `/review-web [url]` | Website review 7 chiều (100 điểm) |
+| **docs** 🆕 | `/docs [scope]` | Documentation generation + ADR + handoff (9 template files) |
+| **seo** 🆕 | `/seo [topic]` | SEO + GEO content writer (keyword → draft → optimize → publish) |
 
 ### Nâng cấp skills hiện có:
-- **start**: Nhận diện 12 skills (thêm 4 skills mới vào auto-select)
-- **guard**: Thêm Supply Chain Security audit
+| Skill | Thay đổi |
+|---|---|
+| **build** ⭐ | Thêm Architecture Spec Phase — `.spec.md` BẮT BUỘC cho project mới |
+| **design** | Thêm Design Token System (Atomic → Semantic → Mode) + Component API Docs |
+| **n8n-pro** | Thêm MCP Server + Sub-workflows + Scaling Patterns |
+| **start** | Auto-select nâng từ 10 → 14 rules + fallback logic |
 
 ### MCP Integration:
-- n8n-MCP cho workflow automation
+- n8n MCP Server cho workflow-as-tool
 - Qdrant MCP cho persistent memory
 - Context7/Docfork cho documentation grounding
 
-## Quick Reference
+## Quick Reference — 14 Skills
 ```
-/start [task]        → Khởi động phiên
-/build [task]        → Viết code
-/fix [bug]           → Debug + LESSONS
+── Session ──
+/start [task]        → Khởi động phiên (14-rule auto-select)
 /save                → Review + push
+
+── Build ──
+/build [task]        → Code + Architecture Spec      ⭐
+/fix [bug]           → Debug + LESSONS
 /plan [feature]      → Blueprint
-/design [task]       → UI/UX
+
+── Design ──
+/design [task]       → UI/UX + Token System          ⬆
+
+── Quality ──
 /guard [scope]       → Test + Security + Perf
+
+── Integration ──
 /integrate [svc]     → API + webhook
-/n8n [task]          → N8N workflow     🆕
-/brainstorm [idea]   → Ideation         🆕
-/security [target]   → Security audit   🆕
-/review-web [url]    → Website review   🆕
+/n8n [task]          → N8N + MCP Server               ⬆
+
+── Analysis ──
+/brainstorm [idea]   → Ideation
+/security [target]   → OWASP audit
+/review-web [url]    → Website review
+
+── Content ──
+/docs [scope]        → Documentation + ADR            🆕
+/seo [topic]         → SEO + GEO writer               🆕
 ```
+
+## Version History
+| Version | Date | Skills |
+|---|---|---|
+| **v4.0** | 2026-03-04 | 14 skills (+/docs, +/seo, ⬆build, ⬆design, ⬆n8n, ⬆start) |
+| v3.0 | 2026-03-04 | 12 skills (+brainstorm, +n8n-pro, +web-security, +review-website) |
+| v2.0 | 2026-02-28 | 8 unified skills |
+| v1.x | 2026-02-27 | 26 skills (archived) |

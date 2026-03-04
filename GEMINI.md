@@ -1,28 +1,29 @@
-# GEMINI — Skill Repository v3 (Production Code Framework + Extended Arsenal)
+# GEMINI — Skill Repository v4 (Production Code Framework + Extended Arsenal)
 
 > **GitHub**: https://github.com/tampd/skill
 > **Local path**: /root/skill
-> **Cập nhật**: 2026-03-04 — **v3.0 EXTENDED ARSENAL**
+> **Cập nhật**: 2026-03-04 — **v4.0 STRUCTURED VIBE**
 
 ---
 
 ## 🔑 THÔNG TIN QUAN TRỌNG
 
-### Skill System v3 — Extended Arsenal
-Phiên bản 3.0 giữ nguyên 8 skills core ổn định từ v2 + bổ sung **4 skills mới** chuyên biệt:
-- **n8n-pro**: N8N workflow expert (7 sub-skills từ community best practices + MCP integration)
-- **brainstorm**: Ideation → Spec → Prototype pipeline (cho planning & sáng tạo)
-- **web-security**: OWASP Top 10 deep audit + CVE scanner + hardening + compliance
-- **review-website**: Đánh giá website toàn diện (UX/UI/SEO/Performance/Security/A11y)
-- Nâng cấp **start** (auto-select nhận diện 12 skills)
-- Nâng cấp **guard** (Supply Chain Security audit)
+### Skill System v4 — Structured Vibe
+Phiên bản 4.0 nâng cấp từ v3 (12 skills) lên **14 skills**, tập trung:
+- 🆕 **docs**: Documentation generation + ADR + handoff (9 template files chuẩn)
+- 🆕 **seo**: SEO + GEO content writer (keyword → outline → draft → optimize → publish)
+- ⬆ **build**: Thêm **Architecture Spec Phase** — `.spec.md` BẮT BUỘC cho project/module mới
+- ⬆ **design**: Thêm **Design Token System** + **Component API Docs**
+- ⬆ **n8n-pro**: Thêm **MCP Server** + **Sub-workflows** + **Scaling Patterns**
+- ⬆ **start**: Auto-select nâng lên **14 rules** + fallback logic
 
-### Triết lý v3: "Less is More, But Sharp"
+### Triết lý v4: "Vibe With Structure"
 ```
-❌ KHÔNG install 900+ skills rải rác → context rot, tool bloat
-✅ 12 skills tập trung, mỗi skill là "dao sắc" cho 1 mục đích
-✅ Progressive Disclosure: metadata nhẹ, instructions load khi cần
-✅ Mỗi skill có quy trình rõ ràng, evidence-based
+❌ KHÔNG code vibe không cấu trúc → dẫn tới tech debt
+✅ .spec.md trước mọi project/module mới (site map, component tree, data flow)
+✅ 14 skills chuyên biệt, mỗi skill có quy trình evidence-based
+✅ Documentation-as-Code: docs tạo tự động, verify vs code
+✅ GEO-optimized content: viết cho cả Google + AI search engines
 ```
 
 ### GitHub Repository
@@ -53,30 +54,39 @@ SSH Key: SHA256:nTSlO07MbIplXX/j2FAHlyuSb+MJxPO1yboDHJJidFs
 > Không chấp nhận "nó chạy rồi". Phải có bằng chứng cụ thể:
 > curl output, test results, screenshot, hoặc log.
 
+### Rule 4: ARCHITECTURE SPEC TRƯỚC KHI CODE (MỚI v4)
+> Project mới hoặc module mới ≥ 3 files → BẮT BUỘC tạo `.spec.md` trước.
+> Spec gồm: Site Map, Component Tree, Data Flow, File Structure, Design Tokens.
+> Xem chi tiết: `/build` Step 0.5.
+
 ---
 
-## 📁 CẤU TRÚC SKILL REPOSITORY v3
+## 📁 CẤU TRÚC SKILL REPOSITORY v4
 
 ```
 /root/skill/
 ├── GEMINI.md                ← File này — brain & rules
 ├── README.md                ← Hướng dẫn cài đặt
 │
-│── ─── 8 CORE SKILLS (từ v2, nâng cấp) ───
-├── start/SKILL.md           ← /start [task]
-├── build/SKILL.md           ← /build [task] ⭐
+│── ─── 8 CORE SKILLS (từ v2, nâng cấp v4) ───
+├── start/SKILL.md           ← /start [task]          ⬆ 14-rule auto-select
+├── build/SKILL.md           ← /build [task] ⭐       ⬆ Architecture Spec Phase
 ├── fix/SKILL.md             ← /fix [bug]
 ├── save/SKILL.md            ← /save
 ├── plan/SKILL.md            ← /plan [feature]
-├── design/SKILL.md          ← /design [task]
+├── design/SKILL.md          ← /design [task]          ⬆ Token System + Component API
 ├── guard/SKILL.md           ← /guard [scope]
 ├── integrate/SKILL.md       ← /integrate [svc]
 │
-│── ─── 4 NEW SKILLS (v3) ───
-├── n8n-pro/SKILL.md         ← /n8n [task] — N8N workflow expert
-├── brainstorm/SKILL.md      ← /brainstorm [idea] — Ideation pipeline
-├── web-security/SKILL.md    ← /security [target] — Deep security audit
-├── review-website/SKILL.md  ← /review-web [url] — Website review
+│── ─── 4 SKILLS (v3) ───
+├── n8n-pro/SKILL.md         ← /n8n [task]             ⬆ MCP Server + Sub-workflows
+├── brainstorm/SKILL.md      ← /brainstorm [idea]
+├── web-security/SKILL.md    ← /security [target]
+├── review-website/SKILL.md  ← /review-web [url]
+│
+│── ─── 2 NEW SKILLS (v4) ───
+├── docs/SKILL.md            ← /docs [scope]           🆕 Documentation + ADR
+├── seo/SKILL.md             ← /seo [topic]            🆕 SEO + GEO Writer
 │
 │── ─── INFRASTRUCTURE ───
 ├── qdrant-memory/SKILL.md   ← Qdrant Layer 4 Memory
@@ -85,40 +95,44 @@ SSH Key: SHA256:nTSlO07MbIplXX/j2FAHlyuSb+MJxPO1yboDHJJidFs
 
 ---
 
-## 🎯 12 SKILLS — QUICK REFERENCE
+## 🎯 14 SKILLS — QUICK REFERENCE
 
 | # | Skill | Lệnh | Mục đích | Từ v |
 |---|---|---|---|---|
-| 1 | **start** | `/start [task]` | Khởi động phiên + chọn skill | v2 ⬆ |
-| 2 | **build** ⭐ | `/build [task]` | Viết code production-grade | v2 |
+| 1 | **start** | `/start [task]` | Khởi động phiên + chọn skill (14 rules) | v2 ⬆ |
+| 2 | **build** ⭐ | `/build [task]` | Code + Architecture Spec Phase | v2 ⬆ |
 | 3 | **fix** | `/fix [bug]` | Debug + ghi LESSONS | v2 |
 | 4 | **save** | `/save` | Review 7 tiêu chí + save + push | v2 |
 | 5 | **plan** | `/plan [feature]` | Tạo task blueprint | v2 |
-| 6 | **design** | `/design [task]` | UI/UX + design system | v2 |
+| 6 | **design** | `/design [task]` | UI/UX + Design Tokens + Component API | v2 ⬆ |
 | 7 | **guard** | `/guard [scope]` | Test + security + performance | v2 ⬆ |
 | 8 | **integrate** | `/integrate [svc]` | API + 3rd-party + webhook | v2 |
-| 9 | **n8n-pro** 🆕 | `/n8n [task]` | N8N workflow design + debug + MCP | v3 |
-| 10 | **brainstorm** 🆕 | `/brainstorm [idea]` | Ideation → Spec → Prototype | v3 |
-| 11 | **web-security** 🆕 | `/security [target]` | OWASP audit + CVE + hardening | v3 |
-| 12 | **review-website** 🆕 | `/review-web [url]` | Website review toàn diện 7 chiều | v3 |
+| 9 | **n8n-pro** | `/n8n [task]` | N8N + MCP Server + Sub-workflows + Scaling | v3 ⬆ |
+| 10 | **brainstorm** | `/brainstorm [idea]` | Ideation → Spec → Prototype | v3 |
+| 11 | **web-security** | `/security [target]` | OWASP audit + CVE + hardening | v3 |
+| 12 | **review-website** | `/review-web [url]` | Website review toàn diện 7 chiều | v3 |
+| 13 | **docs** 🆕 | `/docs [scope]` | Documentation + ADR + handoff | v4 |
+| 14 | **seo** 🆕 | `/seo [topic]` | SEO + GEO content writer | v4 |
 
 ---
 
-## 🔄 SESSION LIFECYCLE v3
+## 🔄 SESSION LIFECYCLE v4
 
 ```
 /start [task]  →  [auto-select skill]  →  /save
    │                    │                    │
-   ├─ Load context      ├─ /build           ├─ 7-criteria review
+   ├─ Load context      ├─ /build ⭐        ├─ 7-criteria review
    ├─ Check LESSONS     ├─ /fix             ├─ Write LESSONS
    ├─ Qdrant recall     ├─ /design          ├─ Update docs
    ├─ Scan blueprints   ├─ /n8n             ├─ Qdrant store
-   └─ Auto-select       ├─ /brainstorm      ├─ Atomic commit
-      skill             ├─ /security        └─ Push
+   └─ Auto-select       ├─ /guard           ├─ Atomic commit
+      14 skills         ├─ /integrate       └─ Push
+                        ├─ /plan
+                        ├─ /brainstorm
+                        ├─ /security
                         ├─ /review-web
-                        ├─ /guard
-                        ├─ /integrate
-                        └─ /plan
+                        ├─ /docs 🆕
+                        └─ /seo 🆕
 ```
 
 ---
@@ -149,7 +163,7 @@ SSH Key: SHA256:nTSlO07MbIplXX/j2FAHlyuSb+MJxPO1yboDHJJidFs
 | `docs/business-rules.md` | Logic nghiệp vụ thuần (KHÔNG code) | UI details |
 | `docs/api-endpoints.md` | REST API: method + URL + auth + request/response | Business logic |
 | `docs/setup.md` | Cài đặt môi trường dev/prod | Business rules |
-| `docs/security-audit.md` 🆕 | Audit results, CVEs, remediation plan | Code patches |
+| `docs/security-audit.md` | Audit results, CVEs, remediation plan | Code patches |
 
 ### Cách viết Architecture Rules (bắt buộc)
 
@@ -219,20 +233,22 @@ Status: ⬜ Not started | 🔄 In progress | ✅ Done | ⏸️ Blocked
 
 ---
 
-## 📋 CHEAT SHEET v3
+## 📋 CHEAT SHEET v4
 
 ```
 Bắt đầu phiên?           → /start [task]
-Viết code?                → /build [task]
+Viết code?                → /build [task]         ⭐ Architecture Spec
 Gặp bug?                  → /fix [bug]
 Feature phức tạp?         → /plan [feature] → /build
-Design / UI?              → /design [task]
+Design / UI?              → /design [task]         ⬆ Token System
 Test / audit code?        → /guard [scope]
 API / webhook?            → /integrate [service]
-N8N workflow?             → /n8n [task]           🆕
-Cần ý tưởng / spec?      → /brainstorm [idea]     🆕
-Audit bảo mật sâu?       → /security [target]     🆕
-Review website?           → /review-web [url]      🆕
+N8N workflow?             → /n8n [task]            ⬆ MCP Server
+Cần ý tưởng / spec?      → /brainstorm [idea]
+Audit bảo mật sâu?       → /security [target]
+Review website?           → /review-web [url]
+Viết docs / handoff?      → /docs [scope]          🆕
+Viết bài SEO / content?   → /seo [topic]           🆕
 Kết thúc phiên?           → /save
 ```
 
@@ -242,6 +258,7 @@ Kết thúc phiên?           → /save
 
 | Date | Change |
 |---|---|
-| **2026-03-04** | **v3.0 EXTENDED**: +4 skills mới (brainstorm, n8n-pro, web-security, review-website). Nâng cấp start (auto-select 12 skills) + guard (Supply Chain Security). |
+| **2026-03-04** | **v4.0 STRUCTURED VIBE**: +2 skills mới (/docs, /seo). Nâng cấp /build (Architecture Spec Phase), /design (Token System + Component API), /n8n (MCP Server + Sub-workflows + Scaling), /start (14-rule auto-select). Thêm Rule 4 (Architecture Spec). |
+| 2026-03-04 | v3.0 EXTENDED: +4 skills mới (brainstorm, n8n-pro, web-security, review-website). Nâng cấp start + guard. |
 | 2026-02-28 | v2.0: Gộp 26 skills → 8 unified skills. Thêm /plan, /guard. Archive 27 skills cũ. |
 | 2026-02-27 | v1.x: 26 skills, memory-optimizer, qdrant integration |
