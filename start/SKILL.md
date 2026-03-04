@@ -84,9 +84,13 @@ Dựa vào [task description], tự chọn skill phù hợp:
 | code, feature, thêm, tạo, viết | `/build` |
 | fix, bug, lỗi, sửa, error | `/fix` |
 | design, UI, giao diện, logo | `/design` |
-| test, security, audit, kiểm tra | `/guard` |
-| API, webhook, n8n, payment, integrate | `/integrate` |
+| test, kiểm tra code | `/guard` |
+| API, webhook, payment, integrate | `/integrate` |
 | plan, thiết kế, spec, blueprint | `/plan` |
+| n8n, workflow, automation, trigger | `/n8n` 🆕 |
+| ý tưởng, brainstorm, idea, compare | `/brainstorm` 🆕 |
+| bảo mật, security, OWASP, CVE, hack | `/security` 🆕 |
+| review web, đánh giá website, audit site | `/review-web` 🆕 |
 
 Xuất báo cáo:
 

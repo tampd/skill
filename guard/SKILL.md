@@ -44,10 +44,10 @@ Viết tests cho module chỉ định:
 
 ### Mode 2 — `/guard security`
 
-OWASP Top 10 audit:
+OWASP Top 10 + Supply Chain audit:
 
 ```
-Checklist:
+OWASP Checklist:
 [ ] SQL Injection: parameterized queries? Escape wildcards?
 [ ] XSS: {{ }} in Blade? React auto-escape? No {!! $userInput !!}?
 [ ] CSRF: @csrf in forms? SameSite cookies?
@@ -58,6 +58,15 @@ Checklist:
 [ ] Headers: HSTS, CSP, Referrer-Policy?
 [ ] Password: min 8 chars + mixed case + numbers?
 [ ] Audit: sensitive actions logged?
+
+Supply Chain Security (🆕 v3):
+[ ] npm audit / composer audit → 0 critical?
+[ ] Lock files committed (package-lock.json / composer.lock)?
+[ ] No typosquatting packages (verify package names)?
+[ ] Sub-dependencies checked (npm ls --all)?
+[ ] GitHub Dependabot / Snyk enabled?
+[ ] No postinstall scripts từ unknown packages?
+[ ] License compliance (no GPL in commercial)?
 ```
 
 ### Mode 3 — `/guard performance`

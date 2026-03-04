@@ -1,17 +1,29 @@
-# GEMINI — Skill Repository v2 (Production Code Framework)
+# GEMINI — Skill Repository v3 (Production Code Framework + Extended Arsenal)
 
 > **GitHub**: https://github.com/tampd/skill
 > **Local path**: /root/skill
-> **Cập nhật**: 2026-02-28 — **v2.0 MAJOR REWRITE**
+> **Cập nhật**: 2026-03-04 — **v3.0 EXTENDED ARSENAL**
 
 ---
 
 ## 🔑 THÔNG TIN QUAN TRỌNG
 
-### Skill System v2 — Unified Production Code Framework
-Phiên bản 2.0 gộp 26 skills rời rạc thành **8 skills tập trung**, kết hợp:
-- **Antigravity**: LESSONS.md persistence, 5-tier memory, session lifecycle
-- **bkns-minicrm (Claude Code)**: PR blueprints, mandatory testing, architecture rules density
+### Skill System v3 — Extended Arsenal
+Phiên bản 3.0 giữ nguyên 8 skills core ổn định từ v2 + bổ sung **4 skills mới** chuyên biệt:
+- **n8n-pro**: N8N workflow expert (7 sub-skills từ community best practices + MCP integration)
+- **brainstorm**: Ideation → Spec → Prototype pipeline (cho planning & sáng tạo)
+- **web-security**: OWASP Top 10 deep audit + CVE scanner + hardening + compliance
+- **review-website**: Đánh giá website toàn diện (UX/UI/SEO/Performance/Security/A11y)
+- Nâng cấp **start** (auto-select nhận diện 12 skills)
+- Nâng cấp **guard** (Supply Chain Security audit)
+
+### Triết lý v3: "Less is More, But Sharp"
+```
+❌ KHÔNG install 900+ skills rải rác → context rot, tool bloat
+✅ 12 skills tập trung, mỗi skill là "dao sắc" cho 1 mục đích
+✅ Progressive Disclosure: metadata nhẹ, instructions load khi cần
+✅ Mỗi skill có quy trình rõ ràng, evidence-based
+```
 
 ### GitHub Repository
 ```
@@ -26,94 +38,106 @@ SSH Key: SHA256:nTSlO07MbIplXX/j2FAHlyuSb+MJxPO1yboDHJJidFs
 
 ---
 
-## ⚠️ GLOBAL RULE: AI PHẢI HỎI KHI CHƯA RÕ
+## ⚠️ GLOBAL RULES
 
-> **RULE BẮT BUỘC CHO MỌI SKILL:**
-> Nếu trong quá trình làm việc, yêu cầu của user **chưa rõ nghĩa**, **chưa mô tả chuẩn ý định**, hoặc có **thông tin mâu thuẫn/thiếu**:
->
-> � **AI PHẢI HỎI user TRƯỚC KHI**:
-> - Lập kế hoạch làm việc (`/plan`)
-> - Viết code (`/build`)
-> - Ghi vào docs (`GEMINI.md`, `LESSONS.md`, `CHANGE_LOG.md`, bất kỳ file .md nào)
->
-> **Câu hỏi phải cụ thể**, ví dụ:
-> - "Bạn muốn KPI tính theo doanh thu thô hay doanh thu sau feedback?"
-> - "Module này cần RBAC cho role nào? ADMIN only hay cả EMPLOYEE?"
->
-> ❌ KHÔNG ĐƯỢC giả định và code/ghi docs khi chưa xác nhận.
+### Rule 1: AI PHẢI HỎI KHI CHƯA RÕ
+> Nếu yêu cầu chưa rõ nghĩa, thiếu thông tin, hoặc mâu thuẫn:
+> 🛑 AI PHẢI HỎI user TRƯỚC KHI lập kế hoạch, viết code, ghi docs.
+> ❌ KHÔNG giả định và code khi chưa xác nhận.
+
+### Rule 2: ĐỌC LESSONS TRƯỚC KHI CODE
+> Mỗi task PHẢI bắt đầu bằng việc đọc LESSONS.md + grep tags liên quan.
+> Không có ngoại lệ. Đây là cách AI "nhớ" để không lặp sai lầm.
+
+### Rule 3: EVIDENCE-BASED VERIFICATION
+> Không chấp nhận "nó chạy rồi". Phải có bằng chứng cụ thể:
+> curl output, test results, screenshot, hoặc log.
 
 ---
 
-## �📁 CẤU TRÚC SKILL REPOSITORY v2
+## 📁 CẤU TRÚC SKILL REPOSITORY v3
 
 ```
 /root/skill/
-├── GEMINI.md              ← File này — rules & context
-├── README.md              ← Hướng dẫn sử dụng skill system v2
+├── GEMINI.md                ← File này — brain & rules
+├── README.md                ← Hướng dẫn cài đặt
 │
-├── start/SKILL.md         ← /start [task] — Khởi động phiên
-├── build/SKILL.md         ← /build [task] — ⭐ SUPER SKILL viết code
-├── fix/SKILL.md           ← /fix [bug] — Debug + ghi bài học
-├── save/SKILL.md          ← /save — Review + Save + Push
-├── plan/SKILL.md          ← /plan [feature] — Tạo blueprint
-├── design/SKILL.md        ← /design [task] — UI/UX workflow
-├── guard/SKILL.md         ← /guard [scope] — Test + Security + Perf
-├── integrate/SKILL.md     ← /integrate [svc] — API + 3rd-party
+│── ─── 8 CORE SKILLS (từ v2, nâng cấp) ───
+├── start/SKILL.md           ← /start [task]
+├── build/SKILL.md           ← /build [task] ⭐
+├── fix/SKILL.md             ← /fix [bug]
+├── save/SKILL.md            ← /save
+├── plan/SKILL.md            ← /plan [feature]
+├── design/SKILL.md          ← /design [task]
+├── guard/SKILL.md           ← /guard [scope]
+├── integrate/SKILL.md       ← /integrate [svc]
 │
-├── qdrant-memory/SKILL.md ← Qdrant Layer 4 Memory (giữ nguyên)
+│── ─── 4 NEW SKILLS (v3) ───
+├── n8n-pro/SKILL.md         ← /n8n [task] — N8N workflow expert
+├── brainstorm/SKILL.md      ← /brainstorm [idea] — Ideation pipeline
+├── web-security/SKILL.md    ← /security [target] — Deep security audit
+├── review-website/SKILL.md  ← /review-web [url] — Website review
 │
-└── archive/               ← 27 skills cũ v1 (preserved)
-    ├── start/SKILL.md
-    ├── save/SKILL.md
-    ├── vibe-code/SKILL.md
-    └── ... (24 more)
+│── ─── INFRASTRUCTURE ───
+├── qdrant-memory/SKILL.md   ← Qdrant Layer 4 Memory
+└── archive/                 ← Skills cũ v1+v2 (preserved)
 ```
 
 ---
 
-## 🎯 8 SKILLS — QUICK REFERENCE
+## 🎯 12 SKILLS — QUICK REFERENCE
 
-| # | Skill | Lệnh | Mục đích | Thay thế v1 |
+| # | Skill | Lệnh | Mục đích | Từ v |
 |---|---|---|---|---|
-| 1 | **start** | `/start [task]` | Khởi động phiên + chọn skill | start + recall + supper |
-| 2 | **build** ⭐ | `/build [task]` | Viết code production-grade | vibe-code + gsd + 5 skills |
-| 3 | **fix** | `/fix [bug]` | Debug + ghi LESSONS | debugger + bug-journal |
-| 4 | **save** | `/save` | Review + save + push | review + save + checkpoint |
-| 5 | **plan** | `/plan [feature]` | Tạo task blueprint | MỚI (từ bkns-minicrm) |
-| 6 | **design** | `/design [task]` | UI/UX workflow | 4 design skills |
-| 7 | **guard** | `/guard [scope]` | Test + security + perf | 3 quality skills |
-| 8 | **integrate** | `/integrate [svc]` | API + 3rd-party | 5 integration skills |
+| 1 | **start** | `/start [task]` | Khởi động phiên + chọn skill | v2 ⬆ |
+| 2 | **build** ⭐ | `/build [task]` | Viết code production-grade | v2 |
+| 3 | **fix** | `/fix [bug]` | Debug + ghi LESSONS | v2 |
+| 4 | **save** | `/save` | Review 7 tiêu chí + save + push | v2 |
+| 5 | **plan** | `/plan [feature]` | Tạo task blueprint | v2 |
+| 6 | **design** | `/design [task]` | UI/UX + design system | v2 |
+| 7 | **guard** | `/guard [scope]` | Test + security + performance | v2 ⬆ |
+| 8 | **integrate** | `/integrate [svc]` | API + 3rd-party + webhook | v2 |
+| 9 | **n8n-pro** 🆕 | `/n8n [task]` | N8N workflow design + debug + MCP | v3 |
+| 10 | **brainstorm** 🆕 | `/brainstorm [idea]` | Ideation → Spec → Prototype | v3 |
+| 11 | **web-security** 🆕 | `/security [target]` | OWASP audit + CVE + hardening | v3 |
+| 12 | **review-website** 🆕 | `/review-web [url]` | Website review toàn diện 7 chiều | v3 |
 
 ---
 
-## 🔄 SESSION LIFECYCLE v2
+## 🔄 SESSION LIFECYCLE v3
 
 ```
-/start [task]  →  /build [task]  →  /save
-   │                  │               │
-   ├─ Load context    ├─ 8 steps      ├─ 7-criteria review
-   ├─ Check LESSONS   ├─ Mandatory    ├─ Write LESSONS
-   ├─ Scan blueprints │   testing     ├─ Update docs
-   └─ Auto-select     ├─ Blueprint    ├─ Atomic commit
-      skill            │   mode       └─ Push + archive
-                       └─ Arch rules
-                          enforced
-
-ALTERNATIVES:
-/fix [bug]      → For bugs: LESSONS check → debug → fix → record
-/plan [feature] → For complex features: spec → blueprint → /build
-/design [task]  → For UI/UX: brief → implement → verify
-/guard [scope]  → For quality: test → security → performance
-/integrate [svc]→ For APIs: design → implement → test → document
+/start [task]  →  [auto-select skill]  →  /save
+   │                    │                    │
+   ├─ Load context      ├─ /build           ├─ 7-criteria review
+   ├─ Check LESSONS     ├─ /fix             ├─ Write LESSONS
+   ├─ Qdrant recall     ├─ /design          ├─ Update docs
+   ├─ Scan blueprints   ├─ /n8n             ├─ Qdrant store
+   └─ Auto-select       ├─ /brainstorm      ├─ Atomic commit
+      skill             ├─ /security        └─ Push
+                        ├─ /review-web
+                        ├─ /guard
+                        ├─ /integrate
+                        └─ /plan
 ```
 
 ---
 
-## 📚 DOCUMENTATION STANDARDS (Học từ bkns-minicrm)
+## 🧠 MEMORY ARCHITECTURE (5 Tầng)
+
+| Tầng | File/System | Mục đích |
+|---|---|---|
+| **1 — Session** | `ACTIVE_CONTEXT.md` | Working memory (xóa sau /save) |
+| **2 — Project** | `GEMINI.md`, `LESSONS.md`, `CHANGE_LOG.md`, `NEXT-TODO.md` | Não bộ dự án |
+| **3 — Knowledge** | `docs/*.md` | Tài liệu kỹ thuật |
+| **4 — Vector** | Qdrant (MCP hoặc curl) | Cross-session semantic memory |
+| **5 — Skills** | `~/.gemini/antigravity/skills/` + `.agent/commands/` | Skill + Blueprints |
+
+---
+
+## 📚 DOCUMENTATION STANDARDS
 
 ### Nguyên tắc viết docs
-
-Mỗi dự án PHẢI có hệ thống docs theo chuẩn sau:
 
 | File | Viết gì | KHÔNG viết gì |
 |---|---|---|
@@ -125,10 +149,9 @@ Mỗi dự án PHẢI có hệ thống docs theo chuẩn sau:
 | `docs/business-rules.md` | Logic nghiệp vụ thuần (KHÔNG code) | UI details |
 | `docs/api-endpoints.md` | REST API: method + URL + auth + request/response | Business logic |
 | `docs/setup.md` | Cài đặt môi trường dev/prod | Business rules |
+| `docs/security-audit.md` 🆕 | Audit results, CVEs, remediation plan | Code patches |
 
 ### Cách viết Architecture Rules (bắt buộc)
-
-Mỗi project PHẢI define Architecture Rules trong GEMINI.md theo format:
 
 ```markdown
 ### Rule N: [Tên rule] (VI PHẠM = BUG)
@@ -142,8 +165,6 @@ Mỗi project PHẢI define Architecture Rules trong GEMINI.md theo format:
 ```
 
 ### Cách viết LESSONS.md entries (bắt buộc)
-
-Mỗi entry PHẢI có ✅❌ code examples:
 
 ```markdown
 ### 🟡 #WARN-NNN — Tiêu đề (YYYY-MM-DD)
@@ -198,28 +219,20 @@ Status: ⬜ Not started | 🔄 In progress | ✅ Done | ⏸️ Blocked
 
 ---
 
-## 🧠 MEMORY ARCHITECTURE (5 Tầng)
-
-| Tầng | File | Mục đích |
-|---|---|---|
-| **1 — Session** | `ACTIVE_CONTEXT.md` | Working memory (xóa sau /save) |
-| **2 — Project** | `GEMINI.md`, `LESSONS.md`, `CHANGE_LOG.md`, `NEXT-TODO.md` | Não bộ dự án |
-| **3 — Knowledge** | `docs/*.md` | Tài liệu kỹ thuật |
-| **4 — Vector** | Qdrant (curl scripts) | Cross-session semantic memory |
-| **5 — Skills** | `~/.gemini/antigravity/skills/` + `.agent/commands/` | Skill + Blueprints |
-
----
-
-## 📋 CHEAT SHEET v2
+## 📋 CHEAT SHEET v3
 
 ```
-Bắt đầu phiên?           → /start [mô tả task]
-Viết bất kỳ code nào?    → /build [task]
-Gặp bug?                 → /fix [mô tả bug]
+Bắt đầu phiên?           → /start [task]
+Viết code?                → /build [task]
+Gặp bug?                  → /fix [bug]
 Feature phức tạp?         → /plan [feature] → /build
 Design / UI?              → /design [task]
-Viết test / audit?        → /guard [scope]
-API / webhook / payment?  → /integrate [service]
+Test / audit code?        → /guard [scope]
+API / webhook?            → /integrate [service]
+N8N workflow?             → /n8n [task]           🆕
+Cần ý tưởng / spec?      → /brainstorm [idea]     🆕
+Audit bảo mật sâu?       → /security [target]     🆕
+Review website?           → /review-web [url]      🆕
 Kết thúc phiên?           → /save
 ```
 
@@ -229,5 +242,6 @@ Kết thúc phiên?           → /save
 
 | Date | Change |
 |---|---|
-| **2026-02-28** | **v2.0 MAJOR**: Gộp 26 skills → 8 unified skills. Thêm /plan (blueprint), /guard (QA). Nâng /build thành super skill 8 bước với mandatory testing. Archive 27 skills cũ. Thêm Documentation Standards (từ bkns-minicrm). Thêm AI Clarification Rule. |
+| **2026-03-04** | **v3.0 EXTENDED**: +4 skills mới (brainstorm, n8n-pro, web-security, review-website). Nâng cấp start (auto-select 12 skills) + guard (Supply Chain Security). |
+| 2026-02-28 | v2.0: Gộp 26 skills → 8 unified skills. Thêm /plan, /guard. Archive 27 skills cũ. |
 | 2026-02-27 | v1.x: 26 skills, memory-optimizer, qdrant integration |
