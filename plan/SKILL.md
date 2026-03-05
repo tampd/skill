@@ -1,13 +1,13 @@
 ---
-name: Plan — Spec-Driven Task Planner
-description: "Tạo change folder spec-driven cho task phức tạp: Qdrant recall → Research → Proposal → Specs → Design → Tasks → Beads epic. v5.0 Change Folder Structure + Delta Specs. Kích hoạt bằng /plan [feature name]."
+name: Plan — Ideation + Spec-Driven Task Planner (v6.0)
+description: "Brainstorm → Spec-driven planning: Ideation pipeline → Qdrant recall → Research → Proposal → Specs → Design → Tasks → Beads epic. v6.0 gộp brainstorm + plan. Change Folder Structure + Delta Specs. Kích hoạt bằng /plan [feature name] hoặc /brainstorm [idea]."
 ---
 
-# /plan [feature name]
+# /plan [feature name] — cũng nhận `/brainstorm [idea]`
 
-> **v5.0 SPEC-DRIVEN** — Lấy cảm hứng từ OpenSpec + Superpowers brainstorming
-> Mục tiêu: Spec trước code. Mỗi change = 1 folder với proposal + specs + design + tasks.
-> Sau khi done → delta specs merge vào docs → specs luôn up-to-date.
+> **v6.0 IDEATION + SPEC-DRIVEN** — Gộp brainstorm + plan
+> Mục tiêu: Từ ý tưởng mơ hồ → spec actionable → TDD tasks
+> Mỗi change = 1 folder với proposal + specs + design + tasks.
 
 ---
 
@@ -18,14 +18,45 @@ description: "Tạo change folder spec-driven cho task phức tạp: Qdrant reca
 | Fix bug nhỏ / sửa UI | ❌ Không — `/fix` hoặc `/build` trực tiếp |
 | Feature mới 1-2 files | ❌ Không — `/build` trực tiếp |
 | Feature phức tạp (3+ files) | ✅ `/plan` trước, `/build` sau |
-| Feature cần design decision | ✅ `/plan` + `/design` |
+| Feature cần design decision | ✅ `/plan` + `/craft` |
+| Ý tưởng mơ hồ, cần phân tích | ✅ `/plan` (= brainstorm + spec) |
+| So sánh nhiều approaches | ✅ `/plan` |
 | Dự án mới toàn bộ | ✅ `/plan` cho từng phase |
 
 ---
 
-## QUY TRÌNH 5 BƯỚC
+## QUY TRÌNH 6 BƯỚC
 
-### Step 1 — RESEARCH ⭐ (Nâng cấp: Brainstorming hard gate)
+### Step 0 — IDEATION (Brainstorm — cho ý tưởng mơ hồ) 🆕 v6.0
+
+> Bước này CHỈ chạy khi user có ý tưởng chưa rõ hoặc gọi `/brainstorm`.
+> Nếu feature đã rõ ràng → nhảy sang Step 1.
+
+```
+1. CAPTURE raw idea:
+   - Ghi lại CHÍNH XÁC lời user (không interpret sai)
+   - Hỏi 3 câu hỏi mở:
+     • "Vấn đề gốc mà bạn muốn giải quyết là gì?"
+     • "Ai là người dùng chính?"
+     • "Kết quả lý tưởng nhất trông như thế nào?"
+
+2. EXPAND — Brainstorm ≥ 3 approaches:
+   | # | Approach | Ưu điểm | Nhược điểm | Effort |
+   |---|---|---|---|---|
+   | A | [approach 1] | [pros] | [cons] | S/M/L |
+   | B | [approach 2] | [pros] | [cons] | S/M/L |
+   | C | [approach 3] | [pros] | [cons] | S/M/L |
+
+3. ANALYZE approach được chọn:
+   - User Stories: "Là [role], tôi muốn [action], để [benefit]"
+   - Technical Feasibility: stack hiện tại support?
+   - Risk Assessment: xác suất × impact
+   - Dependencies: API, data, approval cần?
+
+4. Output → Feature Spec sẵn sàng cho Step 1-5
+```
+
+### Step 1 — RESEARCH ⭐ (Brainstorming hard gate)
 
 ```
 1. EXPLORE context trước khi plan:

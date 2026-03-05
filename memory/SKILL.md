@@ -1,11 +1,11 @@
 ---
-name: Memory — 5-Layer Memory Management
-description: "Quản lý 5-Layer Memory System: checkpoint working memory, recall context từ Beads + Qdrant, xem trạng thái 5 tầng. Lệnh: /checkpoint, /recall, /memory. Kích hoạt bằng /memory hoặc /checkpoint hoặc /recall."
+name: Memory — 5-Layer Memory Management (v6.0)
+description: "Quản lý 5-Layer Memory System: checkpoint working memory, recall context từ Beads + Qdrant, xem trạng thái 5 tầng, context compression. Lệnh: /checkpoint, /recall, /memory. Kích hoạt bằng /memory hoặc /checkpoint hoặc /recall."
 ---
 
 # /memory | /checkpoint | /recall
 
-> **v5.0** — Quản lý Hybrid 5-Layer Memory System
+> **v6.0** — Quản lý Hybrid 5-Layer Memory System
 > Mục tiêu: AI không bao giờ quên context, không lặp lại sai lầm, làm việc xuyên suốt cross-session
 
 ---
@@ -166,6 +166,47 @@ Trước /save              ────────────→ Mandatory fu
 
 ---
 
+## CONTEXT COMPRESSION PROTOCOL 🆕 v6.0
+
+> Khi phiên dài, context window đầy → AI bắt đầu "quên" files đọc đầu phiên.
+
+```
+COMPRESSION LEVEL 1 — Tag-based LESSONS (nhẹ):
+  Thay vì đọc full LESSONS.md → chỉ grep tags liên quan task
+  Tiết kiệm: ~70% context của LESSONS.md
+
+COMPRESSION LEVEL 2 — Progressive file loading (trung bình):
+  Chỉ đọc file đang làm, đọc file khác khi CẦN THẬT SỰ
+  Tiết kiệm: ~60% context code files
+
+COMPRESSION LEVEL 3 — Summary mode (nặng):
+  Khi context > 80%: chỉ làm việc với ACTIVE_CONTEXT.md
+  Checkpoint ngay → gợi ý user bắt đầu phiên mới
+```
+
+#### Dấu hiệu Context Overflow:
+```
+🔴 AI nói "Xin lỗi, tôi không nhớ..." → Checkpoint ngay
+🔴 AI đưa quyết định mâu thuẫn → Context bị truncate
+🔴 AI hỏi lại info đã nói → Cần phiên mới
+```
+
+#### Document Load Order (3-Tier):
+```
+TIER 1 — LUÔN LOAD (mỗi /start):
+  GEMINI.md → rules, stack (~100 tokens)
+  LESSONS.md → grep relevant tags (~50 tokens)
+
+TIER 2 — LOAD KHI CẦN:
+  docs/architecture.md, docs/business-rules.md
+  docs/api-endpoints.md, docs/setup.md
+
+TIER 3 — LOAD KHI /build:
+  changes/<feature>/specs/ → chỉ spec đang build
+```
+
+---
+
 ## QUY TẮC
 
 - `/checkpoint` = KHÔNG BAO GIỜ từ chối. Luôn ghi dù context ít.
@@ -174,3 +215,5 @@ Trước /save              ────────────→ Mandatory fu
 - ACTIVE_CONTEXT.md bị xóa sau mỗi `/save` (memory consolidated)
 - Layer 4-5 không available → **bỏ qua im lặng**, KHÔNG gây lỗi
 - NEXT IMMEDIATE ACTION phải đủ chi tiết để "AI lạ" tiếp tục được
+- Context > 70% → cảnh báo user, gợi ý checkpoint
+

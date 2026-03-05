@@ -7,7 +7,7 @@ description: "Khởi động phiên làm việc toàn diện: load context, chec
 
 > **1 lệnh thay 3** — Gộp start + recall + supper cũ
 > Mục tiêu: Từ 0 → sẵn sàng code trong **< 60 giây**
-> **v5.0** — TDD Iron Law + Spec-Driven + 5-Layer Memory
+> **v6.0** — Memory-First Architecture + 14 Skills
 
 ---
 
@@ -140,22 +140,22 @@ Dựa vào [task description], tự chọn skill phù hợp:
 
 | Từ khóa trong task | Skill được chọn |
 |---|---|
-| code, feature, thêm, tạo, viết, build, module | `/build` |
-| TDD, test-driven, red-green, viết test | `/build` |
+| code, feature, thêm, tạo, viết, build, module, TDD, test-driven | `/build` |
 | fix, bug, lỗi, sửa, error, debug, crash, root cause | `/fix` |
-| design, UI, giao diện, logo, CSS, theme, layout | `/design` |
-| test, kiểm tra code, coverage, lint, audit | `/guard` |
+| design, UI, giao diện, CSS, theme, layout, component, frontend, responsive, token | `/craft` |
+| test, kiểm tra code, coverage, lint, audit, a11y, accessibility, WCAG, axe | `/quality` |
+| performance, lighthouse, tốc độ, LCP, CLS, bundle, Core Web Vitals | `/quality perf` |
+| deploy, launch, ship, CI/CD, production, pre-launch, checklist, monitor | `/ship` |
 | API, webhook, payment, integrate, 3rd-party | `/integrate` |
 | plan, thiết kế, spec, blueprint, roadmap, change folder, proposal | `/plan` |
+| ý tưởng, brainstorm, idea, compare, đánh giá approaches | `/plan` |
 | n8n, workflow, automation, trigger, queue | `/n8n` |
-| ý tưởng, brainstorm, idea, compare, đánh giá | `/brainstorm` |
 | bảo mật, security, OWASP, CVE, hack, pentest | `/security` |
-| review web, đánh giá website, audit site, lighthouse | `/review-web` |
 | docs, tài liệu, document, ADR, handoff, onboard | `/docs` |
 | SEO, viết bài, content, keyword, GEO, article, blog | `/seo` |
+| review web, đánh giá website, audit site | `/quality all` |
 | memory, checkpoint, recall, bộ nhớ, nhớ lại | `/memory` |
 | save, kết thúc, đóng phiên, commit, push | `/save` |
-| start, bắt đầu, khởi động, mở phiên | `/start` |
 
 > **Fallback**: Nếu không match pattern nào → hỏi user chọn skill.
 
@@ -193,9 +193,12 @@ Xuất báo cáo:
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 💡 Gõ lệnh skill ở trên để bắt đầu, hoặc:
-   /plan [feature]  → tạo blueprint trước
-   /build [task]    → bắt đầu code ngay
-   /fix [bug]       → debug ngay
+   /plan [feature]  → brainstorm + tạo spec
+   /build [task]    → bắt đầu code TDD
+   /fix [bug]       → debug systematic
+   /craft [task]    → UI/UX + frontend
+   /quality [scope] → test + a11y + perf
+   /ship check      → pre-launch checklist
    /memory          → quản lý 5-Layer Memory
 ```
 

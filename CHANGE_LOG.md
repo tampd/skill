@@ -2,6 +2,18 @@
 
 ## 2026-03-05
 
+### Changed
+- **v6.0 MEMORY-FIRST ARCHITECTURE** — Gộp thông minh 18→14 skills
+  - 🆕 `/craft`: Gộp design + frontend → UI lifecycle (setup/component/css/a11y)
+  - 🆕 `/quality`: Gộp guard + perf + review-website → quality gate (test/a11y/perf/all)
+  - 🆕 `/ship`: Pre-launch checklist + CI/CD + Monitoring + Rollback
+  - ⬆ `/plan`: Gộp brainstorm → Ideation Step 0
+  - ⬆ `/memory`: Context Compression Protocol + 3-Tier Load Order
+  - +4 Global Rules (9-12): A11y WCAG AA, Security Headers, Design Tokens, Perf Budget
+  - Website Development Workflow
+  - Zero-overlap documentation model
+  - Archived: design→craft, guard→quality, brainstorm→plan, review-website→quality
+
 ### Added
 - `LESSONS.md` — Bài học đầu tiên: #WARN-001 cross-reference consistency
 - `CHANGE_LOG.md` — File theo dõi thay đổi theo timeline
