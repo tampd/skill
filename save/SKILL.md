@@ -1,12 +1,12 @@
 ---
 name: Save — Đóng gói & Xuất bản Production Code
-description: "Kết thúc phiên làm việc toàn diện: review 7 tiêu chí, ghi LESSONS, cập nhật docs, Beads close + compact, Qdrant store knowledge, atomic commit, push. v4.1 tích hợp 5-Layer Memory. Kích hoạt bằng lệnh /save."
+description: "Kết thúc phiên v5.0: 2-stage review (spec compliance + code quality), ghi LESSONS, archive change folders + delta-spec merge, Beads close + compact, Qdrant store, atomic commit, push. Kích hoạt bằng /save."
 ---
 
 # /save
 
-> **1 lệnh thay 3** — Gộp review + save + checkpoint cũ
-> Mục tiêu: Code đã review → docs cập nhật → committed → pushed → memory archived
+> **v5.0** — 2-Stage Review + Change Archive
+> Code đã review (spec + quality) → docs cập nhật → archived → committed → pushed → memory consolidated.
 
 ---
 
@@ -23,9 +23,35 @@ Liệt kê files thay đổi, nhóm theo module.
 
 ---
 
-### Bước 2 — 7 TIÊU CHÍ REVIEW (Từ review skill — giữ nguyên)
+### Bước 2 — 2-STAGE REVIEW ⭐ (MỚI v5.0)
 
-Cho MỖI file thay đổi, kiểm tra:
+> Từ Superpowers: kiểm tra spec compliance TRƯỚC, rồi mới code quality.
+
+#### Stage 1: SPEC COMPLIANCE (từ Superpowers)
+
+```
+Kiểm tra code với spec/proposal (nếu có change folder):
+
+1. CODE ĐÚng SPEC?
+   - Tất cả requirements trong specs/spec.md đã implement?
+   - Scenarios trong spec đã handle?
+
+2. CODE THỪA?
+   - Có code/feature nào KHÔNG ở trong spec?
+   - Nếu có → xóa hoặc tạo change mới
+
+3. BEHAVIOR KHỚP?
+   - Behavior thực tế matches expected behavior?
+   - Edge cases handled?
+
+KẾT QUẢ:
+✅ Spec compliant — all requirements met, nothing extra
+❌ Issues: [liệt kê] → sửa trước khi tiếp tục Stage 2
+```
+
+> Nếu không có change folder → skip Stage 1, chỉ chạy Stage 2.
+
+#### Stage 2: CODE QUALITY (7 tiêu chí — giữ nguyên + enhanced)
 
 | # | Tiêu chí | Kiểm tra |
 |---|---|---|
@@ -33,22 +59,26 @@ Cho MỖI file thay đổi, kiểm tra:
 | ② | **UI/UX** | Responsive, contrast, ARIA, loading/empty/error states? |
 | ③ | **Security** | SQL injection, XSS, CSRF, hardcoded secrets? |
 | ④ | **Performance** | N+1 query, missing index, heavy computation? |
-| ⑤ | **Code Quality** | Magic numbers, DRY, naming, function length, strict types? |
-| ⑥ | **Verification** | Evidence đã có? (test pass / curl output / screenshot) |
-| ⑦ | **LESSONS Compliance** | Code mới có vi phạm bài học cũ trong LESSONS.md? |
+| ⑤ | **Code Quality** | Magic numbers, DRY, YAGNI, naming, types? |
+| ⑥ | **Test Coverage** | Tests viết trước code (TDD)? All pass? Evidence? |
+| ⑦ | **LESSONS Compliance** | Code mới có vi phạm bài học cũ? |
 
 **Output format:**
 ```
-① BUGS:          [✅ | ⚠️ N warning | 🛑 N lỗi]
-② UI/UX:         [✅ | ⚠️ | 🛑 | N/A]
-③ SECURITY:      [✅ | ⚠️ | 🛑]
-④ PERFORMANCE:   [✅ | ⚠️ | 🛑]
-⑤ CODE QUALITY:  [✅ | ⚠️ | 🛑]
-⑥ VERIFICATION:  [✅ Evidence đủ | ❌ Thiếu]
-⑦ LESSONS:       [✅ Tuân thủ | 🛑 Vi phạm #WARN-XXX]
+📋 STAGE 1 — SPEC COMPLIANCE:
+  [✅ All requirements met | ❌ Issues found]
+
+📋 STAGE 2 — CODE QUALITY:
+  ① BUGS:          [✅ | ⚠️ | 🛑]
+  ② UI/UX:         [✅ | ⚠️ | N/A]
+  ③ SECURITY:      [✅ | ⚠️ | 🛑]
+  ④ PERFORMANCE:   [✅ | ⚠️ | 🛑]
+  ⑤ CODE QUALITY:  [✅ | ⚠️ | 🛑]
+  ⑥ TEST COVERAGE: [✅ TDD verified | ❌ Tests missing]
+  ⑦ LESSONS:       [✅ Tuân thủ | 🛑 Vi phạm #WARN-XXX]
 ```
 
-> 🛑 Nếu có CRITICAL → **DỪNG**, yêu cầu sửa trước khi tiếp tục.
+> 🛑 CRITICAL issues → **DỪNG**, yêu cầu sửa trước khi commit.
 
 ---
 
@@ -57,112 +87,119 @@ Cho MỖI file thay đổi, kiểm tra:
 ```
 Hỏi: "Phiên này có gặp bug hoặc rút ra bài học gì không?"
 
-NẾU CÓ → Ghi vào LESSONS.md ngay:
+NẾU CÓ → Ghi vào LESSONS.md:
 
 ### [🔴|🟡|🟢] #WARN-NNN — Tiêu đề (YYYY-MM-DD)
-
 - **Mức độ:** 🔴 Critical | 🟡 Warning | 🟢 Info
-- **Thẻ:** #tag1, #tag2 (tối đa 3)
-- **Triệu chứng:** Mô tả lỗi quan sát được
-- **Nguyên nhân gốc:** WHY
-- **Cách fix:** Code snippet cụ thể
-- **Quy tắc rút ra:** Rule LUÔN áp dụng từ nay
-  // ✅ Đúng: [code example]
-  // ❌ Sai: [code example]
+- **Thẻ:** #tag1, #tag2
+- **Triệu chứng:** [description]
+- **Nguyên nhân gốc:** [WHY]
+- **Cách fix:**
+  // ✅ Đúng: [code]
+  // ❌ Sai: [code]
+- **Quy tắc rút ra:** [Rule]
 - **File liên quan:** `path/to/file`
-
-Cập nhật thống kê đầu LESSONS.md.
-
-NẾU KHÔNG → Bỏ qua, tiếp tục.
 ```
-
-> ❌ KHÔNG BAO GIỜ xóa LESSONS.md — chỉ thêm mới.
-> ✅ MỚI: Luôn thêm ✅❌ code examples (học từ bkns-minicrm)
 
 ---
 
-### Bước 4 — DOCS UPDATE
+### Bước 4 — CHANGE ARCHIVE ⭐ (MỚI v5.0)
 
-Cập nhật theo quy tắc One Source of Truth:
+> Từ OpenSpec: Archive change folders + merge delta specs.
+
+```
+1. NẾU có change folder (changes/<feature>/):
+   a. Verify: tất cả tasks trong tasks.md đã ✅?
+      ✅ → tiếp tục archive
+      ❌ → cảnh báo: "Còn N tasks chưa done. Archive anyway?"
+
+   b. MERGE DELTA SPECS:
+      → Đọc delta-specs.md
+      → Apply changes vào docs/ tương ứng:
+        - docs/architecture.md ← thêm sections mới
+        - docs/api-endpoints.md ← thêm endpoints mới
+        - GEMINI.md ← thêm rules mới (nếu có)
+      → Specs giờ phản ánh trạng thái MỚI
+
+   c. ARCHIVE:
+      → Move: changes/<feature>/ → archive/YYYY-MM-DD-<feature>/
+      → "✅ Change archived, specs updated"
+
+2. NẾU không có change folder → bỏ qua bước này
+```
+
+---
+
+### Bước 5 — DOCS UPDATE
 
 | File | Hành động |
 |---|---|
-| `CHANGE_LOG.md` | Thêm entry `## [vX.Y.Z] - YYYY-MM-DD` với Added/Fixed/Changed |
-| `NEXT-TODO.md` | XÓA task đã hoàn thành, THÊM task mới phát sinh |
-| `GEMINI.md` | Cập nhật version, Implementation Status, Development History |
-| `STATE.md` | Cập nhật phase/wave/task hiện tại (nếu dùng GSD) |
+| `CHANGE_LOG.md` | Thêm entry `## [vX.Y.Z] - YYYY-MM-DD` |
+| `NEXT-TODO.md` | XÓA task đã hoàn thành |
+| `GEMINI.md` | Cập nhật version, status |
+| `STATE.md` | Cập nhật phase/wave (nếu có) |
 
 ---
 
-### Bước 5 — ATOMIC COMMIT & PUSH
+### Bước 6 — ATOMIC COMMIT & PUSH
 
 ```bash
-# Nhóm commit theo module/feature:
+# Feature/fix commit (nếu chưa commit trong TDD cycle):
 git add [files cùng feature]
 git commit -m "feat(scope): mô tả 72 ký tự max"
 
+# Docs commit:
 git add [docs files]
 git commit -m "docs: update changelog vX.Y.Z"
+
+# Archive commit (nếu có):
+git add [archive/* delta changes]
+git commit -m "chore: archive change <feature-name>"
 
 # Push
 git push origin main
 ```
 
-Convention commits: `feat | fix | chore | docs | perf | sec | test`
-
-> 🔑 Mỗi feature/fix = 1 commit riêng. Không gom.
-
 ---
 
-### Bước 6 — MEMORY CONSOLIDATION (Enhanced v4.1)
+### Bước 7 — MEMORY CONSOLIDATION & END REPORT
 
 ```
-1. NẾU có ACTIVE_CONTEXT.md:
-   → Archive hoặc xóa (context đã persist vào docs)
-   → "✅ Working memory archived"
+1. NẾU có ACTIVE_CONTEXT.md → xóa (persisted vào docs)
 
-2. NẾU STATE.md tồn tại:
-   → Cập nhật: version, phase, task xong, task tiếp theo
-
-3. ⭐ BEADS CONSOLIDATION (Layer 5 — nếu available):
-   → Close các issues đã hoàn thành trong phiên:
-     bd close <id1> <id2> --reason "Completed in session" --json
-   → Tạo follow-up issues nếu có task chưa xong:
-     bd create "Follow-up: [mô tả]" -p 2 --json
-   → Gợi ý compact task cũ:
+2. ⭐ BEADS CONSOLIDATION (Layer 5):
+   → Close issues hoàn thành:
+     bd close <id1> <id2> --reason "Completed in session"
+   → Tạo follow-up nếu có:
+     bd create "Follow-up: [mô tả]" -p 2
+   → Compact task cũ:
      bd admin compact --days 90 --dry-run
-     NẾU có tasks cũ → hỏi user: "Có [N] tasks đã đóng > 90 ngày. Compact?"
-   → Nếu Beads chưa init → bỏ qua
 
-4. ⭐ QDRANT STORE (Layer 4 — nếu available):
-   → Tổng hợp session highlights:
-     - Lessons mới → qdrant_store(lesson, {project, tags, type: "lesson"})
-     - Patterns hay → qdrant_store(pattern, {project, tags, type: "pattern"})
-     - Quyết định quan trọng → qdrant_store(decision, {project, tags, type: "decision"})
-   → Nếu Qdrant chưa kết nối → bỏ qua
+3. ⭐ QDRANT STORE (Layer 4):
+   → Store session highlights:
+     - Lessons mới → type: "lesson"
+     - Patterns → type: "pattern"
+     - Decisions → type: "decision"
 ```
 
----
-
-### Bước 7 — END REPORT
-
+**End Report:**
 ```
 ✅ /save hoàn tất!
 
-📊 REVIEW: [✅ 7/7 pass | ⚠️ N warnings accepted]
-📝 LESSONS: [N bài học mới ghi | Không thay đổi]
+📋 REVIEW:
+  Stage 1 (Spec): [✅ Compliant | N/A]
+  Stage 2 (Quality): [✅ 7/7 pass | ⚠️ N warnings]
+📝 LESSONS: [N bài học mới | Không thay đổi]
+📦 ARCHIVE: [changes/<name>/ → archived | N/A]
 📋 DOCS: CHANGE_LOG ✅ | NEXT-TODO ✅ | GEMINI ✅
 📦 COMMITS: [N commits]
-🔗 PUSHED: main → origin (hash: xxxxxxx)
+🔗 PUSHED: main → origin
 
-🎯 BEADS (Layer 5):
-  [✅ N issues closed | 📋 N follow-ups created | Hoặc: "Chưa khởi tạo"]
-
-🧠 QDRANT (Layer 4):
-  [✅ N memories stored | Hoặc: "Chưa kết nối"]
+🎯 BEADS: [N issues closed | N follow-ups | Chưa init]
+🧠 QDRANT: [N memories stored | Chưa kết nối]
 
 🔜 TASK TIẾP THEO:
-  → [Task ưu tiên cao nhất từ Beads bd ready / NEXT-TODO.md]
+  → [Task ưu tiên từ Beads bd ready / NEXT-TODO]
 
 Gõ /start [task] để bắt đầu phiên mới!
 ```
@@ -171,9 +208,10 @@ Gõ /start [task] để bắt đầu phiên mới!
 
 ## QUY TẮC QUAN TRỌNG
 
-- 🛑 CRITICAL trong review → KHÔNG cho phép commit
-- ❌ Thiếu evidence verify → KHÔNG cho phép commit
+- 🛑 Stage 1 FAIL → KHÔNG cho phép commit (sửa spec compliance trước)
+- 🛑 CRITICAL trong Stage 2 → KHÔNG cho phép commit
+- ❌ Thiếu evidence verify → KHÔNG commit
 - ❌ Vi phạm LESSONS → phải sửa trước
-- ✅ Luôn dùng tool edit file — không chỉ in ra màn hình
+- ✅ Delta specs PHẢI merge khi archive
 - ✅ Commit message rõ WHY, không chỉ WHAT
 - ✅ LESSONS entry mới PHẢI có ✅❌ code examples

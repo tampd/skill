@@ -1,13 +1,17 @@
 ---
 name: Build — Production Code Workflow (Super Skill)
-description: "Quy trình viết code production-grade: từ blueprint → LESSONS check → Qdrant recall → spec → dependencies (Beads) → code → test → verify → commit → record (Beads close + Qdrant store). v4.1 tích hợp 5-Layer Memory. Kích hoạt bằng /build [task]."
+description: "Quy trình viết code production-grade TDD-first: blueprint → LESSONS check → Qdrant recall → spec → TDD (RED→GREEN→REFACTOR) → 2-stage review → commit → record. v5.0 Hybrid: TDD Iron Law + 5-Layer Memory. Kích hoạt bằng /build [task]."
 ---
 
 # /build [task description]
 
-> **SUPER SKILL** — Thay thế 7 skills cũ: vibe-code, gsd, typescript-pro, react-modernization, nextjs-app-router-patterns, nodejs-backend-patterns, frontend-scaffold
+> **SUPER SKILL v5.0** — TDD-First Production Code
 >
-> **Triết lý**: Production code, không phải vibe code. Mọi dòng code phải: tested, verified, documented.
+> **Triết lý**: Test-driven, spec-driven, memory-backed.
+> Mọi dòng code phải: **tested first**, verified, documented.
+
+> [!CAUTION]
+> **TDD IRON LAW**: Viết code trước test? → XÓA code. Bắt đầu lại. Không ngoại lệ.
 
 ---
 
@@ -15,15 +19,14 @@ description: "Quy trình viết code production-grade: từ blueprint → LESSON
 
 | Chế độ | Khi nào | Bước thực hiện |
 |---|---|---|
-| **Blueprint Mode** | Có file `.agent/commands/task-*.md` | Theo blueprint chính xác |
+| **Blueprint Mode** | Có file `.agent/commands/task-*.md` hoặc `changes/<name>/` | Theo blueprint/spec chính xác |
 | **Direct Mode** | Không có blueprint | 8 bước chuẩn bên dưới |
 
 ```
-NẾU /start gợi ý blueprint:
-  → Đọc .agent/commands/task-NNN-name.md
-  → Theo Step 1-4 của blueprint (Read → Implement → Test → Docs)
-  → Skip Step 1 SPEC (blueprint đã có)
-  → Vẫn chạy Step 0 LOAD + Step 4 TEST + Step 7 RECORD
+NẾU có blueprint hoặc change folder:
+  → Đọc spec + tasks → follow chính xác
+  → Vẫn BẮT BUỘC TDD cho mỗi task
+  → Vẫn chạy Step 0 LOAD + Step 4 TDD + Step 7 RECORD
 
 NẾU không có blueprint:
   → Chạy 8 bước đầy đủ bên dưới
@@ -48,7 +51,6 @@ NẾU không có blueprint:
 5. ⭐ QDRANT RECALL (Layer 4 — nếu available):
    → qdrant_find("[task description]")
    → Lấy top 3 patterns/lessons liên quan
-   → Hiển thị: "🧠 Qdrant nhớ: [N] patterns liên quan"
    → Nếu Qdrant chưa kết nối → bỏ qua, KHÔNG báo lỗi
 
 6. ⭐ BEADS CONTEXT (Layer 5 — nếu available):
@@ -59,87 +61,27 @@ NẾU không có blueprint:
    → Nếu Beads chưa init → bỏ qua, KHÔNG báo lỗi
 ```
 
-**LESSONS áp dụng cho task này:**
-```
-Liệt kê ở đây (ví dụ):
-⚠️ #WARN-002 — case-insensitive string comparison cho DB values
-⚠️ #WARN-005 — FK constraint xóa theo thứ tự con → cha
-```
-
 ---
 
 ### Step 0.5 — ARCHITECTURE SPEC (BẮT BUỘC cho project/module mới ≥ 3 files)
 
-> ⭐ **MỚI v4.0** — Vibe code CÓ CẤU TRÚC. Không code mà chưa có spec.
+> ⭐ Vibe code CÓ CẤU TRÚC. Không code mà chưa có spec.
 > Skip nếu task nhỏ (fix/patch 1-2 files) hoặc project đã có spec.
 
-**TRƯỚC KHI CODE BẤT KỲ FILE NÀO**, tạo file `.spec.md` (version-controlled cùng code):
+**TRƯỚC KHI CODE BẤT KỲ FILE NÀO**, tạo file `.spec.md`:
 
 ```markdown
 # [Project/Module Name] — Architecture Spec
 
-## 1. Site Map (Cấu trúc Routes/Pages)
-/ → Homepage
-/about → About page
-/dashboard → Dashboard (auth required)
-/api/v1/* → REST API endpoints
-
+## 1. Site Map (Routes/Pages)
 ## 2. Component Tree
-App
-├── Layout
-│   ├── Header (logo, nav, user menu)
-│   ├── Sidebar (menu items, collapse)
-│   └── Footer (links, copyright)
-├── Pages
-│   ├── Home (hero, features, CTA)
-│   ├── Dashboard (stats, charts, tables)
-│   └── Settings (profile, preferences)
-└── Shared
-    ├── Button (primary, secondary, ghost, danger)
-    ├── Card (header, body, footer slots)
-    ├── Modal (confirm, form, alert)
-    ├── Form (input, select, textarea, validation)
-    └── Table (sortable, searchable, paginated)
-
 ## 3. Data Flow
-User → Browser → [Frontend/Blade] → [Controller] → [Service Layer] → [Database]
-                                                   ↓
-                                            [Queue Jobs] → [Email/Webhook]
-
 ## 4. File Structure Convention
-src/ (hoặc app/ cho Laravel)
-├── Controllers/    ← Route handlers, validation, response
-├── Services/       ← Business logic (KHÔNG ở Controller)
-├── Models/         ← Database models, relationships
-├── Views/          ← Templates (Blade/React/Vue)
-├── Jobs/           ← Queue jobs (async processing)
-├── Mail/           ← Email templates
-└── Middleware/     ← Auth, RBAC, rate limiting
-
 ## 5. Design Tokens
-colors:
-  --color-primary: #2563eb (light) / #60a5fa (dark)
-  --color-secondary: #7c3aed
-  --bg-surface: #ffffff / #0f172a
-  --bg-card: #f8fafc / #1e293b
-  --text-primary: #0f172a / #f8fafc
-spacing:
-  --space-xs: 4px  | --space-sm: 8px  | --space-md: 16px
-  --space-lg: 24px | --space-xl: 32px | --space-2xl: 48px
-typography:
-  --font-heading: 'Inter', sans-serif
-  --font-body: 'Inter', sans-serif
-  --font-mono: 'JetBrains Mono', monospace
-
 ## 6. Tech Decisions (mini-ADR)
-| Quyết định | Lý do | Thay thế đã xem xét |
-|---|---|---|
-| [tech choice] | [why] | [alternatives] |
 ```
 
-**Output**: File `.spec.md` tại root hoặc `.agent/specs/[module].spec.md`
-
-> 🛑 **RULE**: Nếu đang build project mới hoặc module mới (≥ 3 files) mà CHƯA CÓ `.spec.md` → DỪNG và tạo trước.
+> 🛑 **RULE**: Module mới (≥ 3 files) mà CHƯA CÓ `.spec.md` → DỪNG và tạo trước.
 
 ---
 
@@ -152,17 +94,15 @@ WHY   : Vấn đề đang giải quyết là gì?
 WHAT  : Cần tạo/sửa file nào? [liệt kê cụ thể]
 HOW   : Dùng pattern/thư viện gì?
 DONE  : Acceptance criteria — khi nào biết là xong?
-TEST  : Làm sao verify? [curl/test/screenshot — BẮT BUỘC]
+TEST  : Test nào viết TRƯỚC? [TDD — failing test first]
 DEPS  : Cần gì trước? [migration/service/config — nếu có]
 ```
-
-> ⭐ **MỚI so với vibe-code cũ**: TEST và DEPS là bắt buộc, không optional.
 
 Với task phức tạp (> 3 files) → dùng Wave format:
 ```
 Wave 1 — Foundation: DB schema, models, migrations
 Wave 2 — Integration: Services, controllers, logic
-Wave 3 — Polish: UI, validation, edge cases, tests
+Wave 3 — Polish: UI, validation, edge cases
 ```
 
 ---
@@ -172,112 +112,153 @@ Wave 3 — Polish: UI, validation, edge cases, tests
 ```
 1. Files trong WHAT có phụ thuộc vào code chưa tồn tại?
    NẾU CÓ → DỪNG: "⚠️ Dependency missing: [file/service/table]"
-   → Gợi ý: implement dependency trước, hoặc viết stub
 
 2. Migration cần chạy trước?
-   → php artisan migrate:status / npx prisma migrate status
 
 3. Task trong NEXT-TODO.md có dependency nào chưa hoàn thành?
-   NẾU CÓ → cảnh báo và hỏi user có tiếp tục không
 
 4. ⭐ BEADS DEPENDENCY CHECK (Layer 5 — nếu available):
-   → NẾU task là Beads issue (bd-XXXX):
-     bd dep list <id> --json → check blocking issues
-     NẾU có blocker chưa close → cảnh báo: "⚠️ Blocked by bd-YYYY"
+   → bd dep list <id> --json → check blocking issues
    → bd update <id> --claim → claim task, set status in_progress
-   → Nếu Beads chưa init → bỏ qua, dùng NEXT-TODO.md
+   → Nếu Beads chưa init → bỏ qua
 ```
 
 ---
 
-### Step 3 — CODE (Architecture Rules Enforced)
+### Step 3 — TDD CODE ⭐ (THAY ĐỔI LỚN v5.0)
 
-#### PHP/Laravel Rules
-```php
-// ✅ DOs — BẮT BUỘC
-- Type hinting: function calculate(int $month): array
-- Null-safe: $value = $data['key'] ?? 'default';
-- Service layer: logic trong app/Services/, KHÔNG trong Controller
-- DB Transaction: DB::transaction(fn() => ...);
-- Bcmath cho tiền: bcadd($a, $b, 4), bcmul($a, $b, 4)
-- Batch pre-fetch: whereIn('ma_nv', $list) trước loop → tránh N+1
-- Escape wildcard: str_replace(['%','_'], ['\\%','\\_'], $search)
+> **🔥 TDD IRON LAW**: NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST
+> Viết code trước test? **XÓA code. Bắt đầu lại.**
 
-// ❌ DON'Ts — VI PHẠM = BUG
-- dd(), dump() trong production code
-- Hardcode giá trị salary/config → luôn dùng SystemConfig/PayrollFormula
-- passthru() → dùng Symfony\Process
-- eval($userInput) chưa sanitize → dùng FormulaService 3-layer
-- float cho tiền → luôn bcmath
+#### 3.1 — RED: Viết Failing Test
+
+```
+1. Xác định behavior cần test (1 behavior = 1 test)
+2. Viết test TRƯỚC — test phải THẤT BẠI vì code chưa tồn tại
+3. Chạy test → XÁC NHẬN test FAIL đúng lý do
+   ✅ FAIL vì "function not defined" → đúng
+   ❌ FAIL vì syntax error trong test → sửa test
 ```
 
-#### TypeScript/JavaScript Rules
+#### 3.2 — GREEN: Viết Code Tối Thiểu
+
+```
+1. Viết code TỐI THIỂU để test PASS
+   - Không optimize, không refactor, không gold-plate
+   - Chỉ đủ để test xanh
+
+2. Chạy test → XÁC NHẬN test PASS
+   ✅ PASS → tiếp tục REFACTOR
+   ❌ FAIL → sửa code (KHÔNG sửa test để pass)
+```
+
+#### 3.3 — REFACTOR: Clean Up
+
+```
+1. Code đã PASS → giờ clean up:
+   - DRY (Don't Repeat Yourself)
+   - YAGNI (You Aren't Gonna Need It)
+   - Đặt tên rõ ràng, xóa code thừa
+
+2. Chạy test → XÁC NHẬN vẫn PASS
+   ✅ Vẫn PASS → commit
+   ❌ FAIL → undo refactor, thử lại
+
+3. Chạy TẤT CẢ tests → không break gì
+```
+
+#### 3.4 — COMMIT
+
+```bash
+git add <test file> <implementation file>
+git commit -m "feat(module): add [behavior] with test"
+```
+
+> 🔄 **LẶP LẠI** cho mỗi behavior: RED → GREEN → REFACTOR → COMMIT
+
+#### TDD Exceptions (Hỏi user trước)
+| Trường hợp | Hành động |
+|---|---|
+| Throwaway prototype | Hỏi user: "Skip TDD cho prototype?" |
+| Config files | Không cần test |
+| Generated code | Không cần test |
+| UI styling (CSS only) | Visual verify thay test |
+| Emergency hotfix | Viết test SAU fix, nhưng PHẢI viết |
+
+#### Architecture Rules (Vẫn áp dụng trong GREEN phase)
+
+**PHP/Laravel:**
+```php
+// ✅ DOs
+- Type hinting, null-safe operators
+- Service layer (logic trong Services/, KHÔNG Controller)
+- DB::transaction() cho multi-step writes
+- bcmath cho tiền: bcadd(), bcmul(), scale=4
+- Batch pre-fetch: whereIn() trước loop
+
+// ❌ DON'Ts → VI PHẠM = BUG
+- dd(), dump() trong production
+- float cho tiền
+- Hardcode config values
+- eval() chưa sanitize
+```
+
+**TypeScript/JavaScript:**
 ```typescript
 // ✅ DOs
-- Explicit types: const fn = (id: number): Promise<User> => ...
-- Optional chaining: user?.profile?.avatar ?? '/default.png'
-- Error boundaries: try/catch với typed errors
-- Async/await thay vì callback hell
-- Prisma parameterized queries → KHÔNG raw SQL
+- Explicit types, optional chaining
+- Async/await, error boundaries
+- Prisma parameterized queries
 
 // ❌ DON'Ts
-- any type → dùng unknown hoặc generic
-- console.log trong production → dùng logger
-- eval() / new Function() → dùng safe expression evaluator
-- Magic numbers → đặt const/config có tên
+- any type, console.log production
+- eval(), magic numbers
 ```
 
-#### CSS/Blade Rules
+**CSS/Blade:**
 ```
-// ✅ DOs
-- Dùng CSS variables: var(--bg-surface), var(--text-primary)
-- Responsive: test 1024/768/480px breakpoints
-
-// ❌ DON'Ts
-- Hardcode dark colors: rgba(30,41,59,0.8) → dùng var(--bg-card)
-- Inline styles cho theme colors → dùng design system
+// ✅ CSS variables: var(--bg-surface)
+// ❌ Hardcode: rgba(30,41,59,0.8)
 ```
 
 ---
 
-### Step 4 — TEST (BẮT BUỘC — MỚI)
+### Step 4 — VERIFY (Empirical Evidence)
 
-> ⭐ **Đây là sự khác biệt lớn nhất so với vibe-code cũ.**
-> Mỗi task PHẢI có ít nhất 1 verification method.
+> Không chấp nhận "nó chạy rồi" — phải có **bằng chứng cụ thể**
 
-| Loại thay đổi | Test bắt buộc |
+| Loại thay đổi | Evidence bắt buộc |
 |---|---|
-| API endpoint mới | `curl -X POST URL -d data` → verify response |
-| Laravel migration | `php artisan migrate:status` |
-| Service logic | `php artisan test --filter TestName` hoặc manual verify |
+| API endpoint | `curl` response output |
+| DB migration | `migrate:status` output |
+| Service logic | Test results (pass/fail count) |
 | UI component | Browser test hoặc screenshot |
-| Database operation | Query verify: `SELECT COUNT(*) FROM table` |
-| Import/Export | File output sample check |
-| N8N webhook | Trigger test từ N8N |
-
-```
-TEST RESULTS:
-✅ [test name] — PASS [evidence]
-✅ [test name] — PASS [evidence]
-❌ [test name] — FAIL [reason] → FIX trước khi tiếp tục
-```
-
-> 🛑 Nếu TEST FAIL → sửa code, chạy lại. KHÔNG commit code chưa pass test.
-
----
-
-### Step 5 — VERIFY (Empirical Evidence)
-
-Không chấp nhận "nó chạy rồi" — phải có **bằng chứng cụ thể**:
+| Database op | Query verify output |
 
 ```
 EVIDENCE LOG:
 ┌─────────────────────────────────────┐
+│ ✅ All tests PASS: N/N             │
 │ ✅ curl response 200 + correct JSON │
-│ ✅ migrate:status output attached   │
 │ ✅ Screenshot: [mô tả]             │
-│ ✅ Test output: 5/5 pass            │
 └─────────────────────────────────────┘
+```
+
+---
+
+### Step 5 — SPEC COMPLIANCE CHECK ⭐ (MỚI v5.0)
+
+> Từ Superpowers: kiểm tra code có đúng spec không TRƯỚC khi review quality.
+
+```
+1. So sánh code với SPEC (Step 1) hoặc change proposal:
+   - Thiếu requirement nào? → implement
+   - Code thừa (không ở spec)? → xóa hoặc tạo ticket mới
+   - Behavior khác spec? → sửa lại
+
+2. KẾT QUẢ:
+   ✅ Spec compliant — all requirements met, nothing extra
+   ❌ Issues: [liệt kê]
 ```
 
 ---
@@ -289,17 +270,10 @@ EVIDENCE LOG:
 git add <files của task này>
 git commit -m "feat(module): mô tả ngắn gọn ≤ 72 ký tự"
 
-# Types:
-# feat  — tính năng mới
-# fix   — sửa bug
-# chore — task kỹ thuật (refactor, config)
-# docs  — chỉ cập nhật tài liệu
-# perf  — tối ưu performance
-# sec   — fix security
-# test  — thêm/sửa test
+# Types: feat | fix | chore | docs | perf | sec | test
 ```
 
-> 🔑 **1 task = 1 commit**. Không gom nhiều task.
+> 🔑 **1 TDD cycle = 1 commit**. Không gom nhiều behaviors.
 
 ---
 
@@ -311,23 +285,15 @@ git commit -m "feat(module): mô tả ngắn gọn ≤ 72 ký tự"
    - Set NEXT IMMEDIATE ACTION = task tiếp theo
 
 2. Phiên có bug/bài học mới?
-   NẾU CÓ → ghi LESSONS.md ngay (format: triệu chứng + gốc + fix + ✅❌ code)
+   NẾU CÓ → ghi LESSONS.md ngay (format: ✅❌ code examples)
    NẾU KHÔNG → tiếp task tiếp theo
 
-3. Cập nhật STATE.md (nếu dùng Wave):
-   - Wave hiện tại, task vừa xong, task tiếp theo
-
-4. ⭐ BEADS CLOSE (Layer 5 — nếu available):
-   → NẾU task là Beads issue (bd-XXXX):
-     bd close <id> --reason "Completed: [commit message]" --json
-   → NẾU phát hiện follow-up work:
-     bd create "Follow-up: [mô tả]" -p 2 --json
+3. ⭐ BEADS CLOSE (Layer 5 — nếu available):
+   → bd close <id> --reason "Completed: [commit message]" --json
    → Nếu Beads chưa init → bỏ qua
 
-5. ⭐ QDRANT STORE (Layer 4 — nếu available):
-   → NẾU có lesson/pattern mới:
-     qdrant_store(content, {project, type, tags, date})
-   → Metadata:  {type: "lesson"|"pattern"|"decision"|"bug_fix"}
+4. ⭐ QDRANT STORE (Layer 4 — nếu available):
+   → qdrant_store(content, {project, type, tags, date})
    → Nếu Qdrant chưa kết nối → bỏ qua
 ```
 
@@ -336,52 +302,12 @@ git commit -m "feat(module): mô tả ngắn gọn ≤ 72 ký tự"
 ## WAVE EXECUTION (Cho task phức tạp)
 
 ```
-🌊 Wave 1 — Foundation
-   DB schema, models, migrations, core types
-   → Commit khi hoàn thành 100%
-
-🌊 Wave 2 — Integration
-   Services, controllers, API endpoints, business logic
-   → Commit khi hoàn thành 100%
-
-🌊 Wave 3 — Polish
-   UI, validation, error handling, edge cases, tests
-   → Commit khi hoàn thành 100%
+🌊 Wave 1 — Foundation (TDD cho mỗi model/migration)
+🌊 Wave 2 — Integration (TDD cho mỗi service/controller)
+🌊 Wave 3 — Polish (TDD cho edge cases, visual verify cho UI)
 ```
 
 > **Rule**: Hoàn thành 100% Wave N TRƯỚC KHI bắt đầu Wave N+1.
-
----
-
-## BLUEPRINT MODE (Khi có .agent/commands/task-*.md)
-
-```
-Blueprint format (tạo bởi /plan):
-
-## Step 1 — Read (Docs cần đọc)
-- GEMINI.md (Rules: #3, #5)
-- LESSONS.md (grep: payment, formula)
-- docs/ARCHITECTURE.md (Section: Services)
-
-## Step 2 — Implementation
-### Files to Create/Modify
-  [file tree + logic flow + error handling]
-
-## Step 3 — Tests
-### Test Cases (Liệt kê cụ thể)
-  1. [input] → [expected output]
-  2. [edge case] → [expected behavior]
-
-## Step 4 — Documentation
-  - Update: CHANGE_LOG, NEXT-TODO
-  - Verify: docs/API_REFERENCE (nếu endpoint mới)
-```
-
-Khi chạy Blueprint Mode:
-1. Đọc blueprint → follow Steps 1-4 chính xác
-2. Vẫn apply Architecture Rules từ Step 3
-3. Vẫn chạy Test từ Step 4 (BẮT BUỘC)
-4. Vẫn chạy Record từ Step 7
 
 ---
 
@@ -389,14 +315,16 @@ Khi chạy Blueprint Mode:
 
 ```
 [ ] Đã đọc LESSONS.md trước khi code
-[ ] Không có dd()/dump()/console.log trong code mới
-[ ] Không hardcode magic numbers hoặc config values
-[ ] Xử lý null/undefined (null-safe operators)
-[ ] DB operations trong transaction nếu multi-step
-[ ] Monetary calculations dùng bcmath (PHP) / Decimal (JS)
-[ ] Input user đã validate và escape
-[ ] CSS dùng variables — không hardcode dark colors
-[ ] TEST đã pass (evidence attached)
-[ ] Commit message theo conventional commits
-[ ] LESSONS entry mới có ✅❌ code examples (nếu applicable)
+[ ] Test viết TRƯỚC code (TDD)
+[ ] Tất cả tests PASS
+[ ] Spec compliance: đúng spec, không code thừa
+[ ] Không có dd()/dump()/console.log
+[ ] Không hardcode magic numbers
+[ ] Null-safe operators
+[ ] DB transaction cho multi-step writes
+[ ] Monetary calculations dùng bcmath/Decimal
+[ ] Input validate và escape
+[ ] CSS dùng variables
+[ ] Commit message conventional commits
+[ ] Evidence attached
 ```

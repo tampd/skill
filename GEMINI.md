@@ -1,29 +1,28 @@
-# GEMINI — Skill Repository v4.1 (Hybrid Memory + Production Code Framework)
+# GEMINI — Skill Repository v5.0 (Hybrid Memory + TDD + Spec-Driven)
 
 > **GitHub**: https://github.com/tampd/skill
 > **Local path**: /root/skill
-> **Cập nhật**: 2026-03-04 — **v4.1 HYBRID MEMORY**
+> **Cập nhật**: 2026-03-05 — **v5.0 HYBRID UPGRADE**
 
 ---
 
 ## 🔑 THÔNG TIN QUAN TRỌNG
 
-### Skill System v4.1 — Hybrid Memory
-Phiên bản 4.1 nâng cấp từ v4.0 (14 skills) lên **15 skills**, tập trung:
-- 🆕 **memory**: 5-Layer Memory Management (/checkpoint, /recall, /memory)
-- ⬆ **start**: Thêm **Beads Ready** (Layer 5) + **Qdrant Recall** (Layer 4)
-- ⬆ **build**: Thêm **Qdrant recall** + **Beads claim/close** + **Qdrant store**
-- ⬆ **save**: Thêm **Beads close/compact** + **Qdrant store knowledge**
-- ⬆ **fix**: Thêm **Qdrant recall** trước debug + **Qdrant store** + **Beads close** sau fix
-- ⬆ **plan**: Thêm **Beads epic/task creation** + **Qdrant recall**
-- Giữ nguyên: docs, seo, design, n8n-pro, guard, integrate, brainstorm, web-security, review-website
+### Skill System v5.0 — Hybrid Upgrade
+Phiên bản 5.0 nâng cấp từ v4.1 (15 skills), tập trung **methodology**:
+- ⬆ **build**: 🔥 **TDD Iron Law** (RED→GREEN→REFACTOR) + Spec Compliance Check
+- ⬆ **plan**: 🔥 **Change Folder** (proposal/specs/design/tasks/delta-specs) + Brainstorming Hard Gate
+- ⬆ **fix**: 🔥 **4-Phase Systematic Debugging** (Root Cause Investigation mandatory)
+- ⬆ **save**: 🔥 **2-Stage Review** (Spec Compliance + Code Quality) + Change Archive + Delta Merge
+- Giữ nguyên: start, design, guard, integrate, n8n-pro, brainstorm, web-security, review-website, docs, seo, memory
+- Lấy cảm hứng từ: **Superpowers** (TDD, systematic-debugging) + **OpenSpec** (spec-driven, change folders)
 
-### Triết lý v4.1: "Never Forget"
+### Triết lý v5.0: "Test First, Spec First, Root Cause First"
 ```
-❌ KHÔNG AI được quên context giữa các phiên
+✅ TDD Iron Law: Viết test TRƯỚC code. Viết code trước test? XÓA.
+✅ Spec-Driven: Mỗi change = 1 folder (proposal + specs + design + tasks)
+✅ Systematic Debug: Tìm root cause TRƯỚC khi fix. KHÔNG fix symptoms.
 ✅ 5-Layer Memory: Working → Semantic → Episodic → Vector → Task Graph
-✅ Beads (Dolt SQL) cho task tracking với dependency graph
-✅ Qdrant (Vector DB) cho semantic search cross-project
 ✅ Graceful fallback: Layer 4-5 không available → bỏ qua im lặng
 ```
 
@@ -60,42 +59,55 @@ SSH Key: SHA256:nTSlO07MbIplXX/j2FAHlyuSb+MJxPO1yboDHJJidFs
 > Spec gồm: Site Map, Component Tree, Data Flow, File Structure, Design Tokens.
 > Xem chi tiết: `/build` Step 0.5.
 
-### Rule 5: BEADS CHO TASK TRACKING, NEXT-TODO LÀM FALLBACK (MỚI v4.1)
+### Rule 5: BEADS CHO TASK TRACKING, NEXT-TODO LÀM FALLBACK
 > Nếu dự án có `.beads/` → dùng `bd` CLI cho task management.
 > Nếu Beads chưa init hoặc không available → dùng NEXT-TODO.md như bình thường.
 > Layer 4-5 (Qdrant/Beads) KHÔNG bao giờ gây lỗi nếu không available.
 
+### Rule 6: TDD IRON LAW (MỚI v5.0)
+> Viết test TRƯỚC code. RED (fail) → GREEN (pass) → REFACTOR → COMMIT.
+> Viết code trước test? → XÓA code, bắt đầu lại. Không ngoại lệ.
+> **Exceptions** (hỏi user): throwaway prototype, config files, generated code, CSS-only.
+
+### Rule 7: BRAINSTORMING HARD GATE (MỚI v5.0)
+> `/plan` PHẢI hỏi clarifying questions + propose 2-3 approaches TRƯỚC.
+> KHÔNG tạo spec/change folder khi chưa được user approve approach.
+
+### Rule 8: ROOT CAUSE TRƯỚC FIX (MỚI v5.0)
+> `/fix` PHẢI xong Phase 1 (Root Cause Investigation) TRƯỚC KHI fix.
+> "Nó có vẻ rõ ràng" KHÔNG phải root cause. CHỨNG MINH bằng evidence.
+
 ---
 
-## 📁 CẤU TRÚC SKILL REPOSITORY v4.1
+## 📁 CẤU TRÚC SKILL REPOSITORY v5.0
 
 ```
 /root/skill/
 ├── GEMINI.md                ← File này — brain & rules
 ├── README.md                ← Hướng dẫn cài đặt
 │
-│── ─── 8 CORE SKILLS (từ v2, nâng cấp v4.1) ───
-├── start/SKILL.md           ← /start [task]          ⬆ Beads Ready + Qdrant Recall
-├── build/SKILL.md           ← /build [task] ⭐       ⬆ 5-Layer Memory hooks
-├── fix/SKILL.md             ← /fix [bug]             ⬆ Qdrant recall + store
-├── save/SKILL.md            ← /save                  ⬆ Beads close + Qdrant store
-├── plan/SKILL.md            ← /plan [feature]        ⬆ Beads epic creation
-├── design/SKILL.md          ← /design [task]          ⬆ Token System + Component API
+│── ─── 8 CORE SKILLS (v5.0 upgraded) ───
+├── start/SKILL.md           ← /start [task]          Beads Ready + Qdrant Recall
+├── build/SKILL.md           ← /build [task] ⭐       🔥 TDD Iron Law + Spec Check
+├── fix/SKILL.md             ← /fix [bug]             🔥 4-Phase Systematic Debug
+├── save/SKILL.md            ← /save                  🔥 2-Stage Review + Archive
+├── plan/SKILL.md            ← /plan [feature]        🔥 Change Folder + Hard Gate
+├── design/SKILL.md          ← /design [task]         Token System + Component API
 ├── guard/SKILL.md           ← /guard [scope]
 ├── integrate/SKILL.md       ← /integrate [svc]
 │
 │── ─── 4 SKILLS (v3) ───
-├── n8n-pro/SKILL.md         ← /n8n [task]             ⬆ MCP Server + Sub-workflows
+├── n8n-pro/SKILL.md         ← /n8n [task]            MCP Server + Sub-workflows
 ├── brainstorm/SKILL.md      ← /brainstorm [idea]
 ├── web-security/SKILL.md    ← /security [target]
 ├── review-website/SKILL.md  ← /review-web [url]
 │
 │── ─── 2 SKILLS (v4) ───
-├── docs/SKILL.md            ← /docs [scope]           Documentation + ADR
-├── seo/SKILL.md             ← /seo [topic]            SEO + GEO Writer
+├── docs/SKILL.md            ← /docs [scope]          Documentation + ADR
+├── seo/SKILL.md             ← /seo [topic]           SEO + GEO Writer
 │
 │── ─── 1 SKILL (v4.1) ───
-├── memory/SKILL.md          ← /memory /checkpoint /recall  🆕 5-Layer Management
+├── memory/SKILL.md          ← /memory /checkpoint /recall
 │
 │── ─── INFRASTRUCTURE ───
 ├── qdrant-memory/SKILL.md   ← Qdrant Layer 4 setup guide
@@ -106,44 +118,44 @@ SSH Key: SHA256:nTSlO07MbIplXX/j2FAHlyuSb+MJxPO1yboDHJJidFs
 
 ## 🎯 15 SKILLS — QUICK REFERENCE
 
-| # | Skill | Lệnh | Mục đích | Từ v |
+| # | Skill | Lệnh | Mục đích | v5.0 |
 |---|---|---|---|---|
-| 1 | **start** | `/start [task]` | Khởi động phiên + Beads ready + Qdrant recall | v2 ⬆ |
-| 2 | **build** ⭐ | `/build [task]` | Code + 5-Layer Memory hooks | v2 ⬆ |
-| 3 | **fix** | `/fix [bug]` | Debug + Qdrant recall/store + Beads close | v2 ⬆ |
-| 4 | **save** | `/save` | Review + Beads close/compact + Qdrant store | v2 ⬆ |
-| 5 | **plan** | `/plan [feature]` | Blueprint + Beads epic creation | v2 ⬆ |
-| 6 | **design** | `/design [task]` | UI/UX + Design Tokens + Component API | v2 ⬆ |
-| 7 | **guard** | `/guard [scope]` | Test + security + performance | v2 ⬆ |
-| 8 | **integrate** | `/integrate [svc]` | API + 3rd-party + webhook | v2 |
-| 9 | **n8n-pro** | `/n8n [task]` | N8N + MCP Server + Sub-workflows | v3 ⬆ |
-| 10 | **brainstorm** | `/brainstorm [idea]` | Ideation → Spec → Prototype | v3 |
-| 11 | **web-security** | `/security [target]` | OWASP audit + CVE + hardening | v3 |
-| 12 | **review-website** | `/review-web [url]` | Website review toàn diện 7 chiều | v3 |
-| 13 | **docs** | `/docs [scope]` | Documentation + ADR + handoff | v4 |
-| 14 | **seo** | `/seo [topic]` | SEO + GEO content writer | v4 |
-| 15 | **memory** 🆕 | `/memory` `/checkpoint` `/recall` | 5-Layer Memory management | v4.1 |
+| 1 | **start** | `/start [task]` | Khởi động phiên + Memory recall | |
+| 2 | **build** ⭐ | `/build [task]` | 🔥 **TDD** RED→GREEN→REFACTOR + Spec Check | ⬆ |
+| 3 | **fix** | `/fix [bug]` | 🔥 **4-Phase Systematic Debug** (root cause first) | ⬆ |
+| 4 | **save** | `/save` | 🔥 **2-Stage Review** + Change Archive + Delta Merge | ⬆ |
+| 5 | **plan** | `/plan [feature]` | 🔥 **Change Folder** + Brainstorming Hard Gate | ⬆ |
+| 6 | **design** | `/design [task]` | UI/UX + Design Tokens + Component API | |
+| 7 | **guard** | `/guard [scope]` | Test + security + performance | |
+| 8 | **integrate** | `/integrate [svc]` | API + 3rd-party + webhook | |
+| 9 | **n8n-pro** | `/n8n [task]` | N8N + MCP Server + Sub-workflows | |
+| 10 | **brainstorm** | `/brainstorm [idea]` | Ideation → Spec → Prototype | |
+| 11 | **web-security** | `/security [target]` | OWASP audit + CVE + hardening | |
+| 12 | **review-website** | `/review-web [url]` | Website review toàn diện 7 chiều | |
+| 13 | **docs** | `/docs [scope]` | Documentation + ADR + handoff | |
+| 14 | **seo** | `/seo [topic]` | SEO + GEO content writer | |
+| 15 | **memory** | `/memory` `/checkpoint` `/recall` | 5-Layer Memory management | |
 
 ---
 
-## 🔄 SESSION LIFECYCLE v4.1
+## 🔄 SESSION LIFECYCLE v5.0
 
 ```
 /start [task]  →  [auto-select skill]  →  /save
    │                    │                    │
-   ├─ Load context      ├─ /build ⭐        ├─ 7-criteria review
-   ├─ Check LESSONS     ├─ /fix             ├─ Write LESSONS
-   ├─ Beads ready 🆕    ├─ /design          ├─ Beads close + compact 🆕
-   ├─ Qdrant recall 🆕  ├─ /n8n             ├─ Qdrant store 🆕
-   ├─ Scan blueprints   ├─ /guard           ├─ Update docs
-   └─ Auto-select       ├─ /integrate       ├─ Atomic commit
-      15 skills         ├─ /plan            └─ Push
-                        ├─ /brainstorm
-                        ├─ /security
-                        ├─ /review-web
-                        ├─ /docs
-                        ├─ /seo
-                        └─ /memory 🆕
+   ├─ Load context      ├─ /build ⭐        ├─ 2-Stage Review 🔥
+   ├─ Check LESSONS     │  TDD: RED→GREEN   │  Stage 1: Spec compliance
+   ├─ Beads ready       │  →REFACTOR→COMMIT │  Stage 2: Code quality (7)
+   ├─ Qdrant recall     ├─ /plan            ├─ Change Archive 🔥
+   ├─ Scan changes/     │  Hard Gate → Ask  │  delta merge → docs/
+   └─ Auto-select       │  → Change Folder  ├─ Write LESSONS
+      15 skills         ├─ /fix             ├─ Beads close + compact
+                        │  4-Phase Debug 🔥  ├─ Qdrant store
+                        │  Root Cause FIRST  ├─ Atomic commit
+                        ├─ /design           └─ Push
+                        ├─ /n8n
+                        ├─ /guard
+                        └─ ...
 ```
 
 ---
@@ -206,29 +218,19 @@ SSH Key: SHA256:nTSlO07MbIplXX/j2FAHlyuSb+MJxPO1yboDHJJidFs
 - **File liên quan:** `path/to/file`
 ```
 
-### Cách viết Task Blueprint (.agent/commands/task-NNN.md)
+### Cách viết Change Folder (v5.0 — tạo bởi /plan)
 
-Tạo bởi `/plan`, follow bởi `/build`:
-
-```markdown
-> **Complexity: [S|M|L]**
-
-# Task-NNN: [Feature Name]
-
-## Step 1 — Read Rules & Docs
-- `GEMINI.md` (Rules: [chỉ rõ rule nào])
-- `LESSONS.md` (grep: [keywords])
-- `docs/[doc].md` (Section: [chỉ rõ])
-
-## Step 2 — Implementation
-[File tree + logic flow + error handling table]
-
-## Step 3 — Tests
-[Liệt kê từng test case cụ thể]
-
-## Step 4 — Documentation
-[Chỉ rõ files nào cần update]
 ```
+changes/<feature-name>/
+├── proposal.md      ← WHY: Business context, impact, scope
+├── specs/
+│   └── spec.md      ← WHAT: Requirements & scenarios
+├── design.md        ← HOW: Technical approach, architecture
+├── tasks.md         ← TDD bite-sized tasks (2-5 min each)
+└── delta-specs.md   ← Merge into docs/ when archived
+```
+
+> Xem chi tiết: `/plan` SKILL.md
 
 ### Cách viết NEXT-TODO.md (bảng tracking)
 
@@ -244,26 +246,26 @@ Status: ⬜ Not started | 🔄 In progress | ✅ Done | ⏸️ Blocked
 
 ---
 
-## 📋 CHEAT SHEET v4.1
+## 📋 CHEAT SHEET v5.0
 
 ```
 Bắt đầu phiên?           → /start [task]
-Viết code?                → /build [task]         ⭐ 5-Layer Memory hooks
-Gặp bug?                  → /fix [bug]            ⬆ Qdrant recall
-Feature phức tạp?         → /plan [feature] → /build
-Design / UI?              → /design [task]         ⬆ Token System
+Viết code?                → /build [task]         🔥 TDD Iron Law
+Gặp bug?                  → /fix [bug]            🔥 4-Phase Systematic
+Feature phức tạp?         → /plan [feature]       🔥 Change Folder + Hard Gate
+Design / UI?              → /design [task]
 Test / audit code?        → /guard [scope]
 API / webhook?            → /integrate [service]
-N8N workflow?             → /n8n [task]            ⬆ MCP Server
+N8N workflow?             → /n8n [task]
 Cần ý tưởng / spec?      → /brainstorm [idea]
 Audit bảo mật sâu?       → /security [target]
 Review website?           → /review-web [url]
 Viết docs / handoff?      → /docs [scope]
 Viết bài SEO / content?   → /seo [topic]
-Lưu context giữa phiên?  → /checkpoint            🆕
-Khôi phục context?        → /recall                🆕
-Xem trạng thái memory?    → /memory                🆕
-Kết thúc phiên?           → /save
+Lưu context giữa phiên?  → /checkpoint
+Khôi phục context?        → /recall
+Xem trạng thái memory?    → /memory
+Kết thúc phiên?           → /save                 🔥 2-Stage Review + Archive
 ```
 
 ---
@@ -272,8 +274,9 @@ Kết thúc phiên?           → /save
 
 | Date | Change |
 |---|---|
-| **2026-03-04** | **v4.1 HYBRID MEMORY**: +1 skill mới (/memory, /checkpoint, /recall). Thêm Layer 5 Beads (task graph) + nâng cấp Layer 4 Qdrant. Nâng cấp /start (Beads ready + Qdrant recall), /build (5-Layer hooks), /save (Beads close/compact + Qdrant store), /fix (Qdrant recall/store + Beads close), /plan (Beads epic). Thêm Rule 5. 14 → 15 skills. |
-| 2026-03-04 | v4.0 STRUCTURED VIBE: +2 skills mới (/docs, /seo). Nâng cấp /build (Architecture Spec Phase), /design (Token System + Component API), /n8n (MCP Server + Sub-workflows + Scaling), /start (14-rule auto-select). Thêm Rule 4 (Architecture Spec). |
-| 2026-03-04 | v3.0 EXTENDED: +4 skills mới (brainstorm, n8n-pro, web-security, review-website). Nâng cấp start + guard. |
-| 2026-02-28 | v2.0: Gộp 26 skills → 8 unified skills. Thêm /plan, /guard. Archive 27 skills cũ. |
+| **2026-03-05** | **v5.0 HYBRID UPGRADE**: Nâng cấp 4 skills core từ Superpowers + OpenSpec. /build: TDD Iron Law (RED→GREEN→REFACTOR), Spec Compliance Check. /plan: Change Folder (proposal+specs+design+tasks+delta-specs), Brainstorming Hard Gate. /fix: 4-Phase Systematic Debugging, Root Cause Iron Law. /save: 2-Stage Review (Spec+Quality), Change Archive + Delta Merge. Thêm Rule 6-8. |
+| 2026-03-04 | v4.1 HYBRID MEMORY: +1 skill (/memory). Layer 5 Beads + Layer 4 Qdrant. Thêm Rule 5. |
+| 2026-03-04 | v4.0 STRUCTURED VIBE: +2 skills (/docs, /seo). Architecture Spec Phase. Thêm Rule 4. |
+| 2026-03-04 | v3.0 EXTENDED: +4 skills (brainstorm, n8n-pro, web-security, review-website). |
+| 2026-02-28 | v2.0: Gộp 26 skills → 8 unified skills. Thêm /plan, /guard. |
 | 2026-02-27 | v1.x: 26 skills, memory-optimizer, qdrant integration |

@@ -1,165 +1,215 @@
 ---
-name: Fix — Debug & Lessons Workflow
-description: "Quy trình debug và ghi bài học toàn diện: Qdrant recall → check LESSONS cũ → reproduce → isolate → fix → test → record (Qdrant store + Beads close). v4.1 tích hợp 5-Layer Memory. Kích hoạt bằng /fix [bug description]."
+name: Fix — Systematic Debug & Lessons Workflow
+description: "Quy trình debug 4-phase systematic: Qdrant recall → LESSONS check → Root Cause Investigation → Pattern Analysis → Hypothesis Testing → Fix + TDD test → record. v5.0 Iron Law: KHÔNG fix nếu chưa tìm root cause. Kích hoạt bằng /fix [bug description]."
 ---
 
 # /fix [bug description]
 
-> **2-in-1** — Gộp `debugger` + `bug-memory-journal`
-> Mục tiêu: Fix bug + ghi bài học + KHÔNG BAO GIỜ gặp lại cùng bug
+> **v5.0 SYSTEMATIC DEBUG** — Lấy cảm hứng từ Superpowers systematic-debugging
+> Mục tiêu: Root cause TRƯỚC, fix SAU. Ghi bài học. KHÔNG BAO GIỜ gặp lại.
+
+> [!CAUTION]
+> **IRON LAW**: KHÔNG FIX nếu chưa xong Phase 1 (Root Cause Investigation).
+> Quick patch = nợ kỹ thuật. Symptom fix = failure.
 
 ---
 
-## QUY TRÌNH 6 BƯỚC
+## QUY TRÌNH 4 PHASE + RECORD
 
-### Step 1 — LESSONS + QDRANT SEARCH (TRƯỚC KHI DEBUG)
+### Phase 0 — MEMORY RECALL (TRƯỚC KHI DEBUG)
 
 ```
-1. Đọc LESSONS.md
-2. Grep: entry nào MATCH với [bug description]?
+1. Đọc LESSONS.md → grep entries MATCH với [bug description]
    - Tìm theo tags, file liên quan, triệu chứng tương tự
-3. NẾU TÌM THẤY:
+
+2. NẾU TÌM THẤY:
    📌 "Bug này GIỐNG #WARN-XXX! Solution đã biết:"
    → Hiển thị cách fix từ LESSONS
-   → Apply fix → verify → XONG (skip step 2-4)
-4. NẾU KHÔNG TÌM THẤY:
-   → "Bug mới. Bắt đầu debug systematic."
-   → Tiếp tục Step 2
+   → Apply fix → verify → viết test → XONG (skip Phase 1-3)
 
-5. ⭐ QDRANT RECALL (Layer 4 — nếu available):
+3. NẾU KHÔNG TÌM THẤY:
+   → "Bug mới. Bắt đầu 4-phase systematic debugging."
+
+4. ⭐ QDRANT RECALL (Layer 4):
    → qdrant_find("bug: [bug description]")
-   → Tìm bugs tương tự đã fix trước đó (cross-project)
-   → Hiển thị: "🧠 Qdrant: [N] bugs tương tự đã fix"
+   → Tìm bugs tương tự đã fix (cross-project)
    → Nếu Qdrant chưa kết nối → bỏ qua
 ```
 
-> 🎯 **Mục tiêu**: 50% bugs đã gặp rồi → fix trong < 1 phút nhờ LESSONS.
+> 🎯 Mục tiêu: 50% bugs đã gặp rồi → fix trong < 1 phút nhờ LESSONS.
 
 ---
 
-### Step 2 — REPRODUCE
+### Phase 1 — ROOT CAUSE INVESTIGATION 🔍 (BẮT BUỘC)
+
+> 🛑 **IRON LAW**: Nếu chưa xong Phase 1 → KHÔNG ĐƯỢC propose fix.
+> "Nó có vẻ rõ ràng" KHÔNG phải root cause. CHỨNG MINH bằng evidence.
 
 ```
-1. Capture chính xác:
-   - Error message / stack trace
-   - URL / endpoint / page bị lỗi
-   - Steps to reproduce (1-2-3)
-   - Expected behavior vs actual behavior
+1. ĐỌC ERROR MESSAGES — KỸ, TOÀN BỘ
+   - Không skip error messages hay warnings
+   - Đọc stack traces HOÀN CHỈNH
+   - Ghi lại: line numbers, file paths, error codes
+   - Error message thường chứa solution → đọc trước khi guess
 
-2. Reproduce error:
-   - Chạy lại exact steps → confirm error tái hiện
-   - NẾU không tái hiện → thu thập thêm context
-```
+2. REPRODUCE CONSISTENTLY
+   - Trigger lỗi reliably → exact steps (1-2-3)
+   - Xảy ra every time? Intermittent?
+   - NẾU không reproduce được → thu thập thêm data, KHÔNG guess
 
----
-
-### Step 3 — ISOLATE (Root Cause Analysis)
-
-```
-Systematic approach:
-
-1. Check recent changes:
-   git log --oneline -10       → commit nào gần nhất liên quan?
+3. CHECK RECENT CHANGES
+   git log --oneline -10       → commit gần nhất liên quan?
    git diff HEAD~3 [file]      → code gì đã thay đổi?
+   - New dependencies? Config changes?
 
-2. Form hypothesis:
-   "Bug xảy ra vì [hypothesis]"
+4. TRACE DATA FLOW (cho bugs sâu)
+   - Bad value đến từ đâu?
+   - Ai gọi function này với bad value?
+   - Trace NGƯỢC lên cho đến khi tìm SOURCE
+   - Fix tại SOURCE, không fix tại symptom
 
-3. Test hypothesis:
-   - Add strategic debug logging (tạm thời)
-   - Inspect variable states tại failure point
-   - Binary search: comment out code blocks → tìm dòng gây lỗi
+5. GATHER EVIDENCE (cho multi-component systems)
+   - Log ở MỖI component boundary:
+     input vào → output ra → state tại mỗi layer
+   - Chạy 1 lần để gather evidence
+   - Evidence cho thấy WHERE it breaks
+   - THEN investigate failing component
+```
 
-4. Confirm root cause:
-   ✅ "Root cause: [giải thích cụ thể]"
-   ❌ "Hypothesis sai → thử hypothesis khác"
+**Output Phase 1:**
+```
+🔍 ROOT CAUSE IDENTIFIED:
+   Symptom: [mô tả lỗi quan sát]
+   Root Cause: [WHY — nguyên nhân gốc chứng minh được]
+   Evidence: [data/log/trace chứng minh]
+   Location: [exact file:line]
 ```
 
 ---
 
-### Step 4 — FIX (Minimal Change)
+### Phase 2 — PATTERN ANALYSIS 📊
 
 ```
-Nguyên tắc:
-- Sửa ROOT CAUSE, không sửa SYMPTOM
-- Minimal change → dễ review, dễ revert
-- KHÔNG refactor code xung quanh trong fix commit
-- Remove debug logging trước khi commit
+1. TÌM WORKING EXAMPLES
+   - Code tương tự đang HOẠT ĐỘNG trong cùng codebase?
+   - Pattern reference (docs, framework docs)?
 
-Architecture Rules vẫn áp dụng:
-- Bcmath cho tiền
-- Transaction cho multi-step DB
-- Null-safe operators
-- No hardcode values
+2. SO SÁNH KHÁC BIỆT
+   - Working code vs broken code → liệt kê MỌI khác biệt
+   - KHÔNG assume "cái này không ảnh hưởng"
+
+3. HIỂU DEPENDENCIES
+   - Component này cần gì? (config, env, other services)
+   - Assumptions nào đang sai?
 ```
 
 ---
 
-### Step 5 — TEST (Prove fix works)
+### Phase 3 — HYPOTHESIS & TESTING 🧪
 
 ```
-1. Verify fix:
-   - Chạy lại exact reproduction steps → error KHÔNG còn
-   - Evidence: [curl output / test pass / screenshot]
+1. STATE RÕ RÀNG:
+   "Tôi nghĩ [X] là root cause vì [Y]"
+   - Viết ra rõ ràng, cụ thể
 
-2. Regression check:
+2. TEST TỐI THIỂU:
+   - Thay đổi NHỎ NHẤT có thể để test hypothesis
+   - 1 biến tại 1 thời điểm
+   - KHÔNG fix nhiều thứ cùng lúc
+
+3. VERIFY:
+   ✅ Hypothesis đúng → Phase 4 (Fix)
+   ❌ Hypothesis sai → Form NEW hypothesis (KHÔNG stack fixes)
+
+4. KHI KHÔNG BIẾT:
+   - Nói rõ: "Tôi chưa hiểu [X]"
+   - KHÔNG giả vờ biết
+   - Research thêm hoặc hỏi user
+```
+
+---
+
+### Phase 4 — IMPLEMENTATION 🔧
+
+```
+1. FIX ROOT CAUSE (không fix SYMPTOM):
+   - Minimal change → dễ review, dễ revert
+   - KHÔNG refactor xung quanh trong fix commit
+   - Remove debug logging trước khi commit
+   - Architecture Rules vẫn áp dụng
+
+2. TDD TEST CHO BUG ⭐ (MỚI v5.0):
+   🔴 RED: Viết test reproduce bug → chạy → FAIL (bug tồn tại)
+   🟢 GREEN: Apply fix → chạy test → PASS (bug đã fix)
+   🔵 VERIFY: Chạy TẤT CẢ tests → không regression
+
+3. REGRESSION CHECK:
    - Chạy existing tests → không break gì mới
    - Check related functionality → vẫn hoạt động
-
-3. Edge cases:
-   - Null input? Empty array? Zero value? Negative number?
-   - Concurrent requests? Race condition?
+   - Edge cases: null, empty, zero, negative, concurrent
 ```
 
 ---
 
-### Step 6 — RECORD (LESSONS + COMMIT)
+### RECORD — LESSONS + COMMIT + STORE
 
 ```
 1. COMMIT:
-   git add [fix files only]
-   git commit -m "fix(module): mô tả bug đã sửa"
+   git add [fix files + test files]
+   git commit -m "fix(module): [root cause description]"
 
-2. GHI LESSONS.MD NGAY — BẮT BUỘC cho mọi bug fix:
+2. GHI LESSONS.MD — BẮT BUỘC cho MỌI bug fix:
 
-### 🟡 #WARN-NNN — Tiêu đề ngắn gọn (YYYY-MM-DD)
+### 🟡 #WARN-NNN — Tiêu đề (YYYY-MM-DD)
 
 - **Mức độ:** 🔴 Critical | 🟡 Warning | 🟢 Info
 - **Thẻ:** #tag1, #tag2
-- **Triệu chứng:** [mô tả lỗi quan sát được]
-- **Nguyên nhân gốc:** [WHY — root cause]
+- **Triệu chứng:** [mô tả lỗi quan sát]
+- **Root Cause:** [WHY — đã chứng minh ở Phase 1]
+- **Investigation:** [Tóm tắt trace/evidence]
 - **Cách fix:**
-  ```
   // ✅ Đúng — [giải thích]
   [code snippet đúng]
-
   // ❌ Sai — [giải thích]
   [code snippet sai]
-  ```
-- **Quy tắc rút ra:** [Rule LUÔN áp dụng từ nay]
+- **Test:** [Test name that catches this bug]
+- **Quy tắc rút ra:** [Rule LUÔN áp dụng]
 - **File liên quan:** `path/to/file`
 
-3. Cập nhật thống kê LESSONS.md (tổng bug +1)
-
-4. ⭐ QDRANT STORE (Layer 4 — nếu available):
+3. ⭐ QDRANT STORE (Layer 4):
    → qdrant_store(bug_fix, {project, type: "bug_fix", tags, severity})
-   → Nếu Qdrant chưa kết nối → bỏ qua
-
-5. ⭐ BEADS CLOSE (Layer 5 — nếu available):
-   → NẾU bug là Beads issue (bd-XXXX):
-     bd close <id> --reason "Fixed: [commit message]" --json
-   → Nếu Beads chưa init → bỏ qua
+4. ⭐ BEADS CLOSE (Layer 5):
+   → bd close <id> --reason "Fixed: [commit message]" --json
 ```
 
-> ❌ KHÔNG ĐƯỢC bỏ qua ghi LESSONS sau fix bug. Đây là cách AI "học" để không lặp lại.
+---
+
+## RED FLAGS — DỪNG VÀ FOLLOW PROCESS
+
+```
+🛑 DỪNG nếu:
+- Đang viết fix mà chưa reproduce bug
+- Đang stack fixes (fix A chưa work → thêm fix B → thêm fix C)
+- "Fix nhanh" cho issue phức tạp
+- Đã thử > 2 fixes mà chưa tìm root cause
+- Đang sửa symptom thay vì source
+
+💡 KHI GẶP RED FLAG:
+- Quay lại Phase 1
+- Gather thêm evidence
+- Trace data flow carefully
+- Hỏi user nếu cần context
+```
 
 ---
 
 ## QUY TẮC
 
-- Fix bug → **BẮT BUỘC** ghi LESSONS.md (không optional)
-- LESSONS entry PHẢI có ✅❌ code examples
-- Remove ALL debug code trước commit
-- Sửa root cause, KHÔNG sửa symptom
-- 1 bug fix = 1 commit = 1 LESSONS entry
-- ⭐ Beads/Qdrant không available → bỏ qua im lặng, KHÔNG gây lỗi
+- 🛑 Phase 1 PHẢI xong trước khi fix — NO EXCEPTIONS
+- ❌ KHÔNG BAO GIỜ bỏ qua ghi LESSONS sau fix
+- ✅ LESSONS entry PHẢI có ✅❌ code examples
+- ✅ Bug fix PHẢI có test (TDD: RED → GREEN)
+- ✅ Remove ALL debug code trước commit
+- ✅ Sửa root cause, KHÔNG sửa symptom
+- ✅ 1 bug fix = 1 commit = 1 LESSONS entry = 1 test
+- ⭐ Beads/Qdrant không available → bỏ qua im lặng
