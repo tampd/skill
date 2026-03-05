@@ -1,7 +1,7 @@
-# Skill System v4 — Structured Vibe
+# Skill System v5.0 — TDD + Spec-Driven + Systematic Debug
 
-> 14 Skills Production Code Framework + Documentation + SEO
-> Cập nhật: 2026-03-04
+> 15 Skills Production Code Framework + 5-Layer Memory
+> Cập nhật: 2026-03-05
 
 ## Cài đặt
 
@@ -10,72 +10,77 @@
 # Clone repo
 git clone git@github.com:tampd/skill.git ~/skill
 
-# Symlink vào Antigravity global skills
-ln -sf ~/skill ~/.gemini/antigravity/skills/skill-system
+# Symlink tất cả skills vào Antigravity global
+for skill in start build fix save plan design guard integrate \
+  memory brainstorm n8n-pro web-security review-website docs seo; do
+  rm -rf ~/.gemini/antigravity/skills/$skill
+  ln -s ~/skill/$skill ~/.gemini/antigravity/skills/$skill
+done
 ```
 
-### Per-project:
-```bash
-# Copy skills vào project
-cp -r ~/skill/.agent/skills/ .agent/skills/
-```
+## Có gì mới trong v5.0?
 
-## Có gì mới trong v4?
+### 🔥 4 Core Skills nâng cấp (từ OpenSpec + Superpowers):
 
-### 2 Skills mới:
-| Skill | Lệnh | Mục đích |
-|---|---|---|
-| **docs** 🆕 | `/docs [scope]` | Documentation generation + ADR + handoff (9 template files) |
-| **seo** 🆕 | `/seo [topic]` | SEO + GEO content writer (keyword → draft → optimize → publish) |
-
-### Nâng cấp skills hiện có:
-| Skill | Thay đổi |
+| Skill | Thay đổi v5.0 |
 |---|---|
-| **build** ⭐ | Thêm Architecture Spec Phase — `.spec.md` BẮT BUỘC cho project mới |
-| **design** | Thêm Design Token System (Atomic → Semantic → Mode) + Component API Docs |
-| **n8n-pro** | Thêm MCP Server + Sub-workflows + Scaling Patterns |
-| **start** | Auto-select nâng từ 10 → 14 rules + fallback logic |
+| **build** ⭐ | **TDD Iron Law**: RED→GREEN→REFACTOR. Viết code trước test? → XÓA. + Spec Compliance Check |
+| **fix** | **4-Phase Systematic Debug**: Root Cause IRON LAW (không fix khi chưa tìm nguyên nhân gốc) |
+| **plan** | **Change Folder** (proposal+specs+design+tasks+delta-specs) + Brainstorming Hard Gate |
+| **save** | **2-Stage Review** (Spec Compliance + Code Quality 7 tiêu chí) + Change Archive + Delta Merge |
 
-### MCP Integration:
-- n8n MCP Server cho workflow-as-tool
-- Qdrant MCP cho persistent memory
-- Context7/Docfork cho documentation grounding
+### 🧠 5-Layer Memory (v4.1+):
 
-## Quick Reference — 14 Skills
+| Layer | Engine | Mục đích |
+|---|---|---|
+| 1 — Working | `ACTIVE_CONTEXT.md` | Working memory (xóa sau /save) |
+| 2 — Semantic | `GEMINI.md`, `STATE.md` | Não bộ dự án |
+| 3 — Episodic | `LESSONS.md`, `CHANGE_LOG.md` | Bộ nhớ dài hạn (append-only) |
+| 4 — Vector | Qdrant (MCP) | Semantic search cross-session |
+| 5 — Task Graph | Beads/Dolt (CLI) | Dependency-aware task tracking |
+
+## Quick Reference — 15 Skills
+
 ```
 ── Session ──
-/start [task]        → Khởi động phiên (14-rule auto-select)
-/save                → Review + push
+/start [task]        → Khởi động phiên (15-rule auto-select + Qdrant recall)
+/save                → 2-Stage Review + Change Archive + Push    🔥
 
 ── Build ──
-/build [task]        → Code + Architecture Spec      ⭐
-/fix [bug]           → Debug + LESSONS
-/plan [feature]      → Blueprint
+/build [task]        → TDD: RED→GREEN→REFACTOR + Spec Check     🔥
+/fix [bug]           → 4-Phase Systematic Debug + Root Cause     🔥
+/plan [feature]      → Change Folder + Brainstorming Hard Gate   🔥
 
 ── Design ──
-/design [task]       → UI/UX + Token System          ⬆
+/design [task]       → UI/UX + Token System + Component API
 
 ── Quality ──
 /guard [scope]       → Test + Security + Perf
 
 ── Integration ──
 /integrate [svc]     → API + webhook
-/n8n [task]          → N8N + MCP Server               ⬆
+/n8n [task]          → N8N + MCP Server + Sub-workflows
 
 ── Analysis ──
-/brainstorm [idea]   → Ideation
-/security [target]   → OWASP audit
-/review-web [url]    → Website review
+/brainstorm [idea]   → Ideation → Spec → Prototype
+/security [target]   → OWASP audit + CVE + hardening
+/review-web [url]    → Website review toàn diện 7 chiều
 
 ── Content ──
-/docs [scope]        → Documentation + ADR            🆕
-/seo [topic]         → SEO + GEO writer               🆕
+/docs [scope]        → Documentation + ADR + handoff
+/seo [topic]         → SEO + GEO writer
+
+── Memory ──
+/memory              → 5-Layer Memory management                 🆕
 ```
 
 ## Version History
-| Version | Date | Skills |
-|---|---|---|
-| **v4.0** | 2026-03-04 | 14 skills (+/docs, +/seo, ⬆build, ⬆design, ⬆n8n, ⬆start) |
-| v3.0 | 2026-03-04 | 12 skills (+brainstorm, +n8n-pro, +web-security, +review-website) |
-| v2.0 | 2026-02-28 | 8 unified skills |
-| v1.x | 2026-02-27 | 26 skills (archived) |
+
+| Version | Date | Skills | Highlights |
+|---|---|---|---|
+| **v5.0** 🔥 | 2026-03-05 | 15 skills | TDD Iron Law, 4-Phase Debug, Change Folder, 2-Stage Review |
+| v4.1 | 2026-03-04 | 15 skills | +/memory, Qdrant Layer 4, Beads Layer 5 |
+| v4.0 | 2026-03-04 | 14 skills | +/docs, +/seo, Architecture Spec Phase |
+| v3.0 | 2026-03-04 | 12 skills | +brainstorm, +n8n-pro, +web-security, +review-website |
+| v2.0 | 2026-02-28 | 8 skills | Gộp 26 → 8 unified skills |
+| v1.x | 2026-02-27 | 26 skills | Original (archived) |
