@@ -5,7 +5,7 @@ description: "Quản lý 5-Layer Memory System: checkpoint working memory, recal
 
 # /memory | /checkpoint | /recall
 
-> **MỚI v4.1** — Quản lý Hybrid 5-Layer Memory System
+> **v5.0** — Quản lý Hybrid 5-Layer Memory System
 > Mục tiêu: AI không bao giờ quên context, không lặp lại sai lầm, làm việc xuyên suốt cross-session
 
 ---
@@ -126,7 +126,7 @@ Layer 1 — WORKING MEMORY:
   [✅ ACTIVE_CONTEXT.md: checkpoint lúc HH:MM | ❌ Chưa tạo]
 
 Layer 2 — SEMANTIC MEMORY:
-  GEMINI.md:     [✅ v4.1 | ❌ Không tìm thấy]
+  GEMINI.md:     [✅ v5.0 | ❌ Không tìm thấy]
   STATE.md:      [✅ Phase X | ❌ Không có]
   NEXT-TODO.md:  [✅ N tasks | ❌ Không có]
 

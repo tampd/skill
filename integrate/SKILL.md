@@ -7,6 +7,7 @@ description: "Quy trình tích hợp API và dịch vụ bên ngoài: design →
 
 > **5-in-1** — Gộp api-design + nodejs + n8n + payment + graphql
 > Mục tiêu: API chuẩn, secure, documented, tested
+> 💡 Integration phức tạp (≥ 3 files)? → `/plan` trước để tạo change folder
 
 ---
 

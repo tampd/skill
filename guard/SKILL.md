@@ -14,6 +14,9 @@ description: "Quality gate toàn diện: viết tests + security audit + perform
 
 ### Mode 1 — `/guard test [module]`
 
+> ⚠️ **TDD Rule 6**: Tests phải viết TRƯỚC code nếu chưa tồn tại (RED→GREEN→REFACTOR).
+> Nếu module đã có code nhưng chưa có test → viết test trước, verify test FAIL vì behavior chưa đúng, rồi refactor.
+
 Viết tests cho module chỉ định:
 
 ```

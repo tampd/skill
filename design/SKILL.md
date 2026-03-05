@@ -89,6 +89,10 @@ description: "Quy trình design toàn diện: brief → mockup → implement →
 ---
 
 ### Step 3 — IMPLEMENT
+
+> ⚠️ **TDD Rule 6 Exception**: CSS-only changes = visual verify (không cần TDD). 
+> Component có logic (event handlers, state, validation) = BẮT BUỘC TDD.
+
 ```
 Coding rules:
 - CSS variables cho MỌI color (support light + dark)

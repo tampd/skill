@@ -36,6 +36,18 @@ cp -rf source dest          # NOT: cp -r source dest
 - `apt-get` - use `-y` flag
 - `brew` - use `HOMEBREW_NO_AUTO_UPDATE=1` env var
 
+## Skill System v5.0 Core Rules
+
+**MANDATORY** for all AI agents working on this project:
+
+1. **TDD Iron Law (Rule 6)**: Write tests BEFORE code. RED (fail) → GREEN (pass) → REFACTOR → COMMIT. Code written before tests? DELETE and start over.
+2. **Brainstorming Hard Gate (Rule 7)**: `/plan` MUST ask clarifying questions + propose 2-3 approaches BEFORE creating specs. No spec without user approval.
+3. **Root Cause First (Rule 8)**: `/fix` MUST complete Phase 1 (Root Cause Investigation) BEFORE fixing. "It seems obvious" is NOT root cause — prove with evidence.
+4. **Spec-Driven Changes**: Each change = 1 folder (`changes/<name>/`) with proposal.md, specs/, design.md, tasks.md, delta-specs.md.
+5. **2-Stage Review**: Stage 1: Spec compliance. Stage 2: Code quality (7 criteria).
+
+See `GEMINI.md` for full rules and `build/SKILL.md`, `plan/SKILL.md`, `fix/SKILL.md`, `save/SKILL.md` for detailed workflows.
+
 <!-- BEGIN BEADS INTEGRATION -->
 ## Issue Tracking with bd (beads)
 

@@ -7,7 +7,7 @@ description: "Khởi động phiên làm việc toàn diện: load context, chec
 
 > **1 lệnh thay 3** — Gộp start + recall + supper cũ
 > Mục tiêu: Từ 0 → sẵn sàng code trong **< 60 giây**
-> **v4.1** — Tích hợp 5-Layer Memory: Beads (Layer 5) + Qdrant (Layer 4)
+> **v5.0** — TDD Iron Law + Spec-Driven + 5-Layer Memory
 
 ---
 
@@ -47,7 +47,7 @@ description: "Khởi động phiên làm việc toàn diện: load context, chec
 
 ---
 
-### Bước 2.5 — BEADS READY (Layer 5 — Task Graph) ⭐ MỚI v4.1
+### Bước 2.5 — BEADS READY (Layer 5 — Task Graph)
 
 ```
 1. Kiểm tra thư mục .beads/ tồn tại trong dự án:
@@ -72,7 +72,7 @@ description: "Khởi động phiên làm việc toàn diện: load context, chec
 
 ---
 
-### Bước 2.6 — QDRANT RECALL (Layer 4 — Vector Memory) ⭐ MỚI v4.1
+### Bước 2.6 — QDRANT RECALL (Layer 4 — Vector Memory)
 
 ```
 1. Kiểm tra Qdrant MCP tools có available không (qdrant_find, qdrant_store):
@@ -110,16 +110,26 @@ description: "Khởi động phiên làm việc toàn diện: load context, chec
 
 ---
 
-### Bước 4 — BLUEPRINT CHECK
+### Bước 4 — BLUEPRINT / CHANGE FOLDER CHECK ⭐ v5.0
 
 ```
-1. Scan thư mục .agent/commands/ (nếu tồn tại)
-2. Tìm file task-*.md match với [task description]
-3. NẾU TÌM THẤY:
-   📋 "Blueprint found: task-001-payroll-comparison.md"
+1. Scan thư mục changes/ (v5.0 — ưu tiên)
+   NẾU TÌM THẤY changes/<name>/ folder:
+   📋 "Change folder found: changes/<name>/"
+   → Hiển thị: proposal.md summary + tasks count
+   → Suggest: "/build sẽ dùng change folder này"
+
+2. Scan thư mục .agent/commands/ (backward compat v4.x)
+   NẾU TÌM THẤY task-*.md:
+   📋 "Blueprint found: task-NNN-name.md"
    → Suggest: "/build sẽ dùng blueprint này"
-4. NẾU KHÔNG:
-   📋 "Không có blueprint. Bạn muốn /plan trước hay /build trực tiếp?"
+
+3. Scan thư mục archive/ (context từ past changes)
+   NẾU CÓ archived changes:
+   📦 "Archive: N completed changes found"
+
+4. NẾU KHÔNG TÌM THẤY GÌ:
+   📋 "Không có spec/blueprint. Bạn muốn /plan trước hay /build trực tiếp?"
 ```
 
 ---
@@ -131,18 +141,19 @@ Dựa vào [task description], tự chọn skill phù hợp:
 | Từ khóa trong task | Skill được chọn |
 |---|---|
 | code, feature, thêm, tạo, viết, build, module | `/build` |
-| fix, bug, lỗi, sửa, error, debug, crash | `/fix` |
+| TDD, test-driven, red-green, viết test | `/build` |
+| fix, bug, lỗi, sửa, error, debug, crash, root cause | `/fix` |
 | design, UI, giao diện, logo, CSS, theme, layout | `/design` |
-| test, kiểm tra code, coverage, lint | `/guard` |
+| test, kiểm tra code, coverage, lint, audit | `/guard` |
 | API, webhook, payment, integrate, 3rd-party | `/integrate` |
-| plan, thiết kế, spec, blueprint, roadmap | `/plan` |
+| plan, thiết kế, spec, blueprint, roadmap, change folder, proposal | `/plan` |
 | n8n, workflow, automation, trigger, queue | `/n8n` |
 | ý tưởng, brainstorm, idea, compare, đánh giá | `/brainstorm` |
 | bảo mật, security, OWASP, CVE, hack, pentest | `/security` |
 | review web, đánh giá website, audit site, lighthouse | `/review-web` |
 | docs, tài liệu, document, ADR, handoff, onboard | `/docs` |
 | SEO, viết bài, content, keyword, GEO, article, blog | `/seo` |
-| memory, checkpoint, recall, bộ nhớ, nhớ lại | `/memory` 🆕 |
+| memory, checkpoint, recall, bộ nhớ, nhớ lại | `/memory` |
 | save, kết thúc, đóng phiên, commit, push | `/save` |
 | start, bắt đầu, khởi động, mở phiên | `/start` |
 
@@ -174,8 +185,8 @@ Xuất báo cáo:
   1. "[pattern mô tả]" (similarity: 0.XX)
   [Hoặc: "Chưa kết nối — xem /memory để setup"]
 
-📋 BLUEPRINT
-  [✅ Có: task-NNN.md | ❌ Chưa có — gợi ý /plan]
+📋 CHANGE FOLDER / BLUEPRINT
+  [✅ Có: changes/<name>/ | ✅ Có: task-NNN.md | ❌ Chưa có — gợi ý /plan]
 
 🎯 SKILL ĐƯỢC CHỌN
   → /build [task]  (hoặc /fix, /design, /guard, /integrate, /memory)
@@ -194,7 +205,7 @@ Xuất báo cáo:
 
 - CHỈ đọc và báo cáo — KHÔNG tự sửa file
 - Nếu ACTIVE_CONTEXT tồn tại → ưu tiên hiển thị task đang dở
-- Nếu có blueprint → gợi ý dùng `/build` với blueprint
-- Nếu task phức tạp và chưa có blueprint → gợi ý `/plan` trước
+- Nếu có change folder hoặc blueprint → gợi ý dùng `/build`
+- Nếu task phức tạp và chưa có spec → gợi ý `/plan` trước
 - Beads/Qdrant không available → **bỏ qua im lặng**, KHÔNG gây lỗi
 - Tone: đồng nghiệp senior, ngắn gọn, sẵn sàng action

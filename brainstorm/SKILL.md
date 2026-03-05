@@ -137,8 +137,8 @@ Nếu feature là backend:
 📋 SPEC: [Ready for /plan or /build]
 
 🔜 NEXT STEP:
-  Feature phức tạp? → /plan [feature name]
-  Feature đơn giản? → /build [feature name]
+  Feature phức tạp? → /plan [feature name] (tạo change folder: proposal + specs + tasks)
+  Feature đơn giản? → /build [feature name] (TDD: RED→GREEN→REFACTOR)
   Cần design UI?    → /design [feature name]
 ```
 
