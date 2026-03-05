@@ -284,7 +284,7 @@ Cập nhật `MASTER_PLAYBOOK.md` để liên kết tất cả docs:
 🔜 NEXT:
    Docs đầy đủ?  → /build [task]
    Cần thêm ADR? → /docs adr [decision]
-   Review tổng?  → /review-web [url]
+   Review tổng?  → /quality all [url]
 ```
 
 ---

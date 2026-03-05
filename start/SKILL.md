@@ -189,7 +189,7 @@ Xuất báo cáo:
   [✅ Có: changes/<name>/ | ✅ Có: task-NNN.md | ❌ Chưa có — gợi ý /plan]
 
 🎯 SKILL ĐƯỢC CHỌN
-  → /build [task]  (hoặc /fix, /design, /guard, /integrate, /memory)
+  → /build [task]  (hoặc /fix, /craft, /quality, /integrate, /memory)
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 💡 Gõ lệnh skill ở trên để bắt đầu, hoặc:

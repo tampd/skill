@@ -230,7 +230,7 @@ Post-Publish:
 🔜 NEXT:
    Cần tạo images?     → generate_image tool
    Cần implement page?  → /build [page name]
-   Cần design layout?   → /design [page name]
+   Cần design layout?   → /craft [page name]
 ```
 
 ---

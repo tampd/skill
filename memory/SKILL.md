@@ -56,7 +56,7 @@ AI sẽ làm:
 
      ## ⚡ SNAPSHOT HIỆN TẠI
      - Task đang làm: [tên task]
-     - Skill đang dùng: [build/fix/design...]
+     - Skill đang dùng: [build/fix/craft/plan...]
      - Files đang mở:
        - `path/to/file1` — [đang làm gì]
        - `path/to/file2` — [đang làm gì]
