@@ -107,6 +107,11 @@ description: "Quy trình debug 4-phase systematic: Qdrant recall → LESSONS che
 
 ### Phase 3 — HYPOTHESIS & TESTING 🧪
 
+> ⭐ **SELF-REASONING GATE (v6.1)** — Trước khi propose fix:
+> Q1: "Fix này giải quyết ROOT CAUSE hay chỉ symptom? Có approach khác tốt hơn?"
+> Q2: "Side-effect? Regression risk? Có break code khác không?"
+> Q3: "Fix scope lớn (≥ 3 files, breaking) → cần hỏi user trước?"
+
 ```
 1. STATE RÕ RÀNG:
    "Tôi nghĩ [X] là root cause vì [Y]"

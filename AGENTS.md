@@ -36,6 +36,7 @@ rm -rf directory            # NOT: rm -r directory
 7. **Security Headers (Rule 10)**: HSTS, CSP, X-Frame-Options mandatory.
 8. **Design Tokens (Rule 11)**: No hardcoded colors/fonts/spacing — use semantic tokens.
 9. **Performance Budget (Rule 12)**: Lighthouse ≥ 90, LCP < 2.5s, CLS < 0.1, JS < 150KB gzip.
+10. **Self-Reasoning Gate (Rule 13)**: 3-Question Self-Check before EVERY execution decision — best approach? hidden risks? user approval needed?
 
 ### 14 Skills (v6.0 — Memory-First Architecture)
 

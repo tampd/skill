@@ -101,6 +101,15 @@ Toàn bộ lifecycle 1 component: design → implement → verify.
    → --input-border-color-focus
 ```
 
+#### Step 2.5 — SELF-REASONING GATE ⭐ (v6.1)
+
+> Trước khi implement component, AI chạy 3-Question Self-Check:
+> Q1: "Design pattern này vs alternatives? (e.g. Compound vs Render Props vs Hooks)"
+> Q2: "A11y risks? Performance concerns? Bundle size impact?"
+> Q3: "Component scope phức tạp → cần user review design trước?"
+>
+> Output: ✅ SELF-CHECK PASSED | ⚠️ SELF-CHECK FLAG → đề xuất user
+
 #### Step 3 — IMPLEMENT (ARIA-first)
 ```
 ACCESSIBILITY CHECKLIST mỗi component (WCAG AA BẮT BUỘC):

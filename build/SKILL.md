@@ -107,6 +107,31 @@ Wave 3 — Polish: UI, validation, edge cases
 
 ---
 
+### Step 1.5 — SELF-REASONING GATE ⭐ (v6.1)
+
+> Trước khi bắt đầu code, AI chạy 3-Question Self-Check:
+
+```
+Q1: "Approach trong SPEC đã tối ưu chưa?"
+    → Pattern hiện tại (HOW) có alternatives nào tốt hơn?
+    → Library đang dùng có phù hợp nhất?
+    → Có cách đơn giản hơn để đạt DONE criteria?
+
+Q2: "Có risk nào tôi đang bỏ qua?"
+    → Breaking changes? Regression? N+1 queries?
+    → Performance impact? Security concern?
+
+Q3: "Cần user approve không?"
+    → ≤ 2 files, no breaking → BUILD trực tiếp
+    → ≥ 3 files hoặc risky → Trình bày approach + xin approve
+
+Output:
+✅ SELF-CHECK PASSED — Approach tối ưu, no risk, tự thực thi
+⚠️ SELF-CHECK FLAG — [Risk/Alternative found] → đề xuất user
+```
+
+---
+
 ### Step 2 — DEPENDENCY CHECK (Enhanced v4.1)
 
 ```

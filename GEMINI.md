@@ -27,6 +27,7 @@ Phiên bản 6.0 nâng cấp từ v5.0, tập trung **zero-overlap + composable 
 ✅ TDD Iron Law: Viết test TRƯỚC code (giữ từ v5.0)
 ✅ Spec-Driven: Mỗi change = 1 folder (giữ từ v5.0)
 ✅ Graceful fallback: Layer 4-5 không available → bỏ qua im lặng
+✅ SELF-REASONING GATE: AI tự hỏi 3 câu trước MỌI quyết định (v6.1)
 ```
 
 ### GitHub Repository
@@ -41,7 +42,7 @@ SSH Key: SHA256:nTSlO07MbIplXX/j2FAHlyuSb+MJxPO1yboDHJJidFs
 
 ---
 
-## ⚠️ GLOBAL RULES (12 Rules)
+## ⚠️ GLOBAL RULES (13 Rules)
 
 ### Rule 1: AI PHẢI HỎI KHI CHƯA RÕ
 > 🛑 AI PHẢI HỎI user TRƯỚC KHI lập kế hoạch, viết code, ghi docs.
@@ -84,6 +85,21 @@ SSH Key: SHA256:nTSlO07MbIplXX/j2FAHlyuSb+MJxPO1yboDHJJidFs
 ### Rule 12: PERFORMANCE BUDGET (v5.1→v6.0)
 > Lighthouse Performance (mobile) ≥ 90. LCP < 2.5s. CLS < 0.1. INP < 200ms.
 > First Load JS < 150KB gzip.
+
+### Rule 13: SELF-REASONING GATE (v6.1) 🆕
+> 🛑 Trước MỌI quyết định thực thi, AI PHẢI chạy **3-Question Self-Check**:
+>
+> **Q1 — "Đây đã là phương án tốt nhất chưa?"**
+> → Liệt kê ≥ 2 alternatives. So sánh nhanh pros/cons/effort.
+> → Nếu phương án hiện tại KHÔNG rõ ràng tốt nhất → dừng, đề xuất options cho user.
+>
+> **Q2 — "Có risk hoặc side-effect nào tôi đang bỏ qua không?"**
+> → Check: breaking changes? Regression? Performance? Security?
+> → Nếu CÓ risk → ghi rõ và đề xuất mitigation TRƯỚC khi thực thi.
+>
+> **Q3 — "User có cần approve quyết định này không?"**
+> → Nếu thay đổi ≤ 2 files, không breaking → tự thực thi + giải thích.
+> → Nếu thay đổi ≥ 3 files, hoặc có breaking/risky → PHẢI hỏi user trước.
 
 ---
 

@@ -1,5 +1,16 @@
 # CHANGE LOG — Skill Repository
 
+## 2026-03-06
+
+### Added
+- **v6.1 SELF-REASONING GATE** — Global Rule 13
+  - 3-Question Self-Check trước MỌI quyết định thực thi
+  - Q1: "Đây đã là phương án tốt nhất chưa?" (≥2 alternatives)
+  - Q2: "Có risk/side-effect nào đang bỏ qua?" (breaking, regression, perf, security)
+  - Q3: "User có cần approve không?" (scope-based auto-decide)
+  - Embedded: `/build` Step 1.5, `/fix` Phase 3, `/craft` Step 2.5, `/plan` Q2 enhancement
+  - Updated: GEMINI.md (13 Rules), AGENTS.md
+
 ## 2026-03-05
 
 ### Changed

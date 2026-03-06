@@ -85,6 +85,12 @@ description: "Brainstorm → Spec-driven planning: Ideation pipeline → Qdrant 
 
 > 🛑 **HARD GATE** (từ Superpowers): Phải present approach VÀ được user approve TRƯỚC KHI tạo change folder.
 
+> ⭐ **SELF-REASONING ENHANCEMENT (v6.1)**:
+> Sau khi chọn approach, BẮT BUỘC thêm:
+> Q2: "Risk/side-effect của approach được chọn?"
+> → Liệt kê ≥ 1 risk + mitigation cho mỗi risk
+> → Nếu risk HIGH → cảnh báo user rõ ràng trước khi tạo spec
+
 ---
 
 ### Step 2 — CREATE CHANGE FOLDER ⭐ (MỚI v5.0)
