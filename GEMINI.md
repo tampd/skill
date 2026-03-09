@@ -39,7 +39,7 @@ SSH Key: SHA256:nTSlO07MbIplXX/j2FAHlyuSb+MJxPO1yboDHJJidFs
 
 ---
 
-## ⚠️ GLOBAL RULES (14 Rules)
+## ⚠️ GLOBAL RULES (15 Rules)
 
 ### Rule 1: AI PHẢI HỎI KHI CHƯA RÕ
 > 🛑 AI PHẢI HỎI user TRƯỚC KHI lập kế hoạch, viết code, ghi docs.
@@ -98,6 +98,20 @@ SSH Key: SHA256:nTSlO07MbIplXX/j2FAHlyuSb+MJxPO1yboDHJJidFs
 ### Rule 14: BKNS REPO STANDARD
 > Mỗi repo BKNS **PHẢI** có: README.md, SPEC.md, DEPLOYMENT.md, CHANGELOG.md, PROJECT-META.md, .env.example.
 > **Templates**: Xem `templates/` trong skill repo.
+
+### Rule 15: README SYNC KHI PUSH GITHUB (v7.0) 🆕
+> 🛑 Trước MỌI lần `git push` lên GitHub, AI PHẢI kiểm tra:
+>
+> **CHECK 1**: README.md version có khớp GEMINI.md version không?
+> → Nếu GEMINI.md = v7.0 mà README vẫn ghi v6.1 → **PHẢI update README trước push**.
+>
+> **CHECK 2**: Danh sách skills/lệnh trong README có khớp thực tế không?
+> → Số skills, tên lệnh, cấu trúc thư mục phải 100% match.
+>
+> **CHECK 3**: Install script trong README có đúng danh sách folder hiện tại không?
+> → `for skill in ...` phải list đúng 8 folders v7.0 (không list folders đã xóa).
+>
+> **Quy tắc**: README.md là "mặt tiền" GitHub — SAI README = gây nhầm lẫn nghiêm trọng.
 
 ---
 
