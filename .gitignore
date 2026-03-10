@@ -1,4 +1,8 @@
-
-# Dolt database files (added by bd init)
-.dolt/
+# Project-specific
 *.db
+.dolt/
+PASSWORD.md
+ACTIVE_CONTEXT.md
+INSTINCTS.md
+INSIGHTS.md
+STATE.md
