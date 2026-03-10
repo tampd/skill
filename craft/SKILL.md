@@ -1,141 +1,145 @@
 ---
 name: craft
-description: "Thiết kế và xây dựng UI toàn diện: Atomic Design + Design Tokens + WCAG Accessibility + Performance audit. Gộp craft + quality. Kích hoạt khi người dùng nói /craft, /quality, 'design UI', 'component', 'CSS', 'responsive', 'accessibility', 'a11y', 'performance', 'lighthouse', 'test', 'audit'."
-metadata:
-  author: tampd
-  version: 7.0.0
-  category: frontend
+description: UI/UX implementation and design system. Use for /craft (build UI components), /audit (quality audit), /tokens (design system), /e2e (browser visual testing). Triggers on "UI", "component", "design", "giao diện", "responsive", "WCAG", "accessibility", "craft", "audit giao diện".
 ---
 
-# Craft — Design Web & Quality Gate
+# Craft Skill — UI Engineering + Design Tokens + WCAG + Browser Testing
 
-> **v7.0** — Gộp craft + quality
-> Mục tiêu: UI đẹp, accessible, performant, tested.
-
----
-
-## 4 MODES
-
-### Mode 1 — `/craft setup` (Project Setup)
+## /craft [task]
+> Build UI components theo Atomic Design, đạt WCAG 2.2 AA
 
 ```
-1. Chọn stack: Next.js / Vite / Astro + TypeScript strict
-2. Tạo Atomic Design structure:
-   components/
-   ├── atoms/       ← Button, Input, Badge (no business logic)
-   ├── molecules/   ← SearchBar, FormField (combine atoms)
-   ├── organisms/   ← Header, DataTable, ProductCard
-   ├── templates/   ← DashboardLayout, AuthLayout
-   └── pages/       ← Actual routes
+PHASE 1 — DESIGN SYSTEM CHECK
+  □ Đọc design tokens hiện có (colors, spacing, typography, radius)
+  □ Nếu chưa có tokens → tạo tokens trước, không hardcode
+  □ Identify component level: Atom / Molecule / Organism / Template?
+  □ Check: component tương tự đã tồn tại chưa? (DRY)
 
-3. Setup Design System:
-   design-system/
-   ├── tokens.css     ← Primitive tokens (colors, spacing, fonts)
-   ├── semantics.css  ← Semantic tokens (light/dark/high-contrast)
-   ├── animations.css ← Keyframes, transitions, motion-reduce
-   └── utilities.css  ← Layout helpers, visually-hidden
-```
+PHASE 2 — COMPONENT SPEC
+  □ Props interface (TypeScript): required vs optional
+  □ Variants: size (sm/md/lg), state (default/hover/active/disabled/error)
+  □ Responsive behavior: mobile-first breakpoints
+  □ Animation/transition: nếu có, dùng prefers-reduced-motion check
+  □ Dark mode: nếu project hỗ trợ
 
-> Token templates chi tiết: `references/design-tokens.md`
+PHASE 3 — IMPLEMENT
+  □ Semantic HTML (đúng element cho đúng role)
+  □ Design tokens ONLY (không hardcode bất kỳ giá trị nào)
+  □ Keyboard navigation: Tab order, focus visible, Enter/Space/Arrow keys
+  □ ARIA attributes: role, aria-label, aria-describedby, aria-live
+  □ Error states: accessible error messages
+  □ Loading states: skeleton / spinner với aria-busy
 
----
+PHASE 4 — WCAG CHECKLIST (bắt buộc)
+  □ Color contrast ≥4.5:1 (text), ≥3:1 (large text/UI)
+  □ Không dùng màu là cách DUY NHẤT truyền thông tin
+  □ Focus indicator rõ ràng (không remove outline mà không thay thế)
+  □ Touch target ≥44×44px (mobile)
+  □ Alt text cho mọi ảnh có nghĩa
+  □ Heading hierarchy đúng (h1→h2→h3, không skip)
+  □ Form labels kết nối với input (for/id hoặc aria-labelledby)
 
-### Mode 2 — `/craft component [name]` (Build Component)
+PHASE 5 — PERFORMANCE CHECK
+  □ Images: WebP/AVIF, lazy loading, srcset
+  □ Icons: SVG inline (không dùng icon font nếu có thể)
+  □ Animation: GPU-accelerated (transform, opacity — không layout thrash)
+  □ Fonts: font-display: swap, preload critical fonts
+  □ Bundle impact: import cụ thể, không import toàn bộ library
 
-```
-STEP 1 — ANALYSIS:
-  Atomic level? States? Responsive? Dark mode?
-
-STEP 2 — DESIGN TOKEN CHECK:
-  LUÔN dùng semantic tokens: var(--bg-surface), KHÔNG #ffffff
-  Token mới → thêm vào tokens.css trước
-
-STEP 3 — BUILD (Accessibility-first):
-  HTML:
-  [ ] Semantic elements (button, nav, article)
-  [ ] ARIA: role, aria-label, aria-describedby
-  [ ] Focus visible: custom focus ring
-  INTERACTIVITY:
-  [ ] Keyboard: Enter/Space, arrow keys
-  [ ] Touch target ≥ 44×44px
-  [ ] All states: hover, active, disabled, loading, error
-
-STEP 4 — COMPONENT API DOCS:
-  Props interface, accessibility notes, usage examples
-
-STEP 5 — VISUAL VERIFY (Evidence):
-  1. Desktop (1440px) 2. Tablet (768px) 3. Mobile (375px) 4. Dark mode
-  > Screenshot evidence BẮT BUỘC
+PHASE 6 — BROWSER AGENT VERIFY (Antigravity)
+  □ Spawn Browser Sub-Agent với task: "Verify component renders correctly"
+  □ Screenshots: desktop, tablet (768px), mobile (375px)
+  □ Dark mode screenshot nếu applicable
+  □ Keyboard navigation test (Tab through all interactive elements)
+  □ Hover/focus states visual check
+  □ Fix issues discovered → re-verify
 ```
 
 ---
 
-### Mode 3 — `/craft audit [page]` (Quality Audit)
-
-Gộp a11y + perf + visual verify:
-
-**A11y (WCAG 2.2 AA):**
-```
-npx jest --testPathPattern=a11y  # hoặc axe-core
-
-KEYBOARD: Tab, Shift+Tab, Enter/Space, Escape, Arrow keys
-SCREEN READER: Headings hierarchy, alt text, aria-label, role="status"
-CONTRAST: Normal ≥ 4.5:1, Large ≥ 3:1, UI ≥ 3:1, Focus ≥ 3:1
-```
-> Full WCAG checklist: `references/wcag-checklist.md`
-
-**Performance (Core Web Vitals):**
-```bash
-npx lighthouse https://yoursite.com --form-factor=mobile \
-  --only-categories=performance,accessibility,best-practices,seo
-```
-
-| Metric | Target |
-|---|---|
-| LCP | < 2.5s |
-| CLS | < 0.1 |
-| INP | < 200ms |
-| Lighthouse Performance | ≥ 90 |
-| First Load JS | < 150KB gzip |
-
-> Full perf checklist: `references/perf-targets.md`
-
----
-
-### Mode 4 — `/craft test [module]` (Component Testing)
+## /audit [scope]
+> Multi-dimensional quality audit cho UI
 
 ```
-Test pyramid:
-  Unit (70%): Service/util functions
-  Integration (20%): API endpoints
-  E2E (10%): Critical user journeys
+AUDIT DIMENSIONS:
 
-React Testing Library best practices:
-  - getByRole (semantic queries) > getByTestId
-  - userEvent > fireEvent
-  - waitFor / findBy cho async
-  - jest-axe: toHaveNoViolations()
+VISUAL CONSISTENCY 🎨
+  □ Spacing theo grid system? (4px / 8px base)
+  □ Typography scale nhất quán?
+  □ Color palette chỉ dùng design tokens?
+  □ Border radius nhất quán?
+  □ Shadow/elevation consistent?
+
+ACCESSIBILITY ♿
+  □ Run axe-core / Lighthouse accessibility
+  □ Screen reader test (NVDA/VoiceOver mentally)
+  □ Color contrast ratio check
+  □ Focus management đúng không?
+  □ Error messages accessible?
+
+PERFORMANCE ⚡
+  □ Lighthouse score (target: Performance ≥90)
+  □ LCP, CLS, FID trong budget?
+  □ Unused CSS/JS?
+  □ Image optimization?
+  □ Third-party scripts impact?
+
+RESPONSIVE 📱
+  □ 320px (small mobile) → không bị overflow
+  □ 768px (tablet) → layout đúng
+  □ 1280px (desktop) → full layout
+  □ 1920px (wide) → không bị stretched
+
+OUTPUT: Scored report với CRITICAL / WARNING / INFO
 ```
 
 ---
 
-## OUTPUT FORMAT
+## /tokens [scope]
+> Tạo hoặc mở rộng design token system
 
 ```
-🎨 CRAFT REPORT — [scope]
-━━━━━━━━━━━━━━━━━━━━━━
-🧪 TESTS:        [N/M pass | Coverage X%]
-♿ ACCESSIBILITY: [✅ 0 violations | ⚠️ N]
-⚡ PERFORMANCE:  [Lighthouse P:XX A:XX]
-🔴 CRITICAL: [fix before merge]
-🟡 WARNINGS: [fix this sprint]
-✅ PASSING: [N checks]
+TOKEN STRUCTURE (CSS Custom Properties):
+  --color-primary-50 → --color-primary-900  (scale)
+  --color-semantic-bg-default
+  --color-semantic-text-primary
+  --color-semantic-border-focus
+  
+  --space-1 (4px) → --space-16 (64px)
+  --font-size-xs → --font-size-4xl
+  --font-weight-regular, --font-weight-medium, --font-weight-bold
+  --radius-sm → --radius-full
+  --shadow-sm → --shadow-2xl
+  --duration-fast (100ms), --duration-normal (200ms), --duration-slow (300ms)
+
+DARK MODE:
+  @media (prefers-color-scheme: dark) { ... }
+  hoặc [data-theme="dark"] { ... }
+  Semantic tokens tự động flip — không hardcode dark values trong components
 ```
 
-## QUY TẮC
+---
 
-- ❌ KHÔNG hardcode colors → var(--xxx)
-- ❌ KHÔNG mix Atomic levels
-- ✅ LUÔN test 3 breakpoints + dark mode
-- ✅ LUÔN attach screenshot evidence
-- ✅ Lighthouse mobile ≥ 90 trước khi ship
+## COMPONENT DOCUMENTATION TEMPLATE
+> Dùng sau khi build component để /handoff chuyên nghiệp
+
+```markdown
+## ComponentName
+
+**Purpose:** [1 câu mô tả purpose]
+
+**Props:**
+| Prop | Type | Default | Required | Description |
+|------|------|---------|----------|-------------|
+| ... | ... | ... | ... | ... |
+
+**Variants:** default | primary | secondary | destructive
+
+**Usage:**
+```tsx
+<ComponentName variant="primary" size="md" />
+```
+
+**Accessibility:** [keyboard shortcuts, ARIA notes]
+**Known Limitations:** [edge cases, browser compat]
+```

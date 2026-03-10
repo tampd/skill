@@ -1,130 +1,135 @@
 ---
 name: build
-description: "Viết code production-grade theo TDD và lập kế hoạch tính năng. Hỗ trợ 2 mode: /plan (ideation + SPEC + change folder) và /build (TDD RED→GREEN→REFACTOR). Kích hoạt khi người dùng nói /build, /plan, 'viết code', 'tạo feature', 'brainstorm', 'lên spec', hoặc 'TDD'."
-metadata:
-  author: tampd
-  version: 7.0.0
-  category: development
+description: Feature implementation and code writing. Use for /build (implement feature with TDD), /plan (plan before code), /search (research packages/solutions). Triggers on "viết code", "implement", "tạo feature", "build", "tdd", "xây dựng".
 ---
 
-# Build — Vibe Code & Spec-Driven Development
+# Build Skill — Search-First + TDD Hard Gate + Cleanup Pass
 
-> **v7.0** — Gộp build + plan
-> Mục tiêu: Từ ý tưởng → spec → code TDD → verified trong 1 flow.
-
----
-
-## 2 MODES
-
-### Mode 1 — `/plan [feature]` (Ideation → Spec)
-
-> Bước này CHỈ chạy khi cần brainstorm hoặc feature ≥ 3 files.
-> Task nhỏ ≤ 2 files → dùng Mini-Spec inline ở `/build` Step 1.
+## /plan [idea or feature]
+> Brainstorm và lập kế hoạch TRƯỚC khi viết bất kỳ dòng code nào
 
 ```
-STEP 0 — IDEATION (cho ý tưởng mơ hồ):
-  1. Capture raw idea → hỏi 3 câu mở:
-     "Vấn đề gốc?", "Ai là user?", "Thành công = gì?"
-  2. Propose ≥ 2 approaches → so sánh pros/cons/effort
-  🛑 HARD GATE: KHÔNG tạo spec khi chưa hiểu rõ
+STEP 1 — UNDERSTAND
+  □ Parse requirement: what exactly needs to be built?
+  □ Clarifying questions (hỏi nếu mơ hồ, không đoán)
+  □ Define success criteria rõ ràng
 
-STEP 1 — RESEARCH:
-  Đọc docs/ → patterns hiện có
-  Đọc LESSONS.md → warnings liên quan
-  Scan code hiện tại → identify files cần tạo/sửa
+STEP 2 — RESEARCH (Search-First)
+  □ Tìm kiếm: có package/library nào giải quyết được không?
+  □ Đánh giá top 3 options: pros/cons/bundle size/maintenance
+  □ Decision: build vs buy vs adapt
 
-STEP 2 — CREATE CHANGE FOLDER:
-  changes/<feature-name>/
-  ├── SPEC.md         ← Feature SPEC (10 sections BKNS)
-  ├── tasks.md        ← Implementation tasks (TDD bite-sized)
-  └── delta-specs.md  ← Spec changes to merge vào docs/ khi done
+STEP 3 — ARCHITECTURE
+  □ Component breakdown (nếu UI)
+  □ Data flow diagram (nếu có state/API)
+  □ File structure đề xuất
+  □ Interfaces / types cần định nghĩa
+  □ Edge cases + error scenarios
 
-  > Dự án MỚI → SPEC.md ở root (Full SPEC 19 sections)
-  > Feature → changes/<name>/SPEC.md (Feature SPEC 10 sections)
-  > Task ≤ 2 files → Mini-Spec inline
+STEP 4 — ANTIGRAVITY TASK LIST
+  □ Break down thành numbered tasks có checkpoint
+  □ Identify tasks có thể parallel (spawn sub-agents?)
+  □ Estimate: small (<1h) / medium (1-3h) / large (>3h)
+  □ Nếu large → đề xuất /spec trước
 
-STEP 3 — PRESENT & CONFIRM:
-  Hiển thị change folder → hỏi user approve
-  Accepted → "Gõ /build để bắt đầu TDD"
+OUTPUT: Structured plan, task list, file list — TRƯỚC khi bất kỳ code nào được viết
 ```
 
 ---
 
-### Mode 2 — `/build [task]` (TDD Execution)
+## /search [need]
+> Research packages và solutions có sẵn
 
 ```
-STEP 0 — LOAD CONTEXT:
-  1. Đọc LESSONS.md → grep entries liên quan
-     🛑 CHƯA ĐỌC LESSONS → DỪNG
-  2. Đọc GEMINI.md → Architecture Rules
-  3. NẾU có change folder → load SPEC.md + tasks.md
-  4. NẾU có ACTIVE_CONTEXT.md → restore state
+SEARCH PROTOCOL:
+  1. Define: chính xác cần gì (input/output/constraints)?
+  2. Search: npm/pip/github + official docs
+  3. Evaluate top 3 candidates:
+     - Weekly downloads / stars (popularity = maturity)
+     - Last commit (maintenance active?)
+     - Bundle size / performance overhead
+     - Security: known CVEs?
+     - TypeScript support?
+  4. Recommend với lý do cụ thể
+  5. Check compatibility: version conflicts?
 
-STEP 0.5 — SPEC CHECK:
-  NẾU module mới ≥ 3 files VÀ chưa có SPEC → DỪNG, gợi ý /plan
-  NẾU task ≤ 2 files → Mini-Spec inline (10 dòng)
-
-STEP 1 — SPEC TASK (< 2 phút):
-  WHY   : Vấn đề giải quyết?
-  WHAT  : Files cần tạo/sửa?
-  HOW   : Approach kỹ thuật?
-  TEST  : Verify bằng gì?
-  RISK  : Có phá gì không?
-  DONE  : Khi nào xong?
-
-STEP 1.5 — SELF-REASONING GATE:
-  Q1: "Phương án tốt nhất chưa?" → ≥ 2 alternatives
-  Q2: "Risk/side-effect bỏ qua?" → breaking, regression, perf, security
-  Q3: "User cần approve?" → ≤ 2 files → tự làm; ≥ 3 files → hỏi
-
-STEP 2 — DEPENDENCY CHECK:
-  Files phụ thuộc code chưa tồn tại? → DỪNG
-  Migration cần chạy trước? DB seeder? Package install?
-
-STEP 3 — TDD CYCLE ⭐:
-  3.1 RED: Viết test TRƯỚC → chạy → FAIL (expected)
-  3.2 GREEN: Viết code TỐI THIỂU → test PASS
-  3.3 REFACTOR: Clean up (DRY, YAGNI, naming) → test vẫn PASS
-  > TDD exceptions: prototype, config, CSS-only
-
-STEP 4 — VERIFY (Evidence-based):
-  Chạy full test suite → screenshot/log/curl output
-  NẾU có spec → so sánh: đúng spec? thừa? thiếu?
-
-STEP 5 — SPEC COMPLIANCE:
-  Code thừa spec? → xóa hoặc tạo ticket mới
-  Behavior khác spec? → sửa lại
-
-STEP 6 — ATOMIC COMMIT:
-  git add <files> && git commit -m "feat(scope): mô tả ≤ 72 chars"
-  Types: feat | fix | chore | docs | perf | sec | test
+DECISION MATRIX:
+  official lib exists → dùng official
+  no official + >1M weekly downloads → dùng popular
+  niche need + small + well-maintained → dùng specialized
+  nothing good → build minimal custom (document why)
 ```
 
 ---
 
-## CHECKLIST TRƯỚC COMMIT
+## /build [task]
+> Implement feature với TDD Hard Gate
 
 ```
-[ ] Đã đọc LESSONS.md trước khi code
-[ ] Test viết TRƯỚC code (TDD)
-[ ] Tất cả tests PASS
-[ ] Spec compliance: đúng spec, không thừa
-[ ] Không có dd()/dump()/console.log
-[ ] Không hardcode magic numbers
-[ ] Null-safe operators
-[ ] DB transaction cho multi-step writes
-[ ] Input validate và escape
-[ ] CSS dùng variables (var(--xxx))
-[ ] Commit message conventional commits
-[ ] Evidence attached
+PHASE 0 — PRE-BUILD CHECK
+  □ Đọc INSTINCTS.md → có pattern liên quan?
+  □ Đọc LESSONS.md → đã gặp vấn đề tương tự chưa?
+  □ /search đã chạy chưa? (nếu chưa → chạy trước)
+  □ Task ≥3 files? → /spec hoặc /plan bắt buộc trước
+
+PHASE 1 — DEFINE CONTRACTS
+  □ Viết TypeScript interfaces / type definitions TRƯỚC
+  □ Viết function signatures (không có implementation)
+  □ Viết API request/response types
+  □ Review: types có đủ không?
+
+PHASE 2 — TDD: RED
+  □ Viết test file TRƯỚC khi có implementation
+  □ Test cases phải cover: happy path, error cases, edge cases
+  □ Run tests → confirm chúng FAIL (nếu pass → test sai)
+  □ Không tiếp tục nếu test không fail
+
+PHASE 3 — TDD: GREEN
+  □ Implement code MINIMAL để tests pass
+  □ Không add logic mà test chưa cover
+  □ Run tests → confirm chúng PASS
+  □ Coverage check: nếu <80% → thêm tests, không tiếp tục
+
+PHASE 4 — TDD: REFACTOR
+  □ Clean code: rename, extract, simplify
+  □ Không thêm logic mới trong bước này
+  □ Run tests → confirm vẫn PASS sau refactor
+
+PHASE 5 — VERIFICATION LOOP
+  □ lint → format → type-check → test → audit
+  □ Tất cả PASS? Nếu không → fix ngay
+  □ Diff review: list từng file đã thay đổi + lý do
+  □ Regression check: những gì có thể bị ảnh hưởng?
+
+PHASE 6 — CLEANUP PASS (separate review pass)
+  □ Scan: console.log, debugger, TODO cũ
+  □ Scan: magic numbers → extract vào constants
+  □ Scan: hardcoded strings → extract vào config/i18n
+  □ Scan: dead code, unused imports
+  □ Scan: error handling đầy đủ (no silent failures)
+  □ Đây là PASS RIÊNG — không làm cùng lúc với implementation
+
+PHASE 7 — COMMIT
+  □ Conventional commit: feat/fix/refactor/test/docs
+  □ Format: type(scope): description
+  □ Ví dụ: feat(auth): add JWT refresh token rotation
 ```
 
----
+### TDD HARD GATE — Không được bypass
+```
+❌ KHÔNG được viết implementation trước test
+❌ KHÔNG được commit khi coverage <80%
+❌ KHÔNG được skip verification loop
+❌ KHÔNG được bỏ qua cleanup pass
+✅ Exceptions phải được ghi rõ lý do vào LESSONS.md
+```
 
-## QUY TẮC
-
-- 🛑 TDD IRON LAW: Viết test TRƯỚC code. Vi phạm → XÓA code
-- 🛑 Module mới ≥ 3 files → PHẢI có SPEC trước
-- ✅ Xem code standards chi tiết: `references/code-standards.md`
-- ✅ Xem TDD patterns: `references/tdd-patterns.md`
-- ✅ Xem SPEC templates: `references/spec-templates.md`
+### ANTIGRAVITY PARALLEL BUILD
+```
+Khi feature lớn (>3h), xem xét split cho parallel agents:
+  Agent A: Backend / API layer
+  Agent B: Frontend / UI components
+  Agent C: Tests / documentation
+  
+Sync point: Trước khi merge, chạy /review trên combined output
+```

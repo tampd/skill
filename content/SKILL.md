@@ -1,112 +1,159 @@
 ---
 name: content
-description: "Viết content SEO + tài liệu hướng dẫn người dùng: keyword research, GEO optimization, E-E-A-T, Schema markup, user guide, onboarding docs. Kích hoạt khi người dùng nói /seo, 'viết bài', 'SEO', 'content', 'keyword', 'blog', 'article', 'user guide', 'tài liệu hướng dẫn', 'onboarding'."
-metadata:
-  author: tampd
-  version: 7.0.0
-  category: content
+description: SEO content creation and blog publishing pipeline. Use for /seo (SEO-optimized article), /article (blog post), /brief (content brief), /audit-content (content SEO audit). Triggers on "SEO", "bài viết", "article", "blog", "content", "viết bài", "keyword", "từ khóa".
 ---
 
-# Content — SEO Writing & User Documentation
+# Content Skill — SEO Pipeline + Content Engine
 
-> **v7.0** — Gộp seo + docs (user-facing parts)
-> Mục tiêu: Content rank Google + AI search + user docs dễ hiểu.
-
----
-
-## 2 MODES
-
-### Mode 1 — `/seo [topic]` (SEO + GEO Content)
+## /brief [topic or keyword]
+> Research và lập content brief trước khi viết
 
 ```
-STEP 1 — RESEARCH:
-  1. Keyword Clustering:
-     Primary: [volume cao nhất]
-     Secondary: [3-5 từ phụ]
-     LSI: [5-10 từ ngữ nghĩa]
-     Long-tail: [2-3 câu hỏi]
-  2. Search Intent: Informational / Transactional / Navigational
-  3. SERP Analysis: top 10, content gap, featured snippet type
-  4. E-E-A-T: Experience, Expertise, Authority, Trust
+RESEARCH PHASE:
+  □ Keyword analysis: search volume, difficulty, intent
+  □ SERP analysis: top 10 results đang cover gì?
+  □ Content gap: gì họ có nhưng thiếu? Gì họ không có?
+  □ Search intent: informational / navigational / transactional / commercial?
+  □ Related keywords: LSI, long-tail variations
 
-STEP 2 — OUTLINE:
-  Title Tag: ≤ 60 chars, chứa primary keyword, compelling
-  Meta Description: ≤ 155 chars, có CTA
-  Heading Hierarchy: 1× H1 → H2s (secondary kw) → H3s
-  Content Blocks: Intro (150-200w) → Sections → FAQ (3-5 Qs) → CTA
-  Links: ≥ 3 internal + ≥ 2 external (nguồn uy tín)
-
-STEP 3 — DRAFT (GEO-optimized):
-  - Mở đầu mỗi section = 1 câu trả lời trực tiếp (AI extract được)
-  - Bullet points / numbered lists / bảng so sánh
-  - Cite nguồn: "Theo [Source], ..." (AI ưu tiên có citations)
-  - E-E-A-T: kinh nghiệm thực, dữ liệu cụ thể, con số
-  - Paragraph ≤ 3-4 câu (mobile-friendly)
-  - Visual break: image/table mỗi 300 words
-  > Chi tiết SEO checklist: references/seo-checklist.md
-
-STEP 4 — OPTIMIZE:
-  [ ] Keyword density: primary 1-2%, secondary 0.5-1%
-  [ ] Readability: ≤ Grade 8, ≤ 20 từ/câu
-  [ ] Internal links ≥ 3 per 1000 words
-  [ ] URL slug: ngắn, chứa primary keyword
-
-STEP 5 — PUBLISH CHECKLIST:
-  On-Page: title, meta, H1, images alt, links
-  Schema: Article, FAQ, HowTo, Breadcrumb
-  Technical: canonical, OG/Twitter cards, sitemap
-  Post: Submit GSC, share social, add internal links từ bài cũ
-```
-
-**Output:**
-```
-📝 SEO CONTENT REPORT — [Topic]
-  🔑 Primary: [kw] | Secondary: [N] | Long-tail: [N Qs]
-  📋 Outline: [N sections] | [N words target] | [content type]
-  ✅ [Draft ✓] [Optimized ✓] [Schema ✓] [Publish ✓]
+BRIEF STRUCTURE:
+  Target keyword: [primary]
+  Secondary keywords: [list 5-10]
+  Search intent: [type]
+  Target audience: [persona]
+  Word count target: [range based on SERP]
+  Required sections: [H2 list]
+  Must-answer questions: [People Also Ask]
+  Tone: [technical/casual/professional]
+  CTA: [what action after reading?]
 ```
 
 ---
 
-### Mode 2 — `/docs user` (User-facing Documentation)
-
-> Tài liệu cho end-user và handoff (khác với `/spec` cho kỹ thuật nội bộ).
+## /article [topic or brief]
+> Viết bài chuẩn SEO, E-E-A-T, đúng format WordPress
 
 ```
-STEP 1 — SCAN: Liệt kê user docs hiện có → thiếu gì?
+PRE-WRITING:
+  □ /brief đã chạy? Nếu không → chạy brief trước
+  □ INSTINCTS.md: có pattern viết bài liên quan?
 
-STEP 2 — GENERATE:
+STRUCTURE (SEO-optimized):
+  □ Title (H1): target keyword trong 60 chars, compelling
+  □ Meta description: 150-160 chars, include keyword, có CTA
+  □ Introduction (150-200 words):
+      - Hook: câu hỏi / stat / pain point
+      - Problem acknowledgment
+      - Promise: bài này giải quyết gì
+      - NO keyword stuffing trong 2 câu đầu
+  
+  □ Body (H2/H3 structure):
+      - H2s chứa secondary keywords tự nhiên
+      - Mỗi section: 200-400 words
+      - Bullet points / numbered lists cho scanability
+      - Internal linking: 2-3 links relevant
+      - External linking: 1-2 authoritative sources
+      - Images: descriptive alt text với keyword
+  
+  □ Conclusion:
+      - Tóm tắt key points
+      - CTA rõ ràng (comment / share / next article)
+      - FAQ section nếu relevant (rich snippet potential)
 
-  USER_GUIDE.md:
-    - Feature tour cho end-user
-    - Screenshots + step-by-step
-    - FAQ / troubleshooting
+E-E-A-T SIGNALS:
+  □ Author expertise hiện rõ (nếu có byline)
+  □ Cite sources cụ thể (không "một nghiên cứu nào đó")
+  □ Cập nhật ngày publish + last updated
+  □ Practical examples từ experience
+  □ Unique insight (không paraphrase lại những gì có sẵn)
 
-  ONBOARDING.md:
-    - 5 phút nắm toàn cảnh
-    - Core business flow
-    - DO's and DON'T's (code examples ✅❌)
-    - Debug commands sẵn copy-paste
-    - Links tới docs khác
+READABILITY:
+  □ Flesch-Kincaid: grade 8-12 (technical: có thể cao hơn)
+  □ Sentence length: avg <25 words
+  □ Paragraph: max 3-4 sentences
+  □ Transition words: 30%+ sentences
+  □ Active voice: 80%+
 
-STEP 3 — HANDOFF PACKAGE:
-  [ ] ONBOARDING.md có "5 phút nắm toàn cảnh"
-  [ ] Tài khoản test đầy đủ (→ PASSWORD.md)
-  [ ] Core flow mô tả rõ → người/AI zero context hiểu được
-  [ ] File tree có annotation
-  > Chi tiết template: references/handoff-template.md
-
-STEP 4 — VERIFY:
-  [ ] Links hoạt động? Content khớp code hiện tại?
+TECHNICAL SEO:
+  □ Keyword density: 1-2% (không spam)
+  □ Keyword trong: title, first 100 words, ≥1 H2, conclusion
+  □ Schema markup: Article schema nếu có thể
+  □ Canonical URL set đúng
+  □ No duplicate content
 ```
 
 ---
 
-## QUY TẮC
+## /seo [topic]
+> Full SEO article với Yoast/RankMath optimization
 
-- KHÔNG keyword stuffing — tự nhiên, đọc mượt trước
-- GEO-first — AI extract được câu trả lời trực tiếp
-- E-E-A-T — kinh nghiệm thực > lý thuyết suông
-- Cite sources — mọi claim cần dẫn chứng
-- ONBOARDING.md viết cho "zero context readers"
-- Docs SAI còn tệ hơn KHÔNG CÓ docs → luôn verify
+```
+YOAST / RANKMATH FIELDS (tất cả phải filled):
+  □ Focus Keyphrase: exact match target keyword
+  □ SEO Title: keyword đầu, ≤60 chars
+  □ Meta Description: keyword, benefit, CTA, ≤160 chars
+  □ Slug: keyword-only, no stop words, no dates
+  □ OG Image: 1200×630px, text overlay nếu cần
+
+CONTENT ANALYSIS TARGETS:
+  □ Keyphrase in first paragraph ✓
+  □ Keyphrase in SEO title ✓
+  □ Keyphrase density: 0.5-2.5% ✓
+  □ Outbound links: ≥1 ✓
+  □ Internal links: ≥1 ✓
+  □ Image alt attributes ✓
+  □ Word count ≥ competitor average ✓
+  □ Text/HTML ratio ≥25% ✓
+  □ Subheadings (H2/H3) ✓
+  □ Flesch reading ease ≥60 ✓
+
+WORDPRESS REST API PAYLOAD:
+  {
+    title: "...",
+    content: "...[formatted HTML]...",
+    status: "draft",              // always draft, human reviews
+    categories: [term_id],
+    tags: [term_ids],
+    meta: {
+      _yoast_wpseo_title: "...",
+      _yoast_wpseo_metadesc: "...",
+      _yoast_wpseo_focuskw: "...",
+      rank_math_focus_keyword: "..."
+    },
+    featured_media: wp_media_id
+  }
+```
+
+---
+
+## /audit-content [URL or post ID]
+> SEO audit bài viết đã publish
+
+```
+TECHNICAL SEO:
+  □ Page load <3s (Core Web Vitals)
+  □ Mobile-friendly (responsive layout)
+  □ HTTPS
+  □ Canonical URL correct
+  □ No broken links (internal + external)
+  □ Images have alt text
+  □ Structured data valid (Schema.org)
+
+ON-PAGE SEO:
+  □ Title: keyword present, ≤60 chars, compelling
+  □ Meta description: filled, ≤160 chars
+  □ H1: exists, unique, contains keyword
+  □ H2/H3 structure: logical, keyword variations
+  □ Content length vs top competitors
+  □ Internal links: quantity và relevance
+  □ Keyword density: 1-2%
+
+CONTENT QUALITY:
+  □ Last updated: nếu >12 tháng → cần refresh?
+  □ Facts/stats: còn accurate?
+  □ Outbound links: không bị broken / redirected?
+  □ New information cần thêm?
+  □ Better media (video, infographic) có thể add?
+
+OUTPUT: Score /100 + Priority fix list
+```

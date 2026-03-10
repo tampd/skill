@@ -1,110 +1,123 @@
 ---
 name: fix
-description: "Debug 4-phase systematic: Memory recall → Root Cause Investigation → Pattern Analysis → Hypothesis Testing → Fix + TDD test → record LESSONS. KHÔNG fix nếu chưa tìm root cause. Kích hoạt khi người dùng nói /fix, 'bug', 'lỗi', 'error', 'debug', 'crash', 'sửa lỗi'."
-metadata:
-  author: tampd
-  version: 7.0.0
-  category: debugging
+description: Bug fixing and debugging. Use for /fix (debug any error), error traces, crashes, unexpected behavior, failing tests. Triggers on "lỗi", "bug", "crash", "không chạy được", "error", "exception", "fix", "debug", "sửa lỗi".
 ---
 
-# Fix — Systematic Debug
+# Fix Skill — 4-Phase Debug + Instinct Matching + Verification Loop
 
-> **v7.0** — 4-Phase Systematic + Root Cause Iron Law
-> Mục tiêu: Root cause TRƯỚC, fix SAU. Ghi bài học. KHÔNG BAO GIỜ gặp lại.
-
-> [!CAUTION]
-> **IRON LAW**: KHÔNG FIX nếu chưa xong Phase 1 (Root Cause Investigation).
-
----
-
-## Phase 0 — MEMORY RECALL
+## /fix [bug description or error]
+> Tìm root cause trước khi fix — không patch symptoms
 
 ```
-1. Đọc LESSONS.md → grep entries MATCH với [bug description]
-   NẾU TÌM THẤY:
-   📌 "Bug này GIỐNG #WARN-XXX! Solution đã biết:"
-   → Apply fix → verify → viết test → XONG (skip Phase 1-3)
+PHASE 0 — INSTINCT MATCH (10 giây)
+  □ Check INSTINCTS.md: đã gặp error pattern này chưa?
+  □ Nếu có instinct match (confidence ≥0.7) → apply và log
+  □ Nếu không match → tiếp tục 4-phase debug
+  □ Ghi lại: "Applied instinct #X to this bug"
 
-2. NẾU KHÔNG → "Bug mới. Bắt đầu systematic debugging."
-```
+PHASE 1 — REPRODUCE (không fix mù)
+  □ Reproduce bug một cách nhất quán
+  □ Xác định: bug xảy ra LUÔN hay ĐÔIKHI?
+  □ Xác định: trigger conditions là gì?
+  □ Xác định: expected vs actual behavior
+  □ Screenshot / error trace / log đầy đủ
 
-## Phase 1 — ROOT CAUSE INVESTIGATION 🔍 (BẮT BUỘC)
+PHASE 2 — DIAGNOSE (root cause)
+  □ Đọc toàn bộ error message (không chỉ dòng đầu)
+  □ Trace call stack từ dưới lên
+  □ Check: input data có hợp lệ không?
+  □ Check: state tại thời điểm lỗi
+  □ Check: network/async timing issues?
+  □ Check: environment differences (dev vs prod)?
+  □ 5-WHY technique: hỏi "tại sao" 5 lần để tìm root cause thật sự
+  □ Ghi: "Root cause is: ___" trước khi viết bất kỳ fix nào
 
-> 🛑 "Nó có vẻ rõ ràng" KHÔNG phải root cause. CHỨNG MINH bằng evidence.
+PHASE 3 — FIX (targeted, minimal)
+  □ Fix chỉ root cause — không "cải thiện" thêm trong cùng PR
+  □ Nếu fix ảnh hưởng nhiều file → comment rõ lý do từng change
+  □ Thêm test case reproduce exact bug (regression guard)
+  □ Đảm bảo fix không break existing tests
 
-```
-1. ĐỌC ERROR MESSAGES — KỸ, TOÀN BỘ
-   Stack traces HOÀN CHỈNH → line numbers, file paths, error codes
-
-2. REPRODUCE CONSISTENTLY
-   Trigger lỗi reliably → exact steps (1-2-3)
-   Không reproduce được → thu thập thêm data, KHÔNG guess
-
-3. CHECK RECENT CHANGES
-   git log --oneline -10 → commit gần nhất liên quan?
-   git diff HEAD~3 [file] → code gì đã thay đổi?
-
-4. TRACE DATA FLOW (cho bugs sâu)
-   Bad value đến từ đâu? → trace NGƯỢC → fix tại SOURCE
-
-5. GATHER EVIDENCE (multi-component)
-   Log input → output → state tại mỗi component boundary
-```
-
-**Output Phase 1:**
-```
-🔍 ROOT CAUSE: [WHY — chứng minh bằng evidence]
-   Evidence: [data/log/trace]
-   Location: [file:line]
-```
-
-## Phase 2 — PATTERN ANALYSIS 📊
-
-```
-1. Tìm WORKING EXAMPLES trong cùng codebase
-2. So sánh khác biệt: working vs broken
-3. Hiểu dependencies: config, env, services
-```
-
-## Phase 3 — HYPOTHESIS & TESTING 🧪
-
-```
-SELF-REASONING GATE:
-  Q1: "Fix ROOT CAUSE hay chỉ symptom?"
-  Q2: "Side-effect? Regression risk?"
-  Q3: "Fix scope lớn → cần hỏi user trước?"
-
-TEST: Thay đổi NHỎ NHẤT → 1 biến → verify
-  ✅ Đúng → Phase 4
-  ❌ Sai → NEW hypothesis (KHÔNG stack fixes)
-```
-
-## Phase 4 — IMPLEMENTATION 🔧
-
-```
-1. FIX ROOT CAUSE (minimal change, dễ revert)
-2. TDD TEST: 🔴 RED → 🟢 GREEN → 🔵 VERIFY all tests
-3. REGRESSION CHECK: existing tests + edge cases
-4. COMMIT: git commit -m "fix(module): [root cause]"
-5. GHI LESSONS.MD (xem references/lessons-template.md)
+PHASE 4 — VERIFY (không báo done nếu chưa qua đây)
+  □ Bug đã được reproduce trước fix → confirm không còn reproduce được
+  □ Run full test suite: không có new failures
+  □ Nếu là UI bug → dùng Antigravity Browser Agent để visual verify
+  □ Run VERIFICATION LOOP: lint → type-check → test → audit
+  □ Log instinct result: fix này đúng hay sai? Update confidence
 ```
 
 ---
 
-## RED FLAGS — DỪNG VÀ FOLLOW PROCESS
+## BUG CLASSIFICATION
 
 ```
-🛑 DỪNG nếu:
-- Fix mà chưa reproduce bug
-- Stack fixes (A chưa work → thêm B → thêm C)
-- "Fix nhanh" cho issue phức tạp
-- Đã thử > 2 fixes mà chưa tìm root cause
-- Sửa symptom thay vì source
+CRITICAL (fix ngay, không commit khác):
+  □ Data loss / corruption
+  □ Security vulnerability
+  □ Production down / service unavailable
+  □ Authentication bypass
+
+HIGH (fix trong sprint này):
+  □ Feature không hoạt động đúng spec
+  □ Performance degradation >20%
+  □ UI broken trên major browser/device
+
+MEDIUM (backlog):
+  □ Edge case không handle
+  □ Error message không rõ ràng
+  □ Minor UX issue
+
+LOW (nice-to-have):
+  □ Typo trong UI
+  □ Console warning không critical
 ```
 
-## QUY TẮC
+---
 
-- 🛑 Phase 1 PHẢI xong trước khi fix — NO EXCEPTIONS
-- ✅ 1 bug fix = 1 commit = 1 LESSONS entry = 1 test
-- ✅ Remove ALL debug code trước commit
-- ✅ Sửa root cause, KHÔNG sửa symptom
+## COMMON PATTERNS & QUICK DIAGNOSIS
+
+```
+React / Next.js:
+  "Cannot read properties of undefined" → async data chưa load, check loading state
+  "Hydration error" → server/client render khác nhau, check conditional rendering
+  "Maximum update depth exceeded" → dependency array trong useEffect sai
+  "Module not found" → import path sai, check tsconfig paths
+
+Node.js / API:
+  "CORS error" → missing/wrong CORS headers, check origin whitelist
+  "JWT expired" → token refresh logic, check expiry handling
+  "Cannot connect to DB" → connection pool exhausted, check max connections
+  "Request timeout" → slow query / external API, check indexes + timeouts
+
+N8N / Automation:
+  "Execution failed" → check node input/output mapping
+  "Rate limit exceeded" → add delay node, check retry logic
+  "Webhook not received" → check URL, authentication, firewall
+
+WordPress / REST API:
+  "401 Unauthorized" → check nonce, check user capabilities
+  "Cannot modify header information" → output buffer issue, early exit
+```
+
+---
+
+## ANTIGRAVITY BROWSER AGENT — UI Bug Fixing
+
+```
+Dùng cho: visual bugs, layout issues, UI state bugs
+
+WORKFLOW:
+  1. Mô tả bug cho Browser Agent
+  2. Browser Agent: navigate → screenshot → identify issue
+  3. Fix code
+  4. Browser Agent: verify fix (before/after screenshots)
+  5. Check: responsive (mobile, tablet, desktop)
+  6. Check: dark mode nếu có
+  7. Confirm với visual diff
+
+Đặc biệt hữu ích cho:
+  - CSS specificity issues
+  - Z-index layering bugs
+  - Animation/transition glitches
+  - Form validation visual feedback
+```

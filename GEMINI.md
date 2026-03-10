@@ -1,315 +1,163 @@
-# GEMINI — Skill Repository v7.0 (Streamlined + Progressive Disclosure)
+# AG-SKILL Global Rules v2.0
+> Applied to ALL sessions in this project. Read before every task.
 
-> **GitHub**: https://github.com/tampd/skill
-> **Local path**: /root/skill
-> **Cập nhật**: 2026-03-09 — **v7.0 STREAMLINED** (14→8 skills + Progressive Disclosure + Claude Guide aligned)
-
----
-
-## 🔑 THÔNG TIN QUAN TRỌNG
-
-### Skill System v7.0 — Streamlined Architecture
-Phiên bản 7.0 nâng cấp từ v6.2, tuân thủ [Claude Skill Guide](https://dotanminh.github.io/hdsd_claude_skill/):
-- **14 → 8 skills**: Loại bỏ 100% overlap, giảm 42% context token
-- **Progressive Disclosure**: YAML frontmatter (Tier 1) → SKILL.md body (Tier 2) → references/ (Tier 3)
-- **YAML Frontmatter chuẩn**: name (kebab-case) + description (trigger phrases) + metadata
-- **Composable modes**: Mỗi skill có modes thay vì tách riêng
-
-### Triết lý v7.0: "Less Skills, More Modes, Zero Overlap"
-```
-✅ PROGRESSIVE DISCLOSURE: 3-tier loading giảm token 42%
-✅ ZERO OVERLAP: 14→8 skills, mỗi knowledge chỉ 1 nơi
-✅ COMPOSABLE MODES: /build --mode plan, /craft --mode audit, etc.
-✅ YAML FRONTMATTER: Chuẩn Claude guide cho auto-trigger
-✅ TDD Iron Law: Viết test TRƯỚC code
-✅ Spec-Driven: Mỗi change = 1 folder
-✅ SELF-REASONING GATE: 3-Question Self-Check
-✅ Graceful fallback: Layer 4-5 không available → bỏ qua
-```
-
-### GitHub Repository
-```
-URL:    https://github.com/tampd/skill
-Remote: origin → git@github.com:tampd/skill.git (SSH)
-Branch: main
-SSH Key: SHA256:nTSlO07MbIplXX/j2FAHlyuSb+MJxPO1yboDHJJidFs
-```
-
-> **RULE**: Mọi dự án đều push qua SSH (`git@github.com:`), KHÔNG dùng HTTPS.
+## MEMORY FILES (read at session start)
+- `LESSONS.md` — bài học từ quá khứ (append-only)
+- `INSTINCTS.md` — patterns đã học + confidence score
+- `STATE.md` — project state hiện tại
+- `ACTIVE_CONTEXT.md` — working memory phiên này (xóa sau /save)
 
 ---
 
-## ⚠️ GLOBAL RULES (15 Rules)
+## 20 GLOBAL RULES
 
-### Rule 1: AI PHẢI HỎI KHI CHƯA RÕ
-> 🛑 AI PHẢI HỎI user TRƯỚC KHI lập kế hoạch, viết code, ghi docs.
-> ❌ KHÔNG giả định và code khi chưa xác nhận.
+### Core Behavior
+1. **ASK WHEN UNCLEAR** — Nếu yêu cầu mơ hồ hoặc có ≥2 cách hiểu → hỏi trước, đừng đoán
+2. **READ MEMORY FIRST** — Đọc `LESSONS.md` + `INSTINCTS.md` trước bất kỳ task nào
+3. **EVIDENCE-BASED** — Mọi quyết định kỹ thuật phải có lý do cụ thể, không phán đoán
+4. **SELF-REASONING GATE** — Tự hỏi 3 câu trước khi implement: (a) Đây có phải cách đơn giản nhất? (b) Có test cho cái này không? (c) Bảo mật có ổn không?
 
-### Rule 2: ĐỌC LESSONS TRƯỚC KHI CODE
-> Mỗi task PHẢI bắt đầu bằng việc đọc LESSONS.md + grep tags liên quan.
+### Architecture & Planning
+5. **SPEC BEFORE CODE** — Task ≥3 files hoặc ≥2h effort → viết `/spec` trước, không code ngay
+6. **PLAN-FIRST (Antigravity)** — Generate task list có checkpoint TRƯỚC khi bắt đầu code
+7. **BRAINSTORM HARD GATE** — Feature phức tạp → `/plan` bắt buộc, không nhảy thẳng vào code
+8. **ADR FOR DECISIONS** — Mọi architectural decision quan trọng → ghi `/adr` ngay lúc quyết định
 
-### Rule 3: EVIDENCE-BASED VERIFICATION
-> Không chấp nhận "nó chạy rồi". Phải có curl output, test results, screenshot, hoặc log.
+### Code Quality
+9. **TDD IRON LAW** — Test TRƯỚC code. Không có test = không commit. Coverage ≥80%
+10. **SEARCH-FIRST** — Tìm package/solution có sẵn trước khi tự viết. Ưu tiên: official > popular > custom
+11. **QUALITY GATE** — Trước mỗi commit: `lint → format → type-check → test → audit`. Tất cả PASS mới commit
+12. **CLEANUP PASS** — Sau implement + verify → review riêng pass chỉ để tìm: dead code, TODO cũ, console.log, magic numbers
 
-### Rule 4: ARCHITECTURE SPEC TRƯỚC KHI CODE
-> Module mới ≥ 3 files → BẮT BUỘC `/plan` tạo change folder trước.
+### Verification
+13. **ROOT CAUSE FIRST** — Bug: tìm nguyên nhân gốc trước khi fix. Không patch symptom
+14. **VERIFICATION LOOP** — Sau mỗi implementation: run lint→test→diff→regression check. Chỉ báo "done" khi tất cả pass
+15. **INSTINCT VALIDATION** — Khi apply instinct → log kết quả. Đúng: +0.1. Sai: −0.2. Dưới 0.3 sau 5 lần → xem xét xóa
 
-### Rule 5: BEADS CHO TASK TRACKING
-> `.beads/` → dùng `bd` CLI. Không có → dùng NEXT-TODO.md.
+### Design & UX
+16. **WCAG AA** — Mọi UI component phải đạt WCAG 2.2 AA. Color contrast, keyboard nav, aria-label
+17. **DESIGN TOKEN MANDATORY** — Không dùng hardcoded color/spacing/font. Luôn dùng design tokens
+18. **PERFORMANCE BUDGET** — LCP ≤2.5s, CLS ≤0.1, FID ≤100ms. Measure before/after feature
 
-### Rule 6: TDD IRON LAW
-> Viết test TRƯỚC code. RED → GREEN → REFACTOR → COMMIT.
-> Viết code trước test? → XÓA code. **Exceptions**: prototype, config, CSS-only.
-
-### Rule 7: BRAINSTORMING HARD GATE
-> `/plan` PHẢI hỏi + propose ≥ 2 approaches TRƯỚC khi tạo spec.
-
-### Rule 8: ROOT CAUSE TRƯỚC FIX
-> `/fix` PHẢI xong Phase 1 (Root Cause Investigation) TRƯỚC khi fix.
-
-### Rule 9: ACCESSIBILITY WCAG AA
-> Mọi user-facing page PHẢI đạt WCAG 2.2 AA.
-> Xem `/craft --mode audit` → axe DevTools 0 violations.
-
-### Rule 10: SECURITY HEADERS
-> HSTS, CSP, X-Frame-Options, X-Content-Type-Options là BẮT BUỘC.
-> Xem `/ship check` → security headers checklist.
-
-### Rule 11: DESIGN TOKEN MANDATORY
-> KHÔNG hardcode colors, fonts, spacing.
-> Mọi giá trị visual PHẢI qua semantic design tokens (var(--xxx)).
-
-### Rule 12: PERFORMANCE BUDGET
-> Lighthouse Performance (mobile) ≥ 90. LCP < 2.5s. CLS < 0.1. INP < 200ms.
-> First Load JS < 150KB gzip.
-
-### Rule 13: SELF-REASONING GATE
-> 🛑 Trước MỌI quyết định thực thi, AI PHẢI chạy **3-Question Self-Check**:
->
-> **Q1 — "Đây đã là phương án tốt nhất chưa?"**
-> → Liệt kê ≥ 2 alternatives. So sánh nhanh pros/cons/effort.
->
-> **Q2 — "Có risk hoặc side-effect nào tôi đang bỏ qua không?"**
-> → Check: breaking changes? Regression? Performance? Security?
->
-> **Q3 — "User có cần approve quyết định này không?"**
-> → ≤ 2 files, không breaking → tự thực thi. ≥ 3 files hoặc risky → PHẢI hỏi.
-
-### Rule 14: BKNS REPO STANDARD
-> Mỗi repo BKNS **PHẢI** có: README.md, SPEC.md, DEPLOYMENT.md, CHANGELOG.md, PROJECT-META.md, .env.example.
-> **Templates**: Xem `templates/` trong skill repo.
-
-### Rule 15: README SYNC KHI PUSH GITHUB (v7.0) 🆕
-> 🛑 Trước MỌI lần `git push` lên GitHub, AI PHẢI kiểm tra:
->
-> **CHECK 1**: README.md version có khớp GEMINI.md version không?
-> → Nếu GEMINI.md = v7.0 mà README vẫn ghi v6.1 → **PHẢI update README trước push**.
->
-> **CHECK 2**: Danh sách skills/lệnh trong README có khớp thực tế không?
-> → Số skills, tên lệnh, cấu trúc thư mục phải 100% match.
->
-> **CHECK 3**: Install script trong README có đúng danh sách folder hiện tại không?
-> → `for skill in ...` phải list đúng 8 folders v7.0 (không list folders đã xóa).
->
-> **Quy tắc**: README.md là "mặt tiền" GitHub — SAI README = gây nhầm lẫn nghiêm trọng.
+### Standards
+19. **SECURITY HEADERS** — Mọi HTTP response phải có: CSP, HSTS, X-Frame-Options, X-Content-Type
+20. **README SYNC** — Sau mỗi push: kiểm tra README có cần cập nhật không (API changes, new env vars, new commands)
 
 ---
 
-## 📁 CẤU TRÚC SKILL REPOSITORY v7.0
+## ANTIGRAVITY NATIVE FEATURES — Sử dụng tích cực
 
 ```
-/root/skill/
-├── GEMINI.md                  ← File này — brain & rules
-├── README.md
-│
-│── ─── 8 SKILLS (v7.0) ───
-├── session/                   ← /start /save /checkpoint (← start+save+memory)
-│   ├── SKILL.md
-│   └── references/
-│       ├── review-checklist.md
-│       └── trigger-keywords.md
-│
-├── build/                     ← /build /plan (← build+plan)
-│   ├── SKILL.md
-│   └── references/
-│       ├── tdd-patterns.md
-│       ├── code-standards.md
-│       └── spec-templates.md
-│
-├── fix/                       ← /fix (tinh gọn)
-│   ├── SKILL.md
-│   └── references/
-│       └── lessons-template.md
-│
-├── craft/                     ← /craft /quality (← craft+quality)
-│   ├── SKILL.md
-│   └── references/
-│       ├── design-tokens.md
-│       ├── wcag-checklist.md
-│       └── perf-targets.md
-│
-├── secure/                    ← /security /ship (← web-security+ship)
-│   ├── SKILL.md
-│   └── references/
-│       ├── owasp-checklist.md
-│       ├── security-headers.md
-│       └── ci-templates.md
-│
-├── automate/                  ← /n8n /integrate (← n8n-pro+integrate)
-│   ├── SKILL.md
-│   └── references/
-│       ├── n8n-patterns.md
-│       └── api-design.md
-│
-├── content/                   ← /seo /docs user (← seo+docs handoff)
-│   ├── SKILL.md
-│   └── references/
-│       ├── seo-checklist.md
-│       └── handoff-template.md
-│
-├── spec/                      ← /spec /docs init /docs adr (← docs arch+templates)
-│   ├── SKILL.md
-│   └── references/
-│       ├── architecture-template.md
-│       ├── api-template.md
-│       └── adr-template.md
-│
-│── ─── BKNS TEMPLATES ───
-├── templates/                 ← BKNS repo templates (giữ nguyên)
-│
-│── ─── INFRASTRUCTURE ───
-├── qdrant-memory/SKILL.md     ← Qdrant Layer 4 setup
-│
-│── ─── ARCHIVED (v6.x → v7.0) ───
-├── start/        ← → merged into session
-├── save/         ← → merged into session
-├── memory/       ← → merged into session
-├── plan/         ← → merged into build
-├── quality/      ← → merged into craft
-├── ship/         ← → merged into secure
-├── integrate/    ← → merged into automate
-├── n8n-pro/      ← → merged into automate
-├── web-security/ ← → merged into secure
-├── docs/         ← → split into content + spec
-├── seo/          ← → merged into content
-├── design/       ← → merged into craft (v4.0)
-├── guard/        ← → merged into craft (v5.0)
-├── brainstorm/   ← → merged into build (v6.0)
-├── review-website/ ← → merged into craft (v6.0)
-└── archive/      ← Skills cũ v1+v2
+Browser Sub-Agent    → /craft, /fix UI bugs, /e2e verification
+Multi-Agent Parallel → /build large features (split thành sub-tasks)
+Mission Control      → Monitor parallel agents, assign /spec + /build + /secure cùng lúc
+Artifact Output      → /spec, /handoff, /runbook output dạng structured Artifact
+Planning Mode        → Luôn gen task-list có checkpoint trước khi code
+Stitch MCP           → /craft setup → generate screens → edit screens → export code
 ```
 
 ---
 
-## 🎯 8 SKILLS — QUICK REFERENCE
+## 🎯 9 SKILLS — QUICK REFERENCE
 
-| # | Skill | Lệnh | Mục đích | Gộp từ |
-|---|---|---|---|---|
-| 1 | **session** | `/start` `/save` `/checkpoint` | 🔄 Lifecycle: mở/đóng/checkpoint phiên | start+save+memory |
-| 2 | **build** ⭐ | `/build` `/plan` | 🔥 Vibe code: TDD + spec-driven | build+plan |
-| 3 | **fix** | `/fix` | � Debug: 4-phase systematic | fix (tinh gọn) |
-| 4 | **craft** | `/craft` `/quality` | 🎨 Design web: UI + tokens + a11y + perf | craft+quality |
-| 5 | **secure** | `/security` `/ship` | 🔒 Security: OWASP + headers + deploy | web-security+ship |
-| 6 | **automate** | `/n8n` `/integrate` | ⚡ Automation: N8N + API integration | n8n-pro+integrate |
-| 7 | **content** | `/seo` `/docs user` | 📝 Content: SEO + user docs | seo+docs handoff |
-| 8 | **spec** | `/spec` `/docs init` `/docs adr` | 📋 Spec & docs kỹ thuật | docs arch+templates |
-
----
-
-## 🌐 WEBSITE DEVELOPMENT WORKFLOW v7.0
-
-```
-/craft setup   → /craft component → /craft audit  → /ship check  → /security
-     │                 │                 │                │              │
-  Stack choice     Token system     A11y + Perf     Pre-launch      OWASP audit
-  Atomic Design    ARIA attrs       axe 0 err       Lighthouse≥90   Headers check
-  TS strict        Animation        Contrast OK     Bundle<150KB    CI/CD pipeline
-```
-
-### Typical Sprint:
-```
-FEATURE MỚI:
-/plan [feature]       → Ideation + Change folder + Tasks
-/craft component      → Atomic Design + Tokens + ARIA
-/build [task]         → TDD implementation
-/craft audit          → A11y + Perf verification
-/save                 → 2-stage review + commit
-
-PRÉ-LAUNCH:
-/security [target]    → OWASP deep audit
-/ship check           → Full pre-launch checklist
-/ship ci              → CI/CD pipeline setup
-/ship monitor         → Monitoring + alerts
-```
-
----
-
-## 🧠 MEMORY ARCHITECTURE (5 Tầng)
-
-| Tầng | Engine/File | Mục đích | Skill |
+| # | Skill | Commands | Purpose |
 |---|---|---|---|
-| **1 — Working** | `ACTIVE_CONTEXT.md` | Session memory (xóa sau /save) | /checkpoint |
-| **2 — Semantic** | `GEMINI.md`, `STATE.md`, `NEXT-TODO.md` | Project brain | /start, /save |
-| **3 — Episodic** | `LESSONS.md`, `CHANGE_LOG.md` | Long-term (append-only) | /fix, /save |
-| **4 — Vector** | **Qdrant** MCP | Semantic search cross-session | /start, /build, /fix |
-| **5 — Task Graph** | **Beads** CLI | Dependency-aware tasks | /start, /build, /save |
-
-### 3-Tier Document Load Order
-```
-TIER 1 — LUÔN LOAD (/start):  GEMINI.md + LESSONS grep tags
-TIER 2 — LOAD KHI CẦN:        docs/architecture.md, docs/business-rules.md
-TIER 3 — LOAD KHI /build:     changes/<feature>/specs/ (chỉ spec đang build)
-```
+| 1 | **session** | `/start` `/save` `/checkpoint` `/review` | 🔄 Lifecycle + Quality Gate + Multi-perspective Review |
+| 2 | **build** ⭐ | `/build` `/plan` `/search` | 🔥 Search-First + TDD + Cleanup Pass |
+| 3 | **fix** | `/fix` | 🐛 4-Phase Debug + Instinct Match + Common Patterns |
+| 4 | **craft** | `/craft` `/audit` `/tokens` `/e2e` | 🎨 UI + Design Tokens + WCAG + Browser Testing |
+| 5 | **secure** | `/security` `/harden` `/ship` | 🔒 OWASP + Hardening + Production Readiness |
+| 6 | **automate** | `/n8n` `/integrate` `/mcp` | ⚡ N8N + API Design + MCP Tool Design |
+| 7 | **content** | `/seo` `/article` `/brief` `/audit-content` | 📝 SEO Pipeline + Content Engine |
+| 8 | **spec** ⭐ | `/spec` `/handoff` `/adr` `/runbook` `/apidoc` `/componentdoc` | 📋 Ultra Architecture + Handoff + API/Component Docs |
+| 9 | **learn** | `/learn` `/instinct` `/evolve` `/review-instincts` | 🧠 Continuous Learning + Instinct Evolution |
 
 ---
 
-## 📚 DOCUMENTATION — ZERO OVERLAP
+## 🧠 MEMORY ARCHITECTURE (5 Layers)
 
-| File | Viết gì | KHÔNG viết gì |
+| Layer | Engine/File | Purpose |
 |---|---|---|
-| `GEMINI.md` | Tech stack, Rules, Version | Tasks, logs, state |
-| `LESSONS.md` | Bug #WARN-XXX + ✅❌ code | Features, changelog |
-| `NEXT-TODO.md` | Task backlog (⬜🔄✅) | Tasks đã xong (XÓA) |
-| `ACTIVE_CONTEXT.md` | Working memory phiên hiện tại | Persistent info |
-| `changes/` | Spec-driven: SPEC.md + tasks + delta-specs | |
+| **Working** | `ACTIVE_CONTEXT.md` | Session memory (xóa sau /save) |
+| **Semantic** | `GEMINI.md`, `STATE.md` | Project brain |
+| **Episodic** | `LESSONS.md`, `CHANGELOG.md` | Long-term (append-only) |
+| **Instinct** | `INSTINCTS.md` | Learned patterns + confidence |
+| **Vector** | Qdrant MCP (optional) | Semantic search cross-session |
 
 ---
 
-## 📋 CHEAT SHEET v7.0
+## SKILL MAP
+
+| Trigger | Skill |
+|---------|-------|
+| Bắt đầu / kết thúc phiên | `session` |
+| Viết code mới, feature | `build` |
+| Debug, lỗi, crash | `fix` |
+| UI, design, component | `craft` |
+| Security, deploy, production | `secure` |
+| N8N, API, automation, MCP | `automate` |
+| Bài viết, SEO, content | `content` |
+| Architecture, docs, handoff | `spec` |
+| Học hỏi, patterns, instincts | `learn` |
+
+---
+
+## 📋 CHEAT SHEET
 
 ```
 Bắt đầu phiên?           → /start [task]
 Ý tưởng mơ hồ?           → /plan [idea]
-Feature phức tạp?         → /plan [feature]       🔥 Ideation + SPEC
-Viết code?                → /build [task]         🔥 TDD Iron Law
-Gặp bug?                  → /fix [bug]            🔥 4-Phase Systematic
-Design UI?                → /craft [task]         � Tokens + WCAG
-Audit chất lượng?         → /craft audit          � A11y + Perf
-Audit bảo mật?            → /security [target]    🔒 OWASP
-Chuẩn bị deploy?          → /ship check           🔒 Pre-launch
-Setup CI/CD?              → /ship ci              🔒 GitHub Actions
-Monitor production?       → /ship monitor         🔒 Monitoring
-API / webhook?            → /integrate [service]  ⚡ REST + webhook
-N8N workflow?             → /n8n [task]            ⚡ Automation
-Viết bài SEO?             → /seo [topic]           📝 SEO + GEO
-Docs hướng dẫn?           → /docs user             📝 Onboarding
-Architecture docs?        → /spec [scope]          � Technical docs
-Khởi tạo repo BKNS?      → /docs init             📋 BKNS setup
-Ghi ADR?                  → /docs adr              📋 Decision record
-Lưu context?              → /checkpoint            🔄 Working memory
-Kết thúc phiên?           → /save                  🔄 Review + commit
+Feature phức tạp?         → /plan [feature]
+Research trước code?      → /search [need]
+Viết code?                → /build [task]           🔥 TDD + Search-First
+Gặp bug?                  → /fix [bug]              🐛 4-Phase Debug
+Design UI?                → /craft [task]           🎨 Tokens + WCAG
+Design tokens?            → /tokens [scope]
+Browser test?             → /e2e [scope]
+Audit chất lượng?         → /audit [scope]
+Audit bảo mật?            → /security [target]      🔒 OWASP
+Hardening?                → /harden [service]
+Chuẩn bị deploy?          → /ship [env]             🔒 Production Readiness
+API / webhook?            → /integrate [service]     ⚡
+N8N workflow?             → /n8n [task]              ⚡
+Thiết kế MCP tool?        → /mcp [tool-name]
+Content brief?            → /brief [topic]           📝
+Viết bài SEO?             → /seo [topic]             📝
+Viết article?             → /article [topic]         📝
+Audit content?            → /audit-content [URL]
+Architecture docs?        → /spec [scope]            📋 15 sections
+Bàn giao dự án?           → /handoff [project]       📋 15 sections
+API documentation?        → /apidoc [endpoint]
+Component docs?           → /componentdoc [scope]
+Ghi ADR?                  → /adr [decision]          📋
+Tạo runbook?              → /runbook [service]       📋
+Ghi bài học?              → /learn [observation]     🧠
+Xem instincts?            → /instinct
+Evolve instincts?         → /evolve                  🧠
+Review instincts?         → /review-instincts
+Review code?              → /review [scope]
+Lưu context?              → /checkpoint
+Kết thúc phiên?           → /save
 ```
 
 ---
 
-## 📝 CHANGE LOG
+## DOCUMENTATION — ZERO OVERLAP
+
+| File | Viết gì | KHÔNG viết gì |
+|---|---|---|
+| `GEMINI.md` | Tech stack, Rules, Version | Tasks, logs, state |
+| `LESSONS.md` | Bug + bài học + ✅❌ code | Features, changelog |
+| `INSTINCTS.md` | Learned patterns + confidence | Bug reports |
+| `STATE.md` | Current project state | History |
+| `ACTIVE_CONTEXT.md` | Working memory phiên hiện tại | Persistent info |
+| `CHANGELOG.md` | Timeline thay đổi theo ngày | Tasks, lessons |
+
+---
+
+## CHANGELOG
 
 | Date | Change |
 |---|---|
-| **2026-03-09** | **v7.0 STREAMLINED**: Gộp 14→8 skills theo Claude Skill Guide. Progressive Disclosure (YAML→SKILL.md→references/). +session (start+save+memory), +secure (web-security+ship), +automate (n8n+integrate), +content (seo+docs user), +spec (docs tech+templates). Giảm ~3200→~1850 lines SKILL.md. |
-| 2026-03-06 | v6.2 BKNS-ALIGNED: Rule 14 — BKNS Repo Standard. +8 templates. |
-| 2026-03-06 | v6.1 SELF-REASONING GATE: Rule 13 — 3-Question Self-Check. |
-| 2026-03-05 | v6.0 MEMORY-FIRST: 18→14 skills. +craft, +quality, +ship. |
-| 2026-03-05 | v5.0 HYBRID UPGRADE: TDD Iron Law, Spec-Driven, 4-Phase Debug. |
-| 2026-03-04 | v4.x: Beads + Qdrant 5-Layer Memory. +docs, +seo, +brainstorm, +n8n-pro. |
-| 2026-02-28 | v2.0: Gộp 26 skills → 8 unified skills. |
+| **2026-03-10** | **v2.0 FINAL**: Merge v1.0 + v2 draft + research. 20 rules, 9 skills with 32 commands, 30+ reference files. New: /mcp, /tokens, /e2e, /harden, /brief, /audit-content, /apidoc, /componentdoc, /evolve, /review-instincts. Context management, platform design rules. |
+| 2026-03-09 | v1.0 LAUNCH: 9 skills, 17 rules, ECC-inspired. |

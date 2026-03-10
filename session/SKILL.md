@@ -1,144 +1,137 @@
 ---
 name: session
-description: "Quản lý lifecycle phiên làm việc: mở phiên (load context, auto-select skill), checkpoint giữa phiên, đóng phiên (review, commit, push). Kích hoạt khi người dùng nói /start, /save, /checkpoint, /recall, /memory, hoặc 'bắt đầu phiên', 'kết thúc phiên', 'lưu lại'."
-metadata:
-  author: tampd
-  version: 7.0.0
-  category: lifecycle
+description: Session lifecycle management. Use for /start (begin session), /save (end session), /checkpoint (save mid-session), /review (multi-perspective code review). Triggers on "bắt đầu phiên", "kết thúc phiên", "lưu context", "review code", "start session", "save session".
 ---
 
-# Session — Lifecycle Management
+# Session Skill — Lifecycle + Quality Gate + Review
 
-> **v7.0** — Gộp start + save + memory
-> Mục tiêu: Mở/đóng/checkpoint phiên trong 1 skill duy nhất.
+## /start [task]
+> Khởi động phiên làm việc, load memory, set context
+
+```
+STEP 1 — LOAD MEMORY
+  □ Đọc LESSONS.md (bài học cũ)
+  □ Đọc INSTINCTS.md (patterns + confidence)
+  □ Đọc STATE.md (project state)
+  □ Nếu ACTIVE_CONTEXT.md tồn tại → đọc (phiên chưa lưu)
+
+STEP 2 — ORIENT
+  □ Tóm tắt: project hiện tại là gì?
+  □ Tóm tắt: last session làm gì, kết quả ra sao?
+  □ Liệt kê: top 3 open issues / blockers
+
+STEP 3 — SET TASK
+  □ Parse [task] input
+  □ Áp dụng SELF-REASONING GATE:
+      (a) Đây có phải cách tiếp cận đơn giản nhất không?
+      (b) Có cần /spec trước không? (≥3 files → YES)
+      (c) Có security risk nào không?
+  □ Tạo ACTIVE_CONTEXT.md với: task, approach, risks, checklist
+
+STEP 4 — ANTIGRAVITY PLAN
+  □ Generate task-list có numbered checkpoints
+  □ Nếu task lớn → đề xuất spawn parallel sub-agents
+  □ Output: plan rõ ràng trước khi bắt đầu code
+```
+
+**Output:** `ACTIVE_CONTEXT.md` + task plan với checkpoints
 
 ---
 
-## 3 MODES
-
-### Mode 1 — `/start [task]` (Mở phiên)
+## /checkpoint
+> Save mid-session state, không kết thúc phiên
 
 ```
-BƯỚC 1 — CHECK ACTIVE CONTEXT:
-  NẾU ACTIVE_CONTEXT.md tồn tại:
-    🚨 "Phiên cũ chưa kết thúc!"
-    → Hiển thị: task đang dở + files + next action
-    → Hỏi: "Tiếp tục hay bắt đầu mới?"
-  NẾU KHÔNG → tiếp tục
-
-BƯỚC 2 — CONTEXT LOAD (song song):
-  Đọc đồng thời: GEMINI.md, LESSONS.md, CHANGE_LOG.md,
-  NEXT-TODO.md, STATE.md, PROJECT-META.md, SPEC.md, DEPLOYMENT.md
-  > File không tồn tại → bỏ qua im lặng
-
-BƯỚC 3 — LESSONS PRE-FLIGHT:
-  Grep LESSONS.md → entries match [task description]
-  Hiển thị tối đa 3 cảnh báo relevant
-
-BƯỚC 4 — BLUEPRINT CHECK:
-  Scan changes/ → SPEC.md + tasks count
-  Scan .agent/commands/ → backward compat
-  Không tìm thấy → "Chưa có spec. /plan trước hay /build trực tiếp?"
-
-BƯỚC 5 — SKILL AUTO-SELECT:
-  Dựa vào [task description] → chọn skill phù hợp
-  Xem bảng trigger keywords trong references/trigger-keywords.md
-```
-
-**Output:**
-```
-🚀 START — [Tên dự án] v[X.Y.Z]
-📅 [Timestamp]
-━━━━━━━━━━━━━━━━━━━━━━
-📋 TRẠNG THÁI: v[X.Y.Z] | Phiên trước: [tóm tắt]
-🔜 TASK: → [task description]
-⚠️ LESSONS: #WARN-XXX — [quy tắc liên quan]
-📋 SPEC/BLUEPRINT: [✅ Có | ❌ Chưa có]
-🎯 SKILL → /[skill] [task]
-━━━━━━━━━━━━━━━━━━━━━━
+□ Update ACTIVE_CONTEXT.md:
+    - Đã làm gì (completed steps)
+    - Đang ở đâu (current step)
+    - Còn lại gì (remaining steps)
+    - Blockers / notes
+□ Chạy VERIFICATION LOOP nhanh:
+    lint → type-check → test (nếu applicable)
+□ Ghi timestamp
 ```
 
 ---
 
-### Mode 2 — `/checkpoint` (Lưu giữa phiên)
+## /save
+> Kết thúc phiên, lưu tất cả vào persistent memory
 
 ```
-KHI NÀO:
-  - Sắp nghỉ giữa task phức tạp
-  - Sau sub-task quan trọng hoàn thành
-  - Trước khi chuyển task khác
-  - Context window cảm giác đầy
+STEP 1 — VERIFICATION LOOP (bắt buộc trước khi save)
+  □ Run: lint → format → type-check → test
+  □ Nếu FAIL → FIX trước, không save với broken state
+  □ Run CLEANUP PASS: tìm console.log, TODO, hardcoded values
+  □ Commit nếu có changes (conventional commit format)
 
-AI SẼ LÀM:
-  1. Tổng hợp context hiện tại
-  2. Ghi ACTIVE_CONTEXT.md:
+STEP 2 — EXTRACT LEARNINGS
+  □ Trong phiên này, gặp vấn đề gì?
+  □ Giải pháp nào hiệu quả? Cái nào không?
+  □ Append vào LESSONS.md (never overwrite)
 
-     # ACTIVE_CONTEXT — [Tên Dự Án]
-     > Last checkpoint: YYYY-MM-DD HH:MM
+STEP 3 — UPDATE INSTINCTS
+  □ Pattern nào được confirm? → confidence += 0.1
+  □ Pattern nào sai? → confidence -= 0.2 + thêm counter-example
+  □ Pattern mới nào xuất hiện? → thêm vào INSTINCTS.md (confidence: 0.5)
 
-     ## ⚡ SNAPSHOT
-     Task: [mô tả]
-     Progress: [X/Y bước xong]
-     Files đang chỉnh: [list]
+STEP 4 — UPDATE STATE
+  □ Cập nhật STATE.md: current status, next steps, blockers
+  □ Cập nhật CHANGELOG.md: những gì đã thay đổi
 
-     ## 🔜 NEXT IMMEDIATE ACTION
-     [Đủ chi tiết để "AI lạ" tiếp tục được]
-
-     ## 🧠 CONTEXT CẦN NHỚ
-     [Decisions, constraints, gotchas]
-```
-
-**`/recall`** — Đọc ACTIVE_CONTEXT.md → hiển thị tóm tắt → load lại files.
-
----
-
-### Mode 3 — `/save` (Đóng phiên)
-
-```
-BƯỚC 1 — SCOPE REVIEW:
-  git status + git diff --stat → liệt kê files thay đổi
-
-BƯỚC 2 — 2-STAGE REVIEW:
-  Stage 1 (Spec Compliance):
-    Code đúng spec? Thừa? Behavior khớp?
-  Stage 2 (Code Quality — 7 tiêu chí):
-    ① Bugs ② UI/UX ③ Security ④ Performance
-    ⑤ Code Quality ⑥ Test Coverage ⑦ LESSONS Compliance
-  🛑 CRITICAL → DỪNG, yêu cầu sửa trước commit
-
-BƯỚC 3 — LESSONS CAPTURE:
-  Hỏi: "Phiên này có bug/bài học gì không?"
-  NẾU CÓ → ghi LESSONS.md (xem references/lessons-template.md)
-
-BƯỚC 4 — CHANGE ARCHIVE:
-  NẾU có change folder → verify Done → merge delta specs → archive
-
-BƯỚC 5 — DOCS UPDATE:
-  CHANGE_LOG.md, NEXT-TODO.md, GEMINI.md + BKNS files nếu có
-
-BƯỚC 6 — ATOMIC COMMIT & PUSH:
-  git add → git commit (conventional) → git push origin main
-
-BƯỚC 7 — CLEANUP:
-  Xóa ACTIVE_CONTEXT.md (consolidated vào docs)
-```
-
-**Output:**
-```
-✅ /save hoàn tất!
-📋 REVIEW: Stage 1 [✅|❌] | Stage 2 [✅ N/7]
-📝 LESSONS: [N mới | Không đổi]
-📦 ARCHIVE: [archived | N/A]
-📦 COMMITS: [N commits] | 🔗 PUSHED: main → origin
-🔜 NEXT → [task ưu tiên]
+STEP 5 — CLEANUP
+  □ Xóa ACTIVE_CONTEXT.md
+  □ README sync check (có cần update không?)
 ```
 
 ---
 
-## QUY TẮC
+## /review [scope]
+> Multi-perspective code review — 3 góc nhìn độc lập
 
-- `/start` — CHỈ đọc và báo cáo, KHÔNG tự sửa file
-- `/checkpoint` — KHÔNG BAO GIỜ từ chối. Luôn ghi dù context ít
-- `/save` — Stage 1 FAIL → KHÔNG commit. CRITICAL → KHÔNG commit
-- ACTIVE_CONTEXT.md bị xóa sau `/save`
-- Beads/Qdrant không available → bỏ qua im lặng
+```
+INPUT: [scope] = file path, PR, hoặc "last changes"
+
+PERSPECTIVE 1 — SECURITY 🔴
+  □ Injection vulnerabilities (SQL, XSS, SSRF)
+  □ Authentication / authorization gaps
+  □ Sensitive data exposure (logs, errors, responses)
+  □ Dependency vulnerabilities (outdated packages)
+  □ Security headers present?
+  □ Secrets hardcoded?
+
+PERSPECTIVE 2 — PERFORMANCE 🔵
+  □ Unnecessary re-renders (React) / N+1 queries
+  □ Missing indexes, unoptimized queries
+  □ Bundle size impact (new imports?)
+  □ Memory leaks (event listeners, subscriptions)
+  □ Core Web Vitals impact (LCP, CLS, FID)
+  □ Caching opportunities missed?
+
+PERSPECTIVE 3 — MAINTAINABILITY 🟢
+  □ Functions >30 lines → đề xuất split
+  □ Duplicated logic (DRY violations)
+  □ Missing/outdated comments trên complex logic
+  □ Type safety (any, unknown không có guard)
+  □ Error handling đầy đủ không?
+  □ Test coverage adequate?
+
+OUTPUT FORMAT:
+  🔴 SECURITY ISSUES (phải fix trước khi merge):
+  🔵 PERFORMANCE ISSUES (nên fix):
+  🟢 MAINTAINABILITY (có thể fix sau):
+  ✅ APPROVED nếu không có critical issues
+```
+
+---
+
+## VERIFICATION LOOP (dùng trong tất cả workflows)
+```bash
+# Thứ tự bắt buộc — dừng ngay khi có lỗi
+1. lint (eslint/biome/ruff)
+2. format check (prettier/black)
+3. type-check (tsc/mypy)
+4. test (jest/pytest/vitest) — coverage check
+5. security audit (npm audit/pip-audit)
+
+# Chỉ sau khi tất cả PASS mới tiếp tục
+```

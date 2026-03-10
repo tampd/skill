@@ -1,146 +1,159 @@
 ---
 name: secure
-description: "Bảo mật web và deploy an toàn: OWASP Top 10 deep audit + security headers + pre-launch checklist + CI/CD pipeline + monitoring + rollback. Kích hoạt khi người dùng nói /security, /ship, 'bảo mật', 'OWASP', 'deploy', 'launch', 'CI/CD', 'monitor', 'rollback', 'pentest'."
-metadata:
-  author: tampd
-  version: 7.0.0
-  category: security
+description: Security audit and production deployment. Use for /security (OWASP audit), /ship (pre-deploy checklist), /harden (security hardening). Triggers on "security", "bảo mật", "deploy", "production", "OWASP", "ship", "hardening", "vulnerability", "lỗ hổng".
 ---
 
-# Secure — Security Audit & Deploy Safety
+# Secure Skill — OWASP + Production Readiness + Deploy
 
-> **v7.0** — Gộp web-security + ship
-> Mục tiêu: Tìm lỗ hổng THẬT SỰ + deploy an toàn + monitor production.
-
----
-
-## 4 MODES
-
-### Mode 1 — `/security [target]` (OWASP Deep Audit)
+## /security [target]
+> OWASP Top 10 audit + security hardening
 
 ```
-PHASE 1 — RECONNAISSANCE:
-  1. Tech stack detection (headers, meta, source)
-  2. Attack surface mapping:
-     - Public endpoints, auth mechanisms
-     - File upload, 3rd-party integrations, WebSocket
+OWASP TOP 10 CHECKLIST:
 
-PHASE 2 — OWASP TOP 10 (2025) DEEP AUDIT:
-  A01 Broken Access Control  → RBAC server-side? IDOR? CORS? JWT verify?
-  A02 Cryptographic Failures → HTTPS? TLS 1.2+? bcrypt/argon2? Secrets in env?
-  A03 Injection              → Parameterized queries? XSS? Command injection?
-  A04 Insecure Design        → Rate limiting? Account lockout? CAPTCHA?
-  A05 Misconfiguration       → Debug OFF? Default creds? Directory listing?
-  A06 Vulnerable Components  → npm audit clean? Lock files committed?
-  A07 Auth Failures          → Session timeout? Logout invalidate? MFA?
-  A08 Data Integrity         → CI/CD signed? Package checksums?
-  A09 Logging & Monitoring   → Auth events logged? No PII in logs?
-  A10 SSRF                   → URL validation? Internal IP blocked?
-  > Chi tiết checklist đầy đủ: references/owasp-checklist.md
+A01 — BROKEN ACCESS CONTROL
+  □ Authentication required cho mọi protected route
+  □ Authorization check: user chỉ access data của mình
+  □ Admin endpoints protected (không chỉ hide ở UI)
+  □ IDOR prevention: không expose sequential IDs trực tiếp
+  □ JWT/session validation đúng
 
-PHASE 3 — SECURITY HEADERS ANALYSIS:
-  CRITICAL (phải có):
-  [ ] Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
-  [ ] Content-Security-Policy: [restrictive — không * cho script-src]
-  [ ] X-Content-Type-Options: nosniff
-  [ ] X-Frame-Options: DENY (hoặc SAMEORIGIN)
-  [ ] Referrer-Policy: strict-origin-when-cross-origin
-  > Chi tiết headers: references/security-headers.md
+A02 — CRYPTOGRAPHIC FAILURES
+  □ Passwords hashed với bcrypt/argon2 (min cost 12)
+  □ Sensitive data encrypted at rest (PII, tokens)
+  □ HTTPS enforced (no HTTP fallback)
+  □ TLS 1.2+ only
+  □ Secrets trong env vars (không trong code)
 
-PHASE 4 — API SECURITY (nếu có):
-  [ ] Auth: Bearer/API key mọi endpoint?
-  [ ] Rate limiting: X-RateLimit headers?
-  [ ] Input validation: schema (Zod/Joi)?
-  [ ] CORS: specific origins, không wildcard?
+A03 — INJECTION
+  □ SQL: parameterized queries / ORM only (không string concat)
+  □ NoSQL: input validation trước khi query
+  □ XSS: output encoding, Content-Security-Policy header
+  □ Command injection: không exec() với user input
+  □ LDAP/XML injection check nếu applicable
 
-PHASE 5 — SERVER & INFRASTRUCTURE:
-  [ ] Firewall: only necessary ports?
-  [ ] SSH: key-based only?
-  [ ] Database: not publicly accessible?
-  [ ] Secrets management: vault/env?
-```
+A04 — INSECURE DESIGN
+  □ Rate limiting: login, API, webhook endpoints
+  □ Account lockout sau N failed attempts
+  □ Security design review cho new features
 
-**Output:**
-```
-🔒 SECURITY AUDIT REPORT — [Target]
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  🔴 Critical: [N]  🟠 High: [N]  🟡 Medium: [N]  🟢 Low: [N]  ✅ Pass: [N]
+A05 — SECURITY MISCONFIGURATION
+  □ Debug mode OFF trong production
+  □ Default credentials đã đổi
+  □ Unnecessary features/ports disabled
+  □ Error messages không expose stack traces
+  □ Directory listing disabled
 
-📋 REMEDIATION PLAN (ưu tiên)
-  1. [Critical fix] — ETA: [time]
-```
+A06 — VULNERABLE COMPONENTS
+  □ npm audit / pip-audit: không có critical CVEs
+  □ Dependencies update strategy (Dependabot?)
+  □ Docker base images: không dùng :latest
 
----
+A07 — AUTH & SESSION FAILURES
+  □ Session invalidated sau logout
+  □ Session timeout reasonable (idle + absolute)
+  □ MFA available cho admin accounts
+  □ Password reset flow secure (token expires)
+  □ Cookie flags: HttpOnly, Secure, SameSite=Strict
 
-### Mode 2 — `/ship check` (Pre-launch Checklist)
+A08 — INTEGRITY FAILURES
+  □ Subresource Integrity (SRI) cho CDN assets
+  □ Package lock file committed
+  □ CI/CD pipeline không nhận untrusted input
 
-```
-✅ CODE QUALITY:
-  [ ] TypeScript: tsc --noEmit → 0 errors
-  [ ] Lint: 0 errors  |  Tests: all pass, coverage ≥ 80%
-  [ ] Build: success  |  No console.log/debugger
+A09 — LOGGING FAILURES
+  □ Auth events logged (login, logout, failed attempts)
+  □ Access control failures logged
+  □ Logs không chứa PII / sensitive data
+  □ Log integrity (append-only, offsite backup)
 
-✅ SECURITY HEADERS: (xem Phase 3 ở trên)
-
-✅ PERFORMANCE:
-  [ ] Lighthouse ≥ 90 (mobile)  |  LCP < 2.5s  |  CLS < 0.1  |  INP < 200ms
-  [ ] Images: WebP, lazy (except LCP)  |  Bundle: < 150KB gzip
-
-✅ SEO:
-  [ ] title ≤ 60 chars  |  meta ≤ 155 chars  |  OG tags  |  sitemap.xml
-
-✅ ACCESSIBILITY:
-  [ ] Keyboard nav  |  ARIA labels  |  Contrast ≥ 4.5:1  |  alt text
-
-✅ ENVIRONMENT:
-  [ ] .env.production NOT in git  |  Production API keys
-  [ ] CORS: production domain only  |  Rate limiting ON
-
-✅ BKNS RELEASE (nếu BKNS repo):
-  [ ] CHANGELOG.md + DEPLOYMENT.md + PROJECT-META.md updated
-  [ ] Rollback plan documented  |  Migration tested (up + down)
-```
-
-**Output:**
-```
-🚀 SHIP REPORT — [Project] v[version]
-  Code Quality: [✅|🛑]  Security: [✅|🛑]  Performance: [✅|🛑]
-  SEO: [✅|🛑]  A11y: [✅|🛑]  Environment: [✅|🛑]
-🚦 [✅ READY TO SHIP | 🛑 BLOCKED — fix N issues]
+A10 — SSRF
+  □ Outbound requests: validate URL destination
+  □ Whitelist external domains nếu có thể
+  □ Internal network inaccessible từ user input
 ```
 
 ---
 
-### Mode 3 — `/ship ci` (CI/CD Pipeline)
+## /harden [service/app]
+> Security headers + hardening configuration
 
-> Tạo GitHub Actions pipeline chuẩn: quality → build → lighthouse → deploy.
-> Xem template đầy đủ: `references/ci-templates.md`
+```
+HTTP SECURITY HEADERS (bắt buộc):
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'...
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+
+CORS CONFIGURATION:
+  □ Whitelist specific origins (không dùng *)
+  □ Credentials: only nếu thực sự cần
+  □ Methods: chỉ những gì dùng
+
+NGINX / REVERSE PROXY:
+  □ Hide server version (server_tokens off)
+  □ Rate limiting (limit_req_zone)
+  □ Max body size phù hợp
+  □ Request timeout reasonable
+
+DOCKER / CONTAINER:
+  □ Non-root user trong container
+  □ Read-only filesystem nếu có thể
+  □ No --privileged flag
+  □ Secrets qua Docker secrets / env, không COPY vào image
+```
 
 ---
 
-### Mode 4 — `/ship monitor` (Production Monitoring)
+## /ship [environment]
+> Pre-deployment production readiness checklist
 
 ```
-MONITORING CHECKLIST:
-[ ] Uptime: ping /api/health mỗi 5 phút
-[ ] Alert: email + Slack khi downtime
-[ ] Error tracking: Sentry DSN configured
-[ ] Core Web Vitals: Real User Monitoring
+CODE QUALITY
+  □ All tests passing (CI green)
+  □ No TODO/FIXME critical
+  □ No debug code (console.log, breakpoints)
+  □ Dependencies: no unresolved peer deps
+  □ Bundle size within budget
 
-ROLLBACK DECISION:
-  Error rate > 1%?           → Rollback ngay
-  LCP > 4s sau deploy?       → Rollback + investigate
-  Core functionality broken?  → Rollback ngay
-  Minor UI bug?              → Hotfix (không rollback)
+ENVIRONMENT & CONFIG
+  □ Environment variables documented (.env.example updated)
+  □ Production config khác với dev (debug off, strict mode on)
+  □ Database: migrations ready + rollback tested
+  □ Feature flags: correct state for prod
+
+PERFORMANCE
+  □ Lighthouse score ≥90 (Performance, Accessibility, Best Practices)
+  □ Core Web Vitals trong budget (LCP, CLS, FID)
+  □ Images optimized
+  □ CDN configured cho static assets
+
+MONITORING & OBSERVABILITY
+  □ Error tracking configured (Sentry / similar)
+  □ Uptime monitoring active
+  □ Key metrics dashboarded (response time, error rate)
+  □ Alerts set up cho critical thresholds
+  □ Log aggregation working
+
+SECURITY (quick final check)
+  □ npm audit / pip-audit: no criticals
+  □ Security headers present
+  □ No secrets in code / git history
+  □ API keys rotated nếu cần
+
+ROLLBACK PLAN
+  □ Previous version tagged in git
+  □ Database rollback migration ready
+  □ Rollback procedure documented + tested
+  □ Who to notify if rollback triggered?
+
+DEPLOYMENT
+  □ Deploy to staging first → smoke test
+  □ Zero-downtime deploy? (blue-green / canary)
+  □ Health check endpoint responds
+  □ Post-deploy smoke test list ready
+
+SIGN-OFF: Code ✓  Security ✓  Performance ✓  Monitoring ✓  Rollback ✓
 ```
-
----
-
-## QUY TẮC
-
-- Audit phải EVIDENCE-BASED: lỗi CỤ THỂ + remediation ACTIONABLE
-- KHÔNG launch mà chưa qua `/ship check`
-- Security headers BẮT BUỘC — không có = blocked
-- Lighthouse ≥ 90 — không đạt = blocked
-- Critical findings → tạo LESSONS.md entry ngay
-- KHÔNG scan/attack hệ thống không có quyền
