@@ -3,6 +3,19 @@
 ## 2026-03-14
 
 ### Changed
+- **APEX v5.0 — Reflexion Loop + Context Degradation Detection**
+  - **Reflexion Loop**: Self-review step sau mỗi /build commit (Bước 8) và /fix verification (Phase 4)
+    - AI tự hỏi: "Solve đúng problem?", "Edge case bỏ sót?", "Test coverage đủ?"
+    - /fix thêm: "Fix root cause hay symptom?", "Side-effect?", "Bug tương tự ở chỗ khác?"
+  - **Context Health Monitor v2**: Nâng từ 1 chiều (Usage %) lên 3 chiều
+    - Dimension 1 — Usage: dung lượng context window (giữ nguyên)
+    - Dimension 2 — Relevance: phát hiện context "dilution" (info không liên quan)
+    - Dimension 3 — Freshness: phát hiện stale references (code đã sửa)
+    - Dấu hiệu cảnh báo: nhầm names, suggest code version cũ
+  - Research-based: NeoLabHQ/context-engineering-kit, muratcankoylan/Agent-Skills-for-Context-Engineering
+  - Files changed: build/SKILL.md, fix/SKILL.md, CHANGE_LOG.md
+
+### Changed
 - **APEX v4.2 — Biomimetic Memory Upgrade (Hindsight-inspired)**
   - **Rule 26 — BIOMIMETIC MEMORY**: Mỗi memory entry PHẢI có `type`: `world` | `experience` | `mental_model`
     - `world` = facts về tech/framework/tool (tĩnh)

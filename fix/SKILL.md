@@ -3,7 +3,7 @@ name: fix
 description: "Bug fixing and debugging. Use for /fix (debug any error), error traces, crashes, unexpected behavior, failing tests. Triggers on: lỗi, bug, crash, không chạy được, error, exception, fix, debug, sửa lỗi."
 ---
 
-# Fix Skill — 4-Phase Debug + Insight Match + Auto-Ingest (v4.2 Biomimetic)
+# Fix Skill — 4-Phase Debug + Insight Match + Auto-Ingest (v5.0)
 
 > 📂 Chi tiết bổ sung: `fix/references/patterns.md` (bug classification, common patterns, browser agent)
 
@@ -75,6 +75,14 @@ PHASE 4 — VERIFY + LEARN (APEX Enhanced)
   □ ≥0.8 → LESSONS.md | <0.8 → LESSONS_ARCHIVE.md
   □ Qdrant store + auto-memory update
   □ "🔗 Connection với #BUG-XXX?" + "/consolidate?"
+
+  REFLEXION (self-review sau fix):
+  □ Tự hỏi:
+    - "Fix này solve đúng ROOT CAUSE chứ không phải symptom?"
+    - "Có side-effect nào từ fix này tôi chưa kiểm tra?"
+    - "Bug tương tự có thể xảy ra ở chỗ khác không?"
+  □ Nếu phát hiện vấn đề → quay lại Phase 3
+  □ Nếu OK → close bug
 
 → Bug classification & common patterns: references/patterns.md
 → Browser Agent workflow: references/patterns.md

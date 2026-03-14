@@ -3,7 +3,7 @@ name: session
 description: Session lifecycle management. Use for /start (begin session), /save (end session), /checkpoint (save mid-session), /review (multi-perspective code review), /recall (quick resume). Triggers on "bắt đầu phiên", "kết thúc phiên", "lưu context", "review code", "start session", "save session", "recall", "resume".
 ---
 
-# Session Skill — 4-Layer Smart Retrieval + Consolidation Save + Quality Gate (v4.2)
+# Session Skill — 4-Layer Smart Retrieval + Consolidation Save + Quality Gate (v5.0)
 
 ## /start [task]
 > Khởi động phiên làm việc, load 4-Layer smart memory, set context

@@ -3,7 +3,7 @@ name: build
 description: "Feature implementation and code writing. Use for /build (implement feature with TDD), /plan (plan before code), /search (research), /gsd (full GSD cycle). Triggers on: viết code, implement, tạo feature, build, tdd, xây dựng, gsd."
 ---
 
-# Build Skill — Search-First + TDD + Memory-Enhanced Build (v4.2)
+# Build Skill — Search-First + TDD + Memory-Enhanced Build (v5.0)
 
 > 📂 Chi tiết bổ sung: `build/references/patterns.md` | `build/references/parallel-guide.md`
 
@@ -153,6 +153,14 @@ BƯỚC 7 — ATOMIC COMMIT
   □ git commit -m "feat(module): mô tả"
   □ Update ACTIVE_CONTEXT.md
 
+BƯỚC 8 — REFLEXION (self-review sau commit)
+  □ Đọc lại code vừa commit — tự hỏi:
+    - "Code này solve đúng problem được đặt ra chưa?"
+    - "Có edge case nào tôi bỏ sót?"
+    - "Test coverage đủ cho logic mới chưa?"
+  □ Nếu phát hiện vấn đề → fix ngay + amend commit
+  □ Nếu OK → tiếp tục task tiếp theo
+
   → Chi tiết checklists: references/patterns.md
 ```
 
@@ -180,21 +188,33 @@ OUTPUT: Detailed plan → User approve → Execute
 
 ---
 
-## CONTEXT HEALTH MONITOR 📊
+## CONTEXT HEALTH MONITOR v2 📊
 
 ```
-Giám sát context window health trong suốt build session:
+Giám sát 3 chiều context health trong suốt build session:
 
-  🟢 Fresh  (0-30%):  Full capability, all tasks OK
-  🟡 Loaded (30-60%): Monitor, tạo checkpoints thường xuyên
-  🔴 Heavy  (60-80%): Commit, /save + fresh session cho complex tasks
-  💀 Critical (>80%): MUST save + restart TRƯỚC khi tiếp tục
+  DIMENSION 1 — USAGE (dung lượng context window):
+    🟢 Fresh  (0-30%):  Full capability, all tasks OK
+    🟡 Loaded (30-60%): Monitor, tạo checkpoints thường xuyên
+    🔴 Heavy  (60-80%): Commit, /save + fresh session cho complex tasks
+    💀 Critical (>80%): MUST save + restart TRƯỚC khi tiếp tục
 
-ACTION khi context Heavy/Critical:
-  1. Commit tất cả work hiện tại
-  2. Update ACTIVE_CONTEXT.md (checkpoint)
-  3. Gợi ý user /save + fresh session
-  4. Resume từ ACTIVE_CONTEXT.md trong session mới
+  DIMENSION 2 — RELEVANCE (context có liên quan task hiện tại?):
+    □ Scan context hiện tại: bao nhiêu % liên quan task đang làm?
+    □ Phát hiện "dilution": thông tin cũ từ tasks trước chèn vào
+    □ Nếu relevance < 70% → /checkpoint + fresh session
+    ⚠️ Dấu hiệu: AI bắt đầu nhầm file/function/variable names
+
+  DIMENSION 3 — FRESHNESS (references còn chính xác?):
+    □ Code references > 3 tasks trước → có thể đã stale
+    □ File đã bị sửa bởi task khác → cần re-read
+    □ Nếu phát hiện stale ref → re-read file trước khi dùng
+    ⚠️ Dấu hiệu: AI suggest code dựa trên version cũ của file
+
+ACTION khi phát hiện vấn đề:
+  Usage Heavy/Critical → commit, /save, fresh session
+  Low Relevance → /checkpoint, fresh session với focused context
+  Stale References → re-read affected files trước khi tiếp tục
 ```
 
 ---
