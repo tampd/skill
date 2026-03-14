@@ -113,10 +113,26 @@ STEP 1 — MEMORY AUDIT
   □ Đọc ACTIVE_CONTEXT.md → liệt kê task xong/còn dở
   □ Task dở → cảnh báo: "⚠️ [N] task chưa xong. Tiếp tục hay lưu tạm?"
 
-STEP 2 — VERIFICATION LOOP (bắt buộc)
-  □ Run: lint → format → type-check → test
+STEP 2 — VERIFICATION GATE (Evidence Before Claims)
+  🛑 Iron Law: NO COMPLETION CLAIMS WITHOUT FRESH VERIFICATION EVIDENCE
+  □ Run: lint → format → type-check → test (FRESH, COMPLETE)
+  □ READ full output, check exit code, count failures
   □ Nếu FAIL → FIX trước, không save với broken state
   □ Run CLEANUP PASS: tìm console.log, TODO, hardcoded values
+  □ ONLY claim "done" khi có evidence output
+
+  ANTI-RATIONALIZATION TABLE:
+  | Excuse                    | Reality                            |
+  |---------------------------|------------------------------------|
+  | "Should pass now"         | RUN verification. Evidence > hope  |
+  | "I'm confident"           | Confidence ≠ evidence              |
+  | "Just this once"          | No exceptions                      |
+  | "Linter passed"           | Linter ≠ type-check ≠ tests        |
+  | "Agent said success"      | Verify independently               |
+  | "Partial check is enough" | Partial proves nothing             |
+
+  RED FLAGS — nếu đang nghĩ từ "should", "probably", "seems to" → STOP, RUN verification
+
   □ Commit nếu có changes (conventional commit format)
 
 STEP 3 — EXTRACT LEARNINGS + INGEST

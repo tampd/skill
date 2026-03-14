@@ -3,6 +3,18 @@
 ## 2026-03-14
 
 ### Changed
+- **APEX v4.1 — Superpowers Integration**
+  - **Verification Gate** (Rule 24): NO completion claims without FRESH evidence. Anti-rationalization table.
+  - **Subagent Orchestration** (Rule 25): Fresh subagent per task + 2-stage review (spec → quality).
+  - **New file: `build/references/subagent-prompts.md`**: 3 prompt templates (Implementer, Spec Reviewer, Code Quality Reviewer) + status protocol (DONE/CONCERNS/CONTEXT/BLOCKED) + orchestrator checklist
+  - **Model selection strategy** in `build/references/parallel-guide.md`: mechanical → cheap, integration → standard, architecture → capable
+  - **Anti-rationalization tables**: Added to `fix/SKILL.md` Phase 3 (debugging) + `session/SKILL.md` /save STEP 2 (verification)
+  - **README.md**: Complete rewrite for APEX v4.1
+  - Research-based: obra/superpowers (6.9k⭐, MIT) — best of breed agentic skills framework
+  - Files new: build/references/subagent-prompts.md
+  - Files changed: GEMINI.md, session/SKILL.md, fix/SKILL.md, build/references/parallel-guide.md, README.md, CHANGE_LOG.md
+
+### Changed
 - **APEX v4.0 Cleanup** — Comprehensive audit & fixes
   - **Deleted 9 nested duplicate directories** (`skill/skill/`) containing stale v3.0 copies
     - All 9 skills had duplicate nested SKILL.md + references/ with old version refs

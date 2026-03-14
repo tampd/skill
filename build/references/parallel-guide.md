@@ -59,3 +59,29 @@ Checkpoint 1: Sau foundation (schema, interfaces) — verify contracts
 Checkpoint 2: Sau integration (API + UI connected) — verify flow
 Checkpoint 3: Sau polish (tests, docs) — final review
 ```
+
+## Model Selection Strategy
+
+```
+Dùng model phù hợp task để tối ưu tốc độ + cost:
+
+  Mechanical (1-2 files, clear spec)  → fast/cheap model
+  Integration (multi-file, judgment)  → standard model
+  Architecture/Design/Review          → most capable model
+
+Signals:
+  □ 1-2 files + complete spec → cheap
+  □ Multi-file + integration → standard
+  □ Design judgment + broad knowledge → most capable
+```
+
+## Subagent-Driven Development
+
+```
+Fresh subagent per task + 2-stage review = high quality, fast iteration
+
+  → Chi tiết prompts: references/subagent-prompts.md
+  → 3 templates: Implementer, Spec Reviewer, Code Quality Reviewer
+  → 4 status levels: DONE, DONE_WITH_CONCERNS, NEEDS_CONTEXT, BLOCKED
+```
+

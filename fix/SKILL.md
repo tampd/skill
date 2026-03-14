@@ -44,6 +44,19 @@ PHASE 3 — FIX (targeted, minimal)
       (a) Đây có phải cách fix tốt nhất? (≥2 alternatives)
       (b) Có risk/side-effect nào đang bỏ qua?
       (c) User có cần approve không?
+
+  RATIONALIZATION PREVENTION:
+  | Excuse                            | Reality                                    |
+  |-----------------------------------|--------------------------------------------|
+  | "Issue is simple, skip process"   | Simple bugs have root causes too           |
+  | "Emergency, no time"              | Systematic is FASTER than thrashing        |
+  | "Just try this first"             | First fix sets the pattern. Do it right.   |
+  | "I see the problem, let me fix"   | Seeing symptoms ≠ understanding root cause |
+  | "One more fix attempt" (after 2+) | 3+ failures = architectural problem        |
+  | "Multiple fixes at once"          | Can't isolate what worked. Causes new bugs |
+
+  RED FLAGS — nếu đang nghĩ bất kỳ câu nào ở trên → STOP, return to PHASE 1
+
   □ Fix chỉ root cause — không "cải thiện" thêm trong cùng PR
   □ Thêm test case reproduce exact bug (regression guard)
   □ Đảm bảo fix không break existing tests

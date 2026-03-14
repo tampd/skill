@@ -1,4 +1,4 @@
-# APEX SKILL SYSTEM v4.0 — Global Rules
+# APEX SKILL SYSTEM v4.1 — Global Rules
 > Applied to ALL sessions in this project. Read before every task.
 > Triết lý: AI không bao giờ quên. Mỗi phiên đều học hỏi và kết nối với quá khứ. Fresh context = High quality.
 
@@ -49,6 +49,10 @@
 21. **ULTRATHINK GATE** — Architecture decisions, complex bugs, refactoring >5 files → prefix "ultrathink:" → full analysis plan (≥500 words) TRƯỜC khi code. List ≥3 alternatives.
 22. **CONTEXT HEALTH MONITOR** — Track context window health: 🟢 Fresh (0-30%) | 🟡 Loaded (30-60%) | 🔴 Heavy (60-80%) | 💀 Critical (>80%). Khi Heavy/Critical → commit, /save, fresh session.
 23. **GSD CYCLE** — Features lớn dùng /gsd: Discuss → Plan → Execute → Verify. Mỗi phase có checkpoint context. KHÔNG skip Phase V (Verify).
+
+### Subagent & Verification (v4.1)
+24. **VERIFICATION GATE** — NO completion claims without FRESH verification evidence. "Should pass" ≠ evidence. Run command → read output → THEN claim. Anti-rationalization: "confident" ≠ evidence, "partial check" ≠ verification.
+25. **SUBAGENT ORCHESTRATION** — Fresh subagent per task + 2-stage review (spec compliance → code quality). Model selection: mechanical → cheap, integration → standard, architecture → capable. Status protocol: DONE/CONCERNS/CONTEXT/BLOCKED.
 
 ---
 
@@ -235,7 +239,8 @@ Kết thúc phiên?           → /save                    (auto /consolidate)
 
 | Date | Change |
 |---|---|
-| **2026-03-14** | **APEX v4.0**: Progressive Disclosure (references/ folders), /gsd command (GSD workflow), Ultrathink Mode, Context Health Monitor. 3 rules mới (21-23). Skills: build/fix/craft được refactor với references/. Research-based: GSD2 (23k⭐), Anthropic SKILL.md patterns, Claude Code docs, sub-agent patterns, context rot research. |
+| **2026-03-14** | **APEX v4.1**: Superpowers Integration — Verification Gate (Rule 24), Subagent Orchestration (Rule 25), anti-rationalization tables, model selection strategy, subagent prompt templates. Research-based: obra/superpowers (6.9k⭐). |
+| 2026-03-14 | **APEX v4.0**: Progressive Disclosure (references/ folders), /gsd command (GSD workflow), Ultrathink Mode, Context Health Monitor. 3 rules mới (21-23). Skills: build/fix/craft được refactor với references/. Research-based: GSD2 (23k⭐), Anthropic SKILL.md patterns, Claude Code docs, sub-agent patterns, context rot research. |
 | 2026-03-10 | **APEX v3.0 Memory**: 4-Layer Smart Retrieval. LESSONS.md critical-only (≤10, ≥0.8). LESSONS_ARCHIVE.md. Auto-Memory. Qdrant search. |
 | 2026-03-10 | **APEX v2.0**: 6-Layer Memory, 35 commands, Importance scoring, INSIGHTS.md, consolidation. |
 | 2026-03-10 | v2.0: 20 rules, 9 skills, 32 commands. Research-based: ECC + 12 GitHub repos. |
