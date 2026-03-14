@@ -1,25 +1,27 @@
-# APEX Skill System v4.1
+# APEX Skill System v5.0
 
 > 🧠 **AI không bao giờ quên.** Mỗi phiên đều học hỏi và kết nối với quá khứ.
 
 **APEX**: Adaptive Pattern EXtraction — hệ thống skill cho AI coding assistant.
 
-## ✨ What's New (v4.1)
+## ✨ What's New (v5.0)
 
-- **Verification Gate** (Rule 24) — NO completion claims without FRESH evidence. Anti-rationalization table chặn excuses như "should pass", "I'm confident"
-- **Subagent Orchestration** (Rule 25) — Fresh subagent per task + 2-stage review (spec compliance → code quality)
-- **Subagent prompt templates** — 3 templates (Implementer, Spec Reviewer, Code Quality Reviewer)
-- **Model selection strategy** — mechanical → cheap, integration → standard, architecture → capable
-- **Anti-rationalization tables** — Fix skill + Save workflow, chặn shortcuts gây lỗi
-- **Research-based**: [obra/superpowers](https://github.com/obra/superpowers) (6.9k⭐)
+- **Reflexion Loop** — Self-review sau mỗi /build commit và /fix verification. AI tự hỏi: "Solve đúng problem?", "Edge case bỏ sót?", "Fix root cause hay symptom?"
+- **Context Health Monitor v2** — Nâng từ 1 chiều (Usage %) lên 3 chiều: Usage + Relevance (phát hiện context "loãng") + Freshness (phát hiện stale references)
+- **Research-based**: [NeoLabHQ/context-engineering-kit](https://github.com/NeoLabHQ/context-engineering-kit), [muratcankoylan/Agent-Skills-for-Context-Engineering](https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering)
+
+### Previous versions
+- **v4.2**: Biomimetic Memory (world/experience/mental_model), 3-Strategy Recall — [vectorize-io/hindsight](https://github.com/vectorize-io/hindsight)
+- **v4.1**: Verification Gate, Subagent Orchestration, Anti-Rationalization — [obra/superpowers](https://github.com/obra/superpowers) (6.9k⭐)
+- **v4.0**: Progressive Disclosure, /gsd, Ultrathink, Context Health — [GSD2](https://github.com/jlowin/gsd2) (23k⭐)
 
 ## 📦 9 Skills — 35+ Commands
 
 | # | Skill | Commands | Purpose |
 |---|---|---|---|
 | 1 | **session** | `/start` `/save` `/checkpoint` `/review` `/recall` | 4-Layer Bootstrap + Verification Gate |
-| 2 | **build** ⭐ | `/build` `/plan` `/search` `/gsd` | TDD + Search-First + Subagent Orchestration |
-| 3 | **fix** | `/fix` | 4-Phase Debug + Anti-Rationalization |
+| 2 | **build** ⭐ | `/build` `/plan` `/search` `/gsd` | TDD + Search-First + Reflexion Loop |
+| 3 | **fix** | `/fix` | 4-Phase Debug + Reflexion + Anti-Rationalization |
 | 4 | **craft** | `/craft` `/audit` `/tokens` `/e2e` | UI + Design Tokens + WCAG + Browser Testing |
 | 5 | **secure** | `/security` `/harden` `/ship` | OWASP + Hardening + Production |
 | 6 | **automate** | `/n8n` `/integrate` `/mcp` | N8N + API + MCP Tool Design |
@@ -42,7 +44,7 @@ done
 ls ~/.gemini/antigravity/skills/
 ```
 
-## 📋 25 Global Rules
+## 📋 26 Global Rules
 
 ### Core Behavior (1-5)
 1. **ASK WHEN UNCLEAR** — ≥2 cách hiểu → hỏi trước
@@ -76,12 +78,13 @@ ls ~/.gemini/antigravity/skills/
 
 ### Fresh Context (21-23)
 21. **ULTRATHINK GATE** — Complex tasks → full analysis plan ≥500 words
-22. **CONTEXT HEALTH** — 🟢/<30% | 🟡/30-60% | 🔴/60-80% | 💀/>80%
+22. **CONTEXT HEALTH v2** — 3 chiều: Usage 🟢🟡🔴💀 + Relevance + Freshness
 23. **GSD CYCLE** — Discuss → Plan → Execute → Verify
 
-### Subagent & Verification (24-25) — *NEW in v4.1*
+### Subagent & Verification (24-26)
 24. **VERIFICATION GATE** — Evidence before claims. Anti-rationalization table
 25. **SUBAGENT ORCHESTRATION** — 2-stage review + model selection + status protocol
+26. **BIOMIMETIC MEMORY** — Memory types: world | experience | mental_model
 
 ## 🧠 Memory Architecture (4-Layer)
 
@@ -93,8 +96,8 @@ ls ~/.gemini/antigravity/skills/
 │  LAYER B — CRITICAL LESSONS (≤10 entries, ≥0.8)             │
 │  LESSONS.md (critical) + LESSONS_ARCHIVE.md (searchable)     │
 ├─────────────────────────────────────────────────────────────┤
-│  LAYER C — SEMANTIC (Qdrant Vector DB)                      │
-│  qdrant_find / qdrant_store — cross-project semantic search  │
+│  LAYER C — SEMANTIC (Qdrant Vector DB + 3-Strategy Recall)  │
+│  semantic + keyword + temporal — cross-project search        │
 ├─────────────────────────────────────────────────────────────┤
 │  LAYER D — AUTO-MEMORY (AI tự ghi)                          │
 │  .ai/memory/MEMORY.md (≤200 dòng)                           │
@@ -106,8 +109,8 @@ ls ~/.gemini/antigravity/skills/
 ```
 Bắt đầu phiên?           → /start [task]
 Feature lớn?              → /gsd [feature]          (Discuss→Plan→Execute→Verify)
-Viết code?                → /build [task]           🔥 TDD + Search-First
-Gặp bug?                  → /fix [bug]              🐛 4-Phase + Anti-Rationalization
+Viết code?                → /build [task]           🔥 TDD + Reflexion
+Gặp bug?                  → /fix [bug]              🐛 4-Phase + Reflexion
 Design UI?                → /craft [task]           🎨 Tokens + WCAG + /e2e
 Chuẩn bị deploy?          → /ship [env]             🔒 Production Readiness
 Ghi bài học?              → /learn [observation]     🧠 Ingest + Tag
@@ -117,7 +120,10 @@ Kết thúc phiên?           → /save                    (Verification Gate + 
 
 ## 📝 Architecture & Sources
 
-- [obra/superpowers](https://github.com/obra/superpowers) — Subagent-driven development, verification gate, anti-rationalization (v4.1)
+- [NeoLabHQ/context-engineering-kit](https://github.com/NeoLabHQ/context-engineering-kit) — Reflexion loops, context degradation (v5.0)
+- [muratcankoylan/Agent-Skills-for-Context-Engineering](https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering) — Context engineering skills (v5.0)
+- [vectorize-io/hindsight](https://github.com/vectorize-io/hindsight) — Biomimetic memory (v4.2)
+- [obra/superpowers](https://github.com/obra/superpowers) — Verification gate, anti-rationalization (v4.1)
 - [GSD2](https://github.com/jlowin/gsd2) — Get Shit Done cycle (v4.0)
 - Anthropic SKILL.md patterns, Claude Code docs (v4.0)
 - Claude Code MEMORY.md, Cursor context layering, ReMe, MemOS (v3.0)
@@ -128,7 +134,7 @@ Kết thúc phiên?           → /save                    (Verification Gate + 
 
 ```
 skill/
-├── GEMINI.md           # 25 Global Rules + Memory Architecture
+├── GEMINI.md           # 26 Global Rules + Memory Architecture
 ├── AGENTS.md           # Agent instructions
 ├── LESSONS.md          # Critical lessons (≤10, ≥0.8)
 ├── CHANGE_LOG.md       # Timeline changes
@@ -137,10 +143,10 @@ skill/
 │   ├── SKILL.md
 │   └── references/     # context-management, quality-gates, trigger-keywords
 ├── build/              # /build /plan /search /gsd
-│   ├── SKILL.md
+│   ├── SKILL.md        # 8-Step Build + Reflexion + Context Health v2
 │   └── references/     # patterns, tdd, parallel-guide, subagent-prompts ⭐
 ├── fix/                # /fix
-│   ├── SKILL.md
+│   ├── SKILL.md        # 4-Phase Debug + Reflexion
 │   └── references/     # patterns, lessons-template
 ├── craft/              # /craft /audit /tokens /e2e
 │   ├── SKILL.md
