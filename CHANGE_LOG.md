@@ -3,6 +3,20 @@
 ## 2026-03-14
 
 ### Changed
+- **APEX v4.2 — Biomimetic Memory Upgrade (Hindsight-inspired)**
+  - **Rule 26 — BIOMIMETIC MEMORY**: Mỗi memory entry PHẢI có `type`: `world` | `experience` | `mental_model`
+    - `world` = facts về tech/framework/tool (tĩnh)
+    - `experience` = trải nghiệm debug/build/deploy cụ thể
+    - `mental_model` = pattern tổng hợp từ nhiều experiences (reflect output)
+  - **3-Strategy Recall**: semantic + keyword + temporal (thay vì chỉ vector search)
+    - Merge top-5 từ 3 strategies, ưu tiên entries match ≥2 strategies
+  - **Reflect Auto-Trigger**: `/consolidate` BƯỚC 2.5 — LLM reflect trên ≥3 experiences cùng domain → tạo mental_model mới
+  - **Type-Aware Retrieval**: `/build` ưu tiên world+mental_model, `/fix` ưu tiên experience+mental_model
+  - **Enriched Qdrant Metadata**: thêm `memory_type`, `timestamp`, `related_entries`
+  - Research-based: vectorize-io/hindsight (SOTA agent memory, LongMemEval benchmark)
+  - Files changed: GEMINI.md, learn/SKILL.md, session/SKILL.md, build/SKILL.md, fix/SKILL.md, LESSONS.md, CHANGE_LOG.md
+
+### Changed
 - **APEX v4.1 — Superpowers Integration**
   - **Verification Gate** (Rule 24): NO completion claims without FRESH evidence. Anti-rationalization table.
   - **Subagent Orchestration** (Rule 25): Fresh subagent per task + 2-stage review (spec → quality).

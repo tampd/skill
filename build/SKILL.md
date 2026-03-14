@@ -3,7 +3,7 @@ name: build
 description: "Feature implementation and code writing. Use for /build (implement feature with TDD), /plan (plan before code), /search (research), /gsd (full GSD cycle). Triggers on: viết code, implement, tạo feature, build, tdd, xây dựng, gsd."
 ---
 
-# Build Skill — Search-First + TDD + Memory-Enhanced Build (v4.0)
+# Build Skill — Search-First + TDD + Memory-Enhanced Build (v4.2)
 
 > 📂 Chi tiết bổ sung: `build/references/patterns.md` | `build/references/parallel-guide.md`
 
@@ -117,10 +117,14 @@ SEARCH PROTOCOL — 4 Steps:
 > Implement feature với APEX 7-Step Build Protocol
 
 ```
-BƯỚC 0 — MEMORY LOAD (v4.0 Smart Retrieval)
+BƯỚC 0 — MEMORY LOAD (v4.2 Biomimetic Retrieval)
   □ Đọc ACTIVE_CONTEXT.md → snapshot hiện tại
-  □ Check INSTINCTS (≥0.7), LESSONS (≥0.8), INSIGHTS
+  □ Check theo memory type ưu tiên (Rule 26):
+     Building feature → world (facts/rules) + mental_model (patterns)
+     Fixing bug → experience (past fixes) + mental_model (patterns)
+     Design/UI → world (design tokens) + mental_model (UX patterns)
   □ Qdrant (nếu available): qdrant_find("[task keywords]")
+    → Filter by relevant memory_type for task context
   □ Auto-memory: check .ai/memory/MEMORY.md
   🛑 STOP: Nếu chưa hoàn thành Bước 0, KHÔNG code.
 

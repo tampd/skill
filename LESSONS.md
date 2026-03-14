@@ -20,6 +20,7 @@
 ### 🟡 #LEARN-001 — Open-source skill frameworks as upgrade catalyst (2026-03-14)
 
 - **Importance:** 0.8 | 🟡 Warning
+- **Type:** mental_model
 - **Entities:** [obra/superpowers, skill-upgrade, anti-rationalization, subagent-orchestration]
 - **Topics:** #research, #upgrade, #superpowers, #verification
 - **Observation:** Studying obra/superpowers (6.9k⭐) revealed 3 critical gaps in APEX v4.0: (1) no subagent prompt templates, (2) no verification-before-completion gate, (3) no anti-rationalization tables. These patterns dramatically improve output quality.

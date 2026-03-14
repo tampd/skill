@@ -1,4 +1,4 @@
-# APEX SKILL SYSTEM v4.1 — Global Rules
+# APEX SKILL SYSTEM v4.2 — Global Rules
 > Applied to ALL sessions in this project. Read before every task.
 > Triết lý: AI không bao giờ quên. Mỗi phiên đều học hỏi và kết nối với quá khứ. Fresh context = High quality.
 
@@ -13,7 +13,7 @@
 
 ---
 
-## 23 GLOBAL RULES
+## 26 GLOBAL RULES
 
 ### Core Behavior
 1. **ASK WHEN UNCLEAR** — Nếu yêu cầu mơ hồ hoặc có ≥2 cách hiểu → hỏi trước, đừng đoán
@@ -54,6 +54,9 @@
 24. **VERIFICATION GATE** — NO completion claims without FRESH verification evidence. "Should pass" ≠ evidence. Run command → read output → THEN claim. Anti-rationalization: "confident" ≠ evidence, "partial check" ≠ verification.
 25. **SUBAGENT ORCHESTRATION** — Fresh subagent per task + 2-stage review (spec compliance → code quality). Model selection: mechanical → cheap, integration → standard, architecture → capable. Status protocol: DONE/CONCERNS/CONTEXT/BLOCKED.
 
+### Memory Intelligence (v4.2 — Hindsight-inspired)
+26. **BIOMIMETIC MEMORY** — Mỗi memory entry PHẢI có `type`: `world` (facts về tech/framework/tool, tĩnh), `experience` (trải nghiệm debug/build/deploy cụ thể), `mental_model` (pattern/insight tổng hợp từ nhiều experiences). Giúp recall chính xác: bug → search experience trước, design → search world + mental_model.
+
 ---
 
 ## ANTIGRAVITY NATIVE FEATURES — Sử dụng tích cực
@@ -87,9 +90,10 @@ Context Health       → Monitor context window, auto-suggest fresh session (v4.
 
 ---
 
-## 🧠 MEMORY ARCHITECTURE v4.0 — 4-Layer Smart Retrieval + Context Health
+## 🧠 MEMORY ARCHITECTURE v4.2 — Biomimetic + 3-Strategy Recall
 
-> Triết lý: Không đọc hết, chỉ đọc đúng. Tối ưu context window.
+> Triết lý: Không đọc hết, chỉ đọc đúng. Memory có type + thời gian + nghĩa.
+> Inspired by: vectorize-io/hindsight (biomimetic memory — world/experiences/mental models)
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -98,16 +102,17 @@ Context Health       → Monitor context window, auto-suggest fresh session (v4.
 │  Nội dung: Tech stack, conventions, rules, project state     │
 │  Đặc điểm: Git-tracked, human-editable                       │
 ├─────────────────────────────────────────────────────────────┤
-│  LAYER B — CRITICAL LESSONS (tĩnh, ≤10 entries, luôn đọc)   │
-│  File: LESSONS.md (chỉ importance ≥ 0.8)                     │
+│  LAYER B — CRITICAL LESSONS (biomimetic, ≤10 entries)        │
+│  File: LESSONS.md (importance ≥ 0.8)                         │
 │  Archive: LESSONS_ARCHIVE.md (importance < 0.8 hoặc cũ)      │
+│  Memory Types: world | experience | mental_model (Rule 26)   │
 │  Đặc điểm: Luôn đọc mỗi /start, ngắn gọn, git-tracked      │
 ├─────────────────────────────────────────────────────────────┤
-│  LAYER C — SEMANTIC MEMORY (Qdrant, search theo nghĩa)      │
+│  LAYER C — SEMANTIC MEMORY (Qdrant, 3-strategy recall)      │
 │  Engine: Qdrant Vector DB (MCP: qdrant_find / qdrant_store)  │
-│  Nội dung: TẤT CẢ lessons + insights + patterns              │
-│  Truy xuất: /start search top-5 relevant theo task context   │
-│  Đặc điểm: Cross-project, scale vô hạn, semantic search     │
+│  Recall: semantic + keyword + temporal (3 chiều)             │
+│  Metadata: memory_type, timestamp, entities, importance      │
+│  Đặc điểm: Cross-project, scale vô hạn, multi-strategy      │
 ├─────────────────────────────────────────────────────────────┤
 │  LAYER D — AUTO-MEMORY (AI tự viết, local)                  │
 │  File: .ai/memory/MEMORY.md (≤200 dòng) + topic files        │
@@ -117,11 +122,30 @@ Context Health       → Monitor context window, auto-suggest fresh session (v4.
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### /start Smart Load Flow
+### Memory Types (Biomimetic — Rule 26)
+```
+world        = Facts về tech/framework/tool (tĩnh, ít thay đổi)
+               VD: "Laravel route specific trước wildcard"
+experience   = Trải nghiệm debug/build/deploy cụ thể
+               VD: "Fix bug N+1 bằng whereIn trong PayrollController"
+mental_model = Pattern tổng hợp từ nhiều experiences (reflect output)
+               VD: "70% lỗi deploy liên quan .env → checklist pre-deploy"
+
+Recall priority theo task type:
+  /fix  → experience first, then mental_model
+  /build → world + mental_model first
+  /craft → world (tokens) + mental_model (UX patterns)
+```
+
+### /start Smart Load Flow (v4.2)
 ```
 1. RULES:    Đọc GEMINI.md + STATE.md                    ← Layer A
 2. CRITICAL: Đọc LESSONS.md (≤10 entries, ≥0.8)          ← Layer B
-3. SEMANTIC: qdrant_find(task context) → top 5 relevant  ← Layer C
+3. 3-STRATEGY RECALL:                                    ← Layer C
+   a. Semantic: qdrant_find(task context) → top 5
+   b. Keyword:  grep LESSONS + ARCHIVE (tags, entities)
+   c. Temporal: entries từ 7 ngày gần nhất
+   → Merge top-5 (deduplicate, ưu tiên match ≥2 strategies)
 4. AUTO:     Đọc .ai/memory/MEMORY.md (≤200 dòng)        ← Layer D
 5. INSTINCT: INSTINCTS.md (top-3, confidence ≥0.7)       
 6. INSIGHT:  INSIGHTS.md (nếu có liên quan)
@@ -239,7 +263,8 @@ Kết thúc phiên?           → /save                    (auto /consolidate)
 
 | Date | Change |
 |---|---|
-| **2026-03-14** | **APEX v4.1**: Superpowers Integration — Verification Gate (Rule 24), Subagent Orchestration (Rule 25), anti-rationalization tables, model selection strategy, subagent prompt templates. Research-based: obra/superpowers (6.9k⭐). |
+| **2026-03-14** | **APEX v4.2**: Biomimetic Memory Upgrade — Rule 26 (BIOMIMETIC MEMORY: world/experience/mental_model types), 3-Strategy Recall (semantic + keyword + temporal), Reflect Auto-Trigger in /consolidate, type-aware retrieval in /build + /fix. Research-based: vectorize-io/hindsight (SOTA agent memory). |
+| 2026-03-14 | **APEX v4.1**: Superpowers Integration — Verification Gate (Rule 24), Subagent Orchestration (Rule 25), anti-rationalization tables, model selection strategy, subagent prompt templates. Research-based: obra/superpowers (6.9k⭐). |
 | 2026-03-14 | **APEX v4.0**: Progressive Disclosure (references/ folders), /gsd command (GSD workflow), Ultrathink Mode, Context Health Monitor. 3 rules mới (21-23). Skills: build/fix/craft được refactor với references/. Research-based: GSD2 (23k⭐), Anthropic SKILL.md patterns, Claude Code docs, sub-agent patterns, context rot research. |
 | 2026-03-10 | **APEX v3.0 Memory**: 4-Layer Smart Retrieval. LESSONS.md critical-only (≤10, ≥0.8). LESSONS_ARCHIVE.md. Auto-Memory. Qdrant search. |
 | 2026-03-10 | **APEX v2.0**: 6-Layer Memory, 35 commands, Importance scoring, INSIGHTS.md, consolidation. |

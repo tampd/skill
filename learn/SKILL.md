@@ -3,7 +3,7 @@ name: learn
 description: Continuous learning, instinct tracking, pattern extraction, and memory consolidation. Use for /learn (capture observation), /instinct (view/manage instincts), /evolve (cluster instincts into skills), /review-instincts (validate and prune), /consolidate (sleep-brain pass), /cross-link (manual connections). Triggers on "học hỏi", "pattern", "instinct", "lesson", "bài học", "ghi nhớ", "learn", "extract pattern", "consolidate", "cross-link", "insights".
 ---
 
-# Learn Skill — Ingest + Consolidation + Instinct Evolution
+# Learn Skill — Ingest + Consolidation + Instinct Evolution (v4.2 Biomimetic)
 
 ## INSTINCTS.md Format
 ```yaml
@@ -32,8 +32,13 @@ instincts:
 BƯỚC 1 — INGEST TAG
   Extract từ observation:
   → Summary: [1-2 câu]
+  → Memory Type: [world | experience | mental_model] (Rule 26)
+     world        = facts/rules ("Laravel route specific trước wildcard")
+     experience   = trải nghiệm cụ thể ("Fix bug N+1 trong PayrollController")
+     mental_model = pattern tổng hợp ("Đa số lỗi deploy liên quan .env")
   → Entities: [tech, files, services liên quan]
   → Topics: [domain tags]
+  → Timestamp: [ISO 8601 — auto from current time]
   → Importance: [0.0–1.0 + emoji]
      1.0 — Security vulnerability, data loss risk
      0.8 — 🔴 Critical: breaks production, major UX failure
@@ -54,6 +59,7 @@ BƯỚC 4 — STORE + EMBED
   LESSONS.md: APEX format entry (nếu importance ≥ 0.8):
     ### #BUG-[SỐ] [Tiêu đề ngắn]
     - **Ngày:** YYYY-MM-DD
+    - **Type:** world | experience | mental_model
     - **Importance:** [score] | [emoji level]
     - **Entities:** [list]
     - **Topics:** #tag1, #tag2
@@ -69,7 +75,7 @@ BƯỚC 4 — STORE + EMBED
   INSTINCTS.md: nếu là pattern (confidence: 0.5 mới)
 
   Qdrant (nếu available): qdrant_store(lesson, {
-    project, date, tags, type, importance, reference
+    project, date, tags, memory_type, importance, reference, timestamp
   }) → embed vào project collection + global_patterns
 
   Auto-memory: ghi note vào .ai/memory/MEMORY.md
@@ -108,6 +114,18 @@ PROCESS:
     - Same topic domain
     - Sequential timeline (bugs trong cùng 1 tuần)
     - Causal relationships (bug A dẫn đến bug B)
+    - Same memory type (cluster world facts riêng, experiences riêng)
+    - Cross-type patterns (world + experiences → promote thành mental_model)
+
+  BƯỚC 2.5 — REFLECT (v4.2 — Hindsight-inspired)
+    Khác biệt với CLUSTER: Reflect tạo KNOWLEDGE MỚI, không chỉ nhóm lại.
+    
+    □ Scan các experience entries cùng domain (≥3 entries)
+    □ Đặt câu hỏi reflect:
+      - "Giữa [exp-1], [exp-2], [exp-3] có pattern chung gì?"
+      - "Nếu gặp tình huống tương tự lần sau → nên làm gì ngay?"
+    □ Output: mental_model entry mới
+    □ Link ngược về source experiences (Connected field)
 
   BƯỚC 3 — CONNECT
     Với mỗi cluster, tìm pattern chung:

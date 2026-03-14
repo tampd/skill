@@ -3,13 +3,13 @@ name: session
 description: Session lifecycle management. Use for /start (begin session), /save (end session), /checkpoint (save mid-session), /review (multi-perspective code review), /recall (quick resume). Triggers on "bắt đầu phiên", "kết thúc phiên", "lưu context", "review code", "start session", "save session", "recall", "resume".
 ---
 
-# Session Skill — 4-Layer Smart Retrieval + Consolidation Save + Quality Gate (v4.0)
+# Session Skill — 4-Layer Smart Retrieval + Consolidation Save + Quality Gate (v4.2)
 
 ## /start [task]
 > Khởi động phiên làm việc, load 4-Layer smart memory, set context
 
 ```
-APEX v4.0 Bootstrap Protocol:
+APEX v4.2 Bootstrap Protocol:
 
 LAYER 0 — CHECK ACTIVE_CONTEXT.md:
   → Có: hiển thị "📍 Đang làm: [task] | Files: [X] | Tiếp theo: [Y]"
@@ -24,10 +24,14 @@ LAYER B — CRITICAL LESSONS (luôn đọc, ≤10 entries):
   □ Đọc LESSONS.md: chỉ entries importance ≥ 0.8
   □ Nếu cần sâu hơn → đọc LESSONS_ARCHIVE.md (on-demand)
 
-LAYER C — SEMANTIC SEARCH (Qdrant):
-  □ Nếu Qdrant available: qdrant_find("[task context]")
-     → Trả về top-5 lessons/insights liên quan nhất
-     → "🧠 Qdrant nhớ: [N] pattern liên quan"
+LAYER C — SEMANTIC SEARCH (Qdrant + 3-Strategy Recall v4.2):
+  □ Nếu Qdrant available — 3-STRATEGY RECALL:
+     Strategy 1 — Semantic: qdrant_find("[task context]")
+     Strategy 2 — Keyword: grep LESSONS.md + LESSONS_ARCHIVE.md (tags + entities)
+     Strategy 3 — Temporal: lessons từ 7 ngày gần nhất (recent context)
+     → Merge top-5 từ cả 3 strategies (deduplicate by entry ID)
+     → Ưu tiên: match ≥2 strategies > match 1 strategy
+     → "🧠 Recall: [N] memories (semantic: X, keyword: Y, temporal: Z)"
   □ Nếu Qdrant chưa setup: skip (fallback Layer B)
 
 LAYER D — AUTO-MEMORY:
@@ -54,7 +58,7 @@ ANTIGRAVITY PLAN:
 
 OUTPUT FORMAT:
 ═══════════════════════════════════════
-🚀 APEX SESSION START (v4.0)
+🚀 APEX SESSION START (v4.2)
 ═══════════════════════════════════════
 📍 Task: [task nếu có]
 🏗️ Phase: [X] | Wave: [Y]
@@ -138,6 +142,10 @@ STEP 2 — VERIFICATION GATE (Evidence Before Claims)
 STEP 3 — EXTRACT LEARNINGS + INGEST
   □ Trong phiên này, gặp vấn đề gì?
   □ Giải pháp nào hiệu quả? Cái nào không?
+  □ Classify memory type (Rule 26):
+     world = fact/rule mới phát hiện ("SvelteKit phải export load() từ +page.server")
+     experience = trải nghiệm debug/build cụ thể ("Fix bug XSS bằng sanitize-html")
+     mental_model = pattern tổng hợp từ ≥2 experiences ("API errors 99% do missing validation")
   □ Đánh giá Importance Score:
      ≥ 0.8 → Append vào LESSONS.md (APEX format)
      < 0.8 → Append vào LESSONS_ARCHIVE.md
@@ -147,7 +155,8 @@ STEP 3 — EXTRACT LEARNINGS + INGEST
 
 STEP 4 — QDRANT EMBED (nếu available)
   □ qdrant_store: embed TẤT CẢ lessons mới (cả critical và archived)
-  □ Metadata: { project, date, tags, type, importance, reference }
+  □ Metadata: { project, date, tags, memory_type, importance, reference,
+               timestamp, related_entries }
   □ Nếu Qdrant chưa setup: skip, ghi vào LESSONS_ARCHIVE.md làm fallback
 
 STEP 5 — CONSOLIDATION CHECK

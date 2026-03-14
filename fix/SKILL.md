@@ -3,7 +3,7 @@ name: fix
 description: "Bug fixing and debugging. Use for /fix (debug any error), error traces, crashes, unexpected behavior, failing tests. Triggers on: lỗi, bug, crash, không chạy được, error, exception, fix, debug, sửa lỗi."
 ---
 
-# Fix Skill — 4-Phase Debug + Insight Match + Auto-Ingest (v4.0)
+# Fix Skill — 4-Phase Debug + Insight Match + Auto-Ingest (v4.2 Biomimetic)
 
 > 📂 Chi tiết bổ sung: `fix/references/patterns.md` (bug classification, common patterns, browser agent)
 
@@ -13,11 +13,14 @@ description: "Bug fixing and debugging. Use for /fix (debug any error), error tr
 > Tìm root cause trước khi fix — không patch symptoms
 
 ```
-PHASE 0 — MEMORY MATCH (v4.0 Smart Retrieval)
+PHASE 0 — MEMORY MATCH (v4.2 Biomimetic Retrieval)
   □ Check INSTINCTS.md: đã gặp error pattern này chưa?
   □ Nếu có instinct match (confidence ≥0.7) → apply và log
-  □ Check LESSONS.md: critical entries (importance ≥0.8) liên quan
-  □ Qdrant (nếu available): qdrant_find("error: [mô tả lỗi]")
+  □ 3-Strategy Recall (Rule 26 — experience-first):
+     1. Experience-first: tìm entries type=experience match error pattern
+     2. Mental models: tìm entries type=mental_model về domain lỗi
+     3. Temporal: bugs fix trong 14 ngày gần nhất (recent patterns)
+  □ Qdrant: qdrant_find("error: [mô tả]", filter: {memory_type: "experience"})
      → "🧠 Qdrant found: đã fix lỗi tương tự ở [project]!"
   □ Check INSIGHTS.md: compound insight nào liên quan?
   □ Nếu không match → tiếp tục 4-phase debug
