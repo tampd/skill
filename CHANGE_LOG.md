@@ -1,5 +1,28 @@
 # CHANGE LOG — Skill Repository
 
+## 2026-03-14
+
+### Changed
+- **APEX v4.0** — Progressive Disclosure + GSD + Ultrathink + Context Health
+  - **Progressive Disclosure**: references/ folders cho build, fix, craft skills
+    - SKILL.md body giữ core workflow (~compact), verbose content → references/
+    - `build/references/patterns.md` + `build/references/parallel-guide.md`
+    - `fix/references/patterns.md` (bug classification, common patterns, browser agent)
+    - `craft/references/patterns.md` (component docs, token structure, audit detail)
+  - **GSD Command** (`/gsd`): Full cycle Discuss → Plan → Execute → Verify
+    - Fresh context checkpoint giữa phases
+    - Không skip Phase V (Verify)
+  - **Ultrathink Mode**: prefix "ultrathink:" cho complex tasks
+    - Architecture decisions, complex bugs, refactoring >5 files
+    - Full analysis plan (≥500 words) trước khi code
+  - **Context Health Monitor**: 🟢/🟡/🔴/💀 tracking
+    - Hiển thị trong /start output
+    - Auto-suggest /save + fresh session khi Heavy/Critical
+  - **3 Rules mới** (21-23): ULTRATHINK GATE, CONTEXT HEALTH MONITOR, GSD CYCLE
+  - **Sub-Agent Orchestration**: Formalized trong build/references/parallel-guide.md
+  - Research-based: GSD2 (23k⭐), Anthropic SKILL.md patterns, Claude Code docs
+  - Files changed: GEMINI.md, build/SKILL.md, fix/SKILL.md, craft/SKILL.md, session/SKILL.md
+
 ## 2026-03-10
 
 ### Changed

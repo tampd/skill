@@ -1,9 +1,13 @@
 ---
 name: build
-description: Feature implementation and code writing. Use for /build (implement feature with TDD), /plan (plan before code), /search (research packages/solutions). Triggers on "viết code", "implement", "tạo feature", "build", "tdd", "xây dựng".
+description: "Feature implementation and code writing. Use for /build (implement feature with TDD), /plan (plan before code), /search (research), /gsd (full GSD cycle). Triggers on: viết code, implement, tạo feature, build, tdd, xây dựng, gsd."
 ---
 
-# Build Skill — Search-First + TDD + Memory-Enhanced Build
+# Build Skill — Search-First + TDD + Memory-Enhanced Build (v4.0)
+
+> 📂 Chi tiết bổ sung: `build/references/patterns.md` | `build/references/parallel-guide.md`
+
+---
 
 ## /plan [idea or feature]
 > Brainstorm và lập kế hoạch TRƯỚC khi viết bất kỳ dòng code nào
@@ -35,11 +39,51 @@ STEP 4 — WAVE PLAN
 
 STEP 5 — ANTIGRAVITY TASK LIST
   □ Break down thành numbered tasks có checkpoint
-  □ Identify tasks có thể parallel (spawn sub-agents?)
+  □ Identify tasks có thể parallel (→ references/parallel-guide.md)
   □ Estimate: small (<1h) / medium (1-3h) / large (>3h)
   □ Nếu large → đề xuất /spec trước
 
 OUTPUT: Structured plan, task list, file list — TRƯỚC khi bất kỳ code nào được viết
+```
+
+---
+
+## /gsd [feature]
+> Full GSD (Get Shit Done) cycle — Discuss → Plan → Execute → Verify
+> Dùng cho features lớn, cần fresh context giữa các phases
+
+```
+PHASE D — DISCUSS
+  □ Thảo luận UI/UX, behavior decisions với user
+  □ Clarify edge cases, error handling strategy
+  □ Define: what does "done" look like?
+  □ Output: Decisions document (ghi vào ACTIVE_CONTEXT.md)
+
+PHASE P — PLAN
+  □ Research: /search relevant packages/patterns
+  □ Viết SPEC (WHY/WHAT/HOW/DONE/FILES)
+  □ Break thành tasks bằng /plan
+  □ Output: Task list + file list + dependencies
+
+  ⚡ CONTEXT CHECKPOINT: Nếu context >50% → /save + fresh session
+
+PHASE E — EXECUTE
+  □ Implement theo /build protocol (7-Step)
+  □ Mỗi task = 1 atomic commit
+  □ Context health check mỗi 3-5 tasks
+  □ Output: Working code + passing tests
+
+  ⚡ CONTEXT CHECKPOINT: Nếu context >60% → commit, /save, resume fresh
+
+PHASE V — VERIFY
+  □ Run full test suite
+  □ Diff review: mọi file đã thay đổi
+  □ Regression check: impact analysis
+  □ Browser verify nếu UI changes
+  □ Confirm spec met: checklist từ Phase D
+  □ Output: Verification evidence
+
+🛑 KHÔNG skip Phase V — đây là gate chất lượng cuối cùng
 ```
 
 ---
@@ -52,25 +96,15 @@ SEARCH PROTOCOL — 4 Steps:
 
   1. INTERNAL SEARCH (codebase + memory):
      □ grep -r "[keyword]" --include="*.ts" .
-     □ Check LESSONS.md: critical entries liên quan?
+     □ Check LESSONS.md + INSTINCTS.md + INSIGHTS.md
      □ Qdrant (nếu available): qdrant_find("[search context]")
-     □ Check INSTINCTS.md: có pattern liên quan?
-     □ Check INSIGHTS.md: compound insight nào relevant?
 
   2. EXTERNAL SEARCH (packages/docs):
      □ npm/pip/github + official docs
-     □ Evaluate top 3 candidates:
-        - Weekly downloads / stars (popularity = maturity)
-        - Last commit (maintenance active?)
-        - Bundle size / performance overhead
-        - Security: known CVEs?
-        - TypeScript support?
+     □ Evaluate top 3 candidates (→ references/patterns.md)
 
   3. DECISION MATRIX:
-     official lib exists → dùng official
-     no official + >1M weekly downloads → dùng popular
-     niche need + small + well-maintained → dùng specialized
-     nothing good → build minimal custom (document why)
+     official → popular → specialized → custom (document why)
 
   4. OUTPUT:
      "🔍 Found: [kết quả] → Sẽ dùng pattern [X]"
@@ -83,16 +117,11 @@ SEARCH PROTOCOL — 4 Steps:
 > Implement feature với APEX 7-Step Build Protocol
 
 ```
-BƯỚC 0 — MEMORY LOAD (v3.0 Smart Retrieval)
+BƯỚC 0 — MEMORY LOAD (v4.0 Smart Retrieval)
   □ Đọc ACTIVE_CONTEXT.md → snapshot hiện tại
-  □ Check INSTINCTS: có instinct confidence ≥0.7 liên quan không?
-     → Nếu có: "🧠 Applying INS-XXX: [pattern]"
-  □ LESSONS.md: đọc critical entries (≤10, importance ≥0.8)
+  □ Check INSTINCTS (≥0.7), LESSONS (≥0.8), INSIGHTS
   □ Qdrant (nếu available): qdrant_find("[task keywords]")
-     → Trả về top-3 relevant lessons/patterns
-     → "🧠 Qdrant found: [N] related patterns"
-  □ Auto-memory: check .ai/memory/MEMORY.md cho context liên quan
-  □ Check INSIGHTS.md: compound insight nào relevant?
+  □ Auto-memory: check .ai/memory/MEMORY.md
   🛑 STOP: Nếu chưa hoàn thành Bước 0, KHÔNG code.
 
 BƯỚC 1 — SEARCH FIRST
@@ -100,68 +129,80 @@ BƯỚC 1 — SEARCH FIRST
   □ Task ≥3 files? → /spec hoặc /plan bắt buộc trước
 
 BƯỚC 2 — SPEC (30 giây)
-  WHY:  Tại sao cần task này?
-  WHAT: Thay đổi/tạo file nào?
-  HOW:  Pattern/library nào?
-  DONE: Khi nào biết là xong?
+  WHY / WHAT / HOW / DONE
 
 BƯỚC 3 — CODE (Clean + Typed)
-  □ Viết TypeScript interfaces / type definitions TRƯỚC
-  □ Viết function signatures (không có implementation)
-  □ Implement code
+  □ TypeScript interfaces TRƯỚC → function signatures → implement
 
 BƯỚC 4 — TDD (Red → Green → Refactor)
-  □ Viết test TRƯỚC code nếu feature phức tạp
-  □ RED: test fail (expected)
-  □ GREEN: code vừa đủ để pass
-  □ REFACTOR: clean up, không break tests
-  □ Coverage ≥80%
+  □ Test TRƯỚC code nếu feature phức tạp
+  □ RED → GREEN → REFACTOR → Coverage ≥80%
 
-BƯỚC 5 — VERIFY (Prove it, don't trust it)
+BƯỚC 5 — VERIFY
   □ lint → format → type-check → test → audit
-  □ Diff review: list từng file đã thay đổi + lý do
-  □ Regression check: những gì có thể bị ảnh hưởng?
+  □ Diff review + regression check
 
-BƯỚC 6 — CLEANUP PASS (separate review pass)
-  □ Scan: console.log, debugger, TODO cũ
-  □ Scan: magic numbers → extract vào constants
-  □ Scan: dead code, unused imports
-  □ Đây là PASS RIÊNG — không làm cùng lúc với implementation
+BƯỚC 6 — CLEANUP PASS (separate pass)
+  □ Scan: console.log, debugger, TODO cũ, magic numbers, dead code
 
-BƯỚC 7 — ATOMIC COMMIT + MINI CHECKPOINT
-  □ git add <file1> <file2>  # Chỉ file của task này
-  □ git commit -m "feat(module): mô tả ngắn gọn"
-  □ Update ACTIVE_CONTEXT.md:
-     - Mark task vừa commit là [x]
-     - Set NEXT IMMEDIATE ACTION = task tiếp theo
-     - Record decision nếu có
-     - Ghi evidence verify
+BƯỚC 7 — ATOMIC COMMIT
+  □ git commit -m "feat(module): mô tả"
+  □ Update ACTIVE_CONTEXT.md
 
-CHECKLIST TRƯỚC COMMIT:
-  [ ] Đã search trước khi code
-  [ ] Không có debug statements
-  [ ] Null-safe operators đầy đủ
-  [ ] DB transactions nếu multi-step
-  [ ] Evidence verify đã có
-  [ ] Commit message theo conventional commits
-  [ ] INSTINCT đã apply: log kết quả
+  → Chi tiết checklists: references/patterns.md
 ```
 
-### TDD HARD GATE — Không được bypass
+---
+
+## ULTRATHINK MODE 🧠
+> Kích hoạt deep reasoning cho tasks phức tạp
+
 ```
-❌ KHÔNG được viết implementation trước test
-❌ KHÔNG được commit khi coverage <80%
-❌ KHÔNG được skip verification loop
-❌ KHÔNG được bỏ qua cleanup pass
-✅ Exceptions phải được ghi rõ lý do vào LESSONS.md
+TRIGGER: Prefix task với "ultrathink:" hoặc khi:
+  - Architecture decisions ảnh hưởng >5 files
+  - Complex bugs không reproduce được sau 15 phút
+  - Refactoring ảnh hưởng core abstractions
+  - Trade-off decisions không có đáp án rõ ràng
+
+PROTOCOL:
+  1. Allocate maximum reasoning tokens
+  2. Present FULL analysis plan (≥500 words) TRƯỚC khi code
+  3. List ≥3 alternatives với pros/cons/risks
+  4. Wait for user approval trước khi execute
+  5. Document decision trong ACTIVE_CONTEXT.md
+
+OUTPUT: Detailed plan → User approve → Execute
 ```
 
-### ANTIGRAVITY PARALLEL BUILD
+---
+
+## CONTEXT HEALTH MONITOR 📊
+
 ```
-Khi feature lớn (>3h), xem xét split cho parallel agents:
+Giám sát context window health trong suốt build session:
+
+  🟢 Fresh  (0-30%):  Full capability, all tasks OK
+  🟡 Loaded (30-60%): Monitor, tạo checkpoints thường xuyên
+  🔴 Heavy  (60-80%): Commit, /save + fresh session cho complex tasks
+  💀 Critical (>80%): MUST save + restart TRƯỚC khi tiếp tục
+
+ACTION khi context Heavy/Critical:
+  1. Commit tất cả work hiện tại
+  2. Update ACTIVE_CONTEXT.md (checkpoint)
+  3. Gợi ý user /save + fresh session
+  4. Resume từ ACTIVE_CONTEXT.md trong session mới
+```
+
+---
+
+## PARALLEL BUILD (Feature lớn >3h)
+
+```
+→ Chi tiết: references/parallel-guide.md
+
   Agent A: Backend / API layer
   Agent B: Frontend / UI components
   Agent C: Tests / documentation
-  
+
 Sync point: Trước khi merge, chạy /review trên combined output
 ```

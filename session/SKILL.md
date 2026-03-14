@@ -3,13 +3,13 @@ name: session
 description: Session lifecycle management. Use for /start (begin session), /save (end session), /checkpoint (save mid-session), /review (multi-perspective code review), /recall (quick resume). Triggers on "bắt đầu phiên", "kết thúc phiên", "lưu context", "review code", "start session", "save session", "recall", "resume".
 ---
 
-# Session Skill — 4-Layer Smart Retrieval + Consolidation Save + Quality Gate
+# Session Skill — 4-Layer Smart Retrieval + Consolidation Save + Quality Gate (v4.0)
 
 ## /start [task]
 > Khởi động phiên làm việc, load 4-Layer smart memory, set context
 
 ```
-APEX v3.0 Bootstrap Protocol:
+APEX v4.0 Bootstrap Protocol:
 
 LAYER 0 — CHECK ACTIVE_CONTEXT.md:
   → Có: hiển thị "📍 Đang làm: [task] | Files: [X] | Tiếp theo: [Y]"
@@ -54,7 +54,7 @@ ANTIGRAVITY PLAN:
 
 OUTPUT FORMAT:
 ═══════════════════════════════════════
-🚀 APEX SESSION START (v3.0)
+🚀 APEX SESSION START (v4.0)
 ═══════════════════════════════════════
 📍 Task: [task nếu có]
 🏗️ Phase: [X] | Wave: [Y]
@@ -65,6 +65,7 @@ OUTPUT FORMAT:
 🧠 Instincts active:
   - INS-003 [0.85] — [pattern]
 💡 Insights: [tóm tắt nếu có]
+📊 Context Health: 🟢 Fresh | 🟡 Loaded | 🔴 Heavy | 💀 Critical
 🎯 Ready. Gõ lệnh tiếp theo.
 ═══════════════════════════════════════
 ```

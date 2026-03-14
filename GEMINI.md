@@ -1,6 +1,6 @@
-# APEX SKILL SYSTEM v3.0 — Global Rules
+# APEX SKILL SYSTEM v4.0 — Global Rules
 > Applied to ALL sessions in this project. Read before every task.
-> Triết lý: AI không bao giờ quên. Mỗi phiên đều học hỏi và kết nối với quá khứ.
+> Triết lý: AI không bao giờ quên. Mỗi phiên đều học hỏi và kết nối với quá khứ. Fresh context = High quality.
 
 ## MEMORY FILES (read at session start)
 - `LESSONS.md` — **critical-only** bài học (≤10 entries, importance ≥0.8). Luôn đọc.
@@ -13,7 +13,7 @@
 
 ---
 
-## 20 GLOBAL RULES
+## 23 GLOBAL RULES
 
 ### Core Behavior
 1. **ASK WHEN UNCLEAR** — Nếu yêu cầu mơ hồ hoặc có ≥2 cách hiểu → hỏi trước, đừng đoán
@@ -45,6 +45,11 @@
 19. **DESIGN TOKEN MANDATORY** — Không dùng hardcoded color/spacing/font. Luôn dùng design tokens
 20. **PERFORMANCE BUDGET** — LCP ≤2.5s, CLS ≤0.1, FID ≤100ms
 
+### Fresh Context & Deep Thinking (v4.0)
+21. **ULTRATHINK GATE** — Architecture decisions, complex bugs, refactoring >5 files → prefix "ultrathink:" → full analysis plan (≥500 words) TRƯỜC khi code. List ≥3 alternatives.
+22. **CONTEXT HEALTH MONITOR** — Track context window health: 🟢 Fresh (0-30%) | 🟡 Loaded (30-60%) | 🔴 Heavy (60-80%) | 💀 Critical (>80%). Khi Heavy/Critical → commit, /save, fresh session.
+23. **GSD CYCLE** — Features lớn dùng /gsd: Discuss → Plan → Execute → Verify. Mỗi phase có checkpoint context. KHÔNG skip Phase V (Verify).
+
 ---
 
 ## ANTIGRAVITY NATIVE FEATURES — Sử dụng tích cực
@@ -56,6 +61,8 @@ Mission Control      → Monitor parallel agents, assign /spec + /build + /secur
 Artifact Output      → /spec, /handoff, /runbook output dạng structured Artifact
 Planning Mode        → Luôn gen task-list có checkpoint trước khi code
 Stitch MCP           → /craft setup → generate screens → edit screens → export code
+Ultrathink           → Deep reasoning cho architecture/complex bugs (v4.0)
+Context Health       → Monitor context window, auto-suggest fresh session (v4.0)
 ```
 
 ---
@@ -65,7 +72,7 @@ Stitch MCP           → /craft setup → generate screens → edit screens → 
 | # | Skill | Commands | Purpose |
 |---|---|---|---|
 | 1 | **session** | `/start` `/save` `/checkpoint` `/review` `/recall` | 🔄 6-Layer Bootstrap + Consolidation Save + Quality Gate |
-| 2 | **build** ⭐ | `/build` `/plan` `/search` | 🔥 Search-First + TDD + Memory-Enhanced Build |
+| 2 | **build** ⭐ | `/build` `/plan` `/search` `/gsd` | 🔥 Search-First + TDD + GSD Cycle + Ultrathink |
 | 3 | **fix** | `/fix` | 🐛 4-Phase Debug + Insight Match + Auto-Ingest |
 | 4 | **craft** | `/craft` `/audit` `/tokens` `/e2e` | 🎨 UI + Design Tokens + WCAG + Browser Testing |
 | 5 | **secure** | `/security` `/harden` `/ship` | 🔒 OWASP + Hardening + Production Readiness |
@@ -76,7 +83,7 @@ Stitch MCP           → /craft setup → generate screens → edit screens → 
 
 ---
 
-## 🧠 MEMORY ARCHITECTURE v3.0 — 4-Layer Smart Retrieval
+## 🧠 MEMORY ARCHITECTURE v4.0 — 4-Layer Smart Retrieval + Context Health
 
 > Triết lý: Không đọc hết, chỉ đọc đúng. Tối ưu context window.
 
@@ -155,8 +162,10 @@ Bắt đầu phiên?           → /start [task]
 Resume phiên cũ?          → /recall
 Ý tưởng mơ hồ?           → /plan [idea]
 Feature phức tạp?         → /plan [feature]
+Feature lớn (GSD)?       → /gsd [feature]          🆕 v4.0
 Research trước code?      → /search [need]
 Viết code?                → /build [task]           🔥 TDD + Search-First
+Deep thinking?            → ultrathink: [task]      🆕 v4.0
 Gặp bug?                  → /fix [bug]              🐛 4-Phase Debug
 Design UI?                → /craft [task]           🎨 Tokens + WCAG
 Design tokens?            → /tokens [scope]
@@ -196,6 +205,7 @@ Kết thúc phiên?           → /save                    (auto /consolidate)
 | Tình huống | Combo |
 |---|---|
 | Feature code mới | `/start` → check INSIGHTS → `/build` → `/save` |
+| Feature lớn (GSD) | `/start` → `/gsd` (D→P→E→V) → `/save` |
 | Fix bug | `/fix` (4-phase) → `/learn` (ingest) → `/consolidate` (nếu ≥3 lessons) |
 | API endpoint mới | `/search` → `/build` → `/security` → `/review` |
 | UI/Component mới | `/craft` → `/tokens` → `/audit` → `/e2e` |
@@ -225,7 +235,8 @@ Kết thúc phiên?           → /save                    (auto /consolidate)
 
 | Date | Change |
 |---|---|
-| **2026-03-10** | **APEX v3.0 Memory**: 4-Layer Smart Retrieval (Rules + Critical Lessons + Qdrant Semantic + Auto-Memory). LESSONS.md critical-only (≤10, ≥0.8). LESSONS_ARCHIVE.md for lower-priority. Auto-Memory (.ai/memory/MEMORY.md, 200-line rule). Qdrant search in /start, /build, /fix. Research-based: Claude Code MEMORY.md, Cursor context layering, ReMe, MemOS patterns. |
-| 2026-03-10 | **APEX v2.0**: 6-Layer Memory, 35 commands, Importance scoring, INSIGHTS.md, consolidation. Synthesized from AG-SKILL v2.0 + Google ADK memory-agent + APEX v1.0 draft. |
+| **2026-03-14** | **APEX v4.0**: Progressive Disclosure (references/ folders), /gsd command (GSD workflow), Ultrathink Mode, Context Health Monitor. 3 rules mới (21-23). Skills: build/fix/craft được refactor với references/. Research-based: GSD2 (23k⭐), Anthropic SKILL.md patterns, Claude Code docs, sub-agent patterns, context rot research. |
+| 2026-03-10 | **APEX v3.0 Memory**: 4-Layer Smart Retrieval. LESSONS.md critical-only (≤10, ≥0.8). LESSONS_ARCHIVE.md. Auto-Memory. Qdrant search. |
+| 2026-03-10 | **APEX v2.0**: 6-Layer Memory, 35 commands, Importance scoring, INSIGHTS.md, consolidation. |
 | 2026-03-10 | v2.0: 20 rules, 9 skills, 32 commands. Research-based: ECC + 12 GitHub repos. |
 | 2026-03-09 | v1.0 LAUNCH: 9 skills, 17 rules, ECC-inspired. |
