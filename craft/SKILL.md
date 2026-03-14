@@ -78,3 +78,36 @@ DARK MODE: @media (prefers-color-scheme: dark) hoặc [data-theme="dark"]
 
 → Chi tiết token structure: references/patterns.md
 ```
+
+---
+
+## /e2e [scope]
+> Browser Agent visual testing — screenshots + keyboard + responsive
+
+```
+WORKFLOW:
+  □ Navigate to target URL / component / page
+  □ Screenshots multi-breakpoint:
+      - Desktop: 1280px
+      - Tablet: 768px
+      - Mobile: 375px
+  □ Dark mode screenshot nếu project hỗ trợ
+  □ Keyboard navigation test:
+      - Tab order đúng logic flow
+      - Focus indicator rõ ràng (WCAG visible focus)
+      - Enter/Space activate buttons/links
+      - Arrow keys cho menus/tabs/selects
+  □ Hover/focus states verification
+  □ Form validation visual feedback:
+      - Error states hiển thị đúng
+      - Success states clear
+      - Required field indicators
+  □ Compare before/after nếu có changes (visual diff)
+  □ Interaction test:
+      - Modals/Dialogs: open, close, keyboard trap
+      - Dropdowns: open, select, close
+      - Animations: smooth, prefers-reduced-motion respected
+
+OUTPUT: Screenshot evidence + pass/fail report per dimension
+→ Chi tiết checklist: references/patterns.md
+```

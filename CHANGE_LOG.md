@@ -3,6 +3,20 @@
 ## 2026-03-14
 
 ### Changed
+- **APEX v4.0 Cleanup** — Comprehensive audit & fixes
+  - **Deleted 9 nested duplicate directories** (`skill/skill/`) containing stale v3.0 copies
+    - All 9 skills had duplicate nested SKILL.md + references/ with old version refs
+    - Nested copies missing v4.0 features: Ultrathink, Context Health, Progressive Disclosure
+  - **Added `/e2e` section** to `craft/SKILL.md` (was listed in GEMINI.md but missing implementation)
+    - Multi-breakpoint screenshots, keyboard navigation, interaction tests
+  - **Rewrote `session/references/trigger-keywords.md`** — now covers all 35 commands
+    - Fixed stale refs: `blueprint` → `change folder`, `/build --mode plan` → `/plan`
+    - Added missing commands: `/gsd`, `/e2e`, `/tokens`, `/audit`, `/mcp`, `/quality`, etc.
+  - **Verified references files** — `fix/references/patterns.md` and `craft/references/patterns.md` contain full v3.0 inline content
+  - Files changed: craft/SKILL.md, session/references/trigger-keywords.md, CHANGE_LOG.md
+  - Files deleted: 9 nested directories (automate/automate, build/build, content/content, craft/craft, fix/fix, learn/learn, secure/secure, session/session, spec/spec)
+
+### Changed
 - **APEX v4.0** — Progressive Disclosure + GSD + Ultrathink + Context Health
   - **Progressive Disclosure**: references/ folders cho build, fix, craft skills
     - SKILL.md body giữ core workflow (~compact), verbose content → references/
